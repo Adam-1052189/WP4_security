@@ -1,0 +1,189 @@
+CREATE TABLE gebruikers(
+  gebruikers_id INTEGER NOT NULL,
+  voortgang_id INTEGER,
+  "admin/docent/student" INTEGER,
+  email INTEGER,
+  username INTEGER,
+  password INTEGER,
+  profielfoto INTEGER,
+  bio INTEGER,
+  CONSTRAINT gebruikers_ak_1 UNIQUE(gebruikers_id),
+  CONSTRAINT gebruikers_ak_2 UNIQUE(gebruikers_id),
+  CONSTRAINT gebruikers_ak_3 UNIQUE(gebruikers_id),
+  CONSTRAINT voortgang_id_voortgang_id
+    FOREIGN KEY (voortgang_id) REFERENCES voortgang (voortgang_id)
+);
+
+CREATE TABLE notificaties(
+  notificatie_id INTEGER NOT NULL,
+  gebruikers_id INTEGER,
+  score INTEGER,
+  beschrijving INTEGER,
+  PRIMARY KEY(notificatie_id),
+  CONSTRAINT gebruikers_id_gebruikers_id
+    FOREIGN KEY (gebruikers_id) REFERENCES gebruikers (gebruikers_id)
+);
+
+CREATE TABLE voortgang(
+  voortgang_id INTEGER NOT NULL,
+  cursus_id INTEGER,
+  notificatie_id INTEGER,
+  gebruikers_id INTEGER,
+  "totale score" INTEGER,
+  CONSTRAINT voortgang_ak_1 UNIQUE(voortgang_id),
+  CONSTRAINT voortgang_id_voortgang_id
+    FOREIGN KEY (voortgang_id) REFERENCES modules (voortgang_id),
+  CONSTRAINT notificatie_id_notificatie_id
+    FOREIGN KEY (notificatie_id) REFERENCES notificaties (notificatie_id),
+  CONSTRAINT "vak/cursus_id_cursus_id"
+    FOREIGN KEY (cursus_id) REFERENCES cursussen ("vak/cursus_id"),
+  CONSTRAINT gebruikers_id_gebruikers_id
+    FOREIGN KEY (gebruikers_id) REFERENCES modules (gebruikers_id)
+);
+
+CREATE TABLE domein(
+  domein_id INTEGER NOT NULL,
+  gebruikers_id INTEGER,
+  domeinnaam INTEGER,
+  domein_domein_id INTEGER NOT NULL,
+  PRIMARY KEY(domein_id),
+  CONSTRAINT domein_ak_1 UNIQUE(gebruikers_id),
+  CONSTRAINT gebruikers_id_gebruikers_id
+    FOREIGN KEY (gebruikers_id) REFERENCES gebruikers (gebruikers_id)
+);
+
+CREATE TABLE activiteiten(
+  activiteit_id INTEGER NOT NULL,
+  module_id INTEGER,
+  gebruikers_id INTEGER,
+  stap INTEGER,
+  taak INTEGER,
+  modules_voortgang_id INTEGER NOT NULL,
+  modules_opdracht_id INTEGER NOT NULL,
+  modules_chalenge_id INTEGER NOT NULL,
+  modules_activiteit_id INTEGER NOT NULL,
+  PRIMARY KEY(activiteit_id),
+  CONSTRAINT activiteit_id_activiteit_id
+    FOREIGN KEY
+      (
+        activiteit_id,
+        modules_voortgang_id,
+        modules_opdracht_id,
+        modules_chalenge_id,
+        modules_activiteit_id
+      )
+      REFERENCES modules
+        (
+          module_id,
+          voortgang_id,
+          opdracht_id,
+          chalenge_id,
+          activiteit_id
+        ),
+  CONSTRAINT gebruikers_id_gebruikers_id
+    FOREIGN KEY (gebruikers_id) REFERENCES modules (gebruikers_id)
+);
+
+CREATE TABLE cursussen(
+  "vak/cursus_id" INTEGER NOT NULL,
+  instantie_id INTEGER NOT NULL,
+  module_id INTEGER,
+  domein_id INTEGER,
+  gebruikers_id INTEGER,
+  vaknaam INTEGER,
+  PRIMARY KEY("vak/cursus_id"),
+  CONSTRAINT cursussen_ak_1 UNIQUE(module_id),
+  CONSTRAINT cursussen_ak_2 UNIQUE(gebruikers_id),
+  CONSTRAINT instantie_id_instantie_id
+    FOREIGN KEY (instantie_id) REFERENCES instantie (instantie_id),
+  CONSTRAINT gebruikers_id_gebruikers_id
+    FOREIGN KEY (gebruikers_id) REFERENCES instantie (gebruikers_id)
+);
+
+CREATE TABLE instantie(
+  instantie_id INTEGER NOT NULL,
+  domein_id INTEGER NOT NULL,
+  gebruikers_id INTEGER,
+  instantienaam INTEGER,
+  cursusjaar INTEGER,
+  onderwijsperiode INTEGER,
+  PRIMARY KEY(instantie_id),
+  CONSTRAINT instantie_ak_1 UNIQUE(gebruikers_id),
+  CONSTRAINT domein_id_domein_id
+    FOREIGN KEY (domein_id) REFERENCES domein (domein_id),
+  CONSTRAINT gebruikers_id_gebruikers_id
+    FOREIGN KEY (gebruikers_id) REFERENCES domein (gebruikers_id)
+);
+
+CREATE TABLE modules(
+  module_id INTEGER NOT NULL,
+  voortgang_id INTEGER NOT NULL,
+  opdracht_id INTEGER NOT NULL,
+  chalenge_id INTEGER NOT NULL,
+  activiteit_id INTEGER NOT NULL,
+  gebruikers_id INTEGER,
+  modulenaam INTEGER,
+  beschrijving INTEGER,
+  PRIMARY KEY(
+    module_id,
+    voortgang_id,
+    opdracht_id,
+    chalenge_id,
+    activiteit_id
+  ),
+  CONSTRAINT modules_ak_1 UNIQUE(voortgang_id),
+  CONSTRAINT modules_ak_2 UNIQUE(opdracht_id),
+  CONSTRAINT modules_ak_3 UNIQUE(gebruikers_id),
+  CONSTRAINT modules_ak_4 UNIQUE(gebruikers_id),
+  CONSTRAINT modules_ak_5 UNIQUE(gebruikers_id),
+  CONSTRAINT modules_ak_6 UNIQUE(gebruikers_id),
+  CONSTRAINT module_id_module_id
+    FOREIGN KEY (module_id) REFERENCES cursussen (module_id),
+  CONSTRAINT gebruikers_id_gebruikers_id
+    FOREIGN KEY (gebruikers_id) REFERENCES cursussen (gebruikers_id)
+);
+
+CREATE TABLE core_assignment(
+  opdracht_id INTEGER NOT NULL,
+  gebruikers_id INTEGER,
+  opdrachtnaam INTEGER,
+  deadline INTEGER,
+  score INTEGER,
+  bijlage INTEGER,
+  PRIMARY KEY(opdracht_id),
+  CONSTRAINT opdracht_id_opdracht_id
+    FOREIGN KEY (opdracht_id) REFERENCES modules (opdracht_id),
+  CONSTRAINT gebruikers_id_gebruikers_id
+    FOREIGN KEY (gebruikers_id) REFERENCES modules (gebruikers_id)
+);
+
+CREATE TABLE chalenges(
+  chalenge_id INTEGER NOT NULL,
+  activiteit_id INTEGER,
+  gebruikers_id INTEGER,
+  "point/concept chalenge" INTEGER,
+  "verzamelde punten" INTEGER,
+  modules_voortgang_id INTEGER NOT NULL,
+  modules_opdracht_id INTEGER NOT NULL,
+  modules_chalenge_id INTEGER NOT NULL,
+  modules_activiteit_id INTEGER NOT NULL,
+  CONSTRAINT chalenge_id_chalenge_id
+    FOREIGN KEY
+      (
+        chalenge_id,
+        modules_voortgang_id,
+        modules_opdracht_id,
+        modules_chalenge_id,
+        modules_activiteit_id
+      )
+      REFERENCES modules
+        (
+          module_id,
+          voortgang_id,
+          opdracht_id,
+          chalenge_id,
+          activiteit_id
+        ),
+  CONSTRAINT gebruikers_id_gebruikers_id
+    FOREIGN KEY (gebruikers_id) REFERENCES modules (gebruikers_id)
+);
