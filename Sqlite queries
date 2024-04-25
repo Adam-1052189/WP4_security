@@ -62,11 +62,16 @@ CREATE TABLE activiteiten(
   modules_opdracht_id INTEGER NOT NULL,
   modules_chalenge_id INTEGER NOT NULL,
   modules_activiteit_id INTEGER NOT NULL,
-  PRIMARY KEY(activiteit_id),
-  CONSTRAINT activiteit_id_activiteit_id
+  modules_voortgang_id INTEGER NOT NULL,
+  modules_opdracht_id INTEGER NOT NULL,
+  modules_chalenge_id INTEGER NOT NULL,
+  modules_activiteit_id INTEGER NOT NULL,
+  CONSTRAINT gebruikers_id_gebruikers_id
+    FOREIGN KEY (gebruikers_id) REFERENCES modules (gebruikers_id),
+  CONSTRAINT module_id_module_id
     FOREIGN KEY
       (
-        activiteit_id,
+        module_id,
         modules_voortgang_id,
         modules_opdracht_id,
         modules_chalenge_id,
@@ -79,14 +84,12 @@ CREATE TABLE activiteiten(
           opdracht_id,
           chalenge_id,
           activiteit_id
-        ),
-  CONSTRAINT gebruikers_id_gebruikers_id
-    FOREIGN KEY (gebruikers_id) REFERENCES modules (gebruikers_id)
+        )
 );
 
 CREATE TABLE cursussen(
   "vak/cursus_id" INTEGER NOT NULL,
-  instantie_id INTEGER NOT NULL,
+  onderwijsperiode_id INTEGER,
   module_id INTEGER,
   domein_id INTEGER,
   gebruikers_id INTEGER,
@@ -94,21 +97,25 @@ CREATE TABLE cursussen(
   PRIMARY KEY("vak/cursus_id"),
   CONSTRAINT cursussen_ak_1 UNIQUE(module_id),
   CONSTRAINT cursussen_ak_2 UNIQUE(gebruikers_id),
-  CONSTRAINT instantie_id_instantie_id
-    FOREIGN KEY (instantie_id) REFERENCES instantie (instantie_id),
   CONSTRAINT gebruikers_id_gebruikers_id
-    FOREIGN KEY (gebruikers_id) REFERENCES instantie (gebruikers_id)
+    FOREIGN KEY (gebruikers_id) REFERENCES cursusjaar (gebruikers_id),
+  CONSTRAINT gebruikers_id_domein_id
+    FOREIGN KEY (domein_id) REFERENCES cursusjaar (gebruikers_id),
+  CONSTRAINT onderwijsperiode_id_onderwijsperiode_id
+    FOREIGN KEY (onderwijsperiode_id)
+      REFERENCES "Onderwijsperiode" (onderwijsperiode_id)
 );
 
-CREATE TABLE instantie(
-  instantie_id INTEGER NOT NULL,
+CREATE TABLE cursusjaar(
+  cursusjaar_id INTEGER NOT NULL,
   domein_id INTEGER NOT NULL,
   gebruikers_id INTEGER,
-  instantienaam INTEGER,
+  naam INTEGER,
   cursusjaar INTEGER,
-  onderwijsperiode INTEGER,
-  PRIMARY KEY(instantie_id),
+  PRIMARY KEY(cursusjaar_id),
   CONSTRAINT instantie_ak_1 UNIQUE(gebruikers_id),
+  CONSTRAINT instantie_ak_2 UNIQUE(gebruikers_id),
+  CONSTRAINT cursusjaar_ak_3 UNIQUE(domein_id),
   CONSTRAINT domein_id_domein_id
     FOREIGN KEY (domein_id) REFERENCES domein (domein_id),
   CONSTRAINT gebruikers_id_gebruikers_id
@@ -117,6 +124,7 @@ CREATE TABLE instantie(
 
 CREATE TABLE modules(
   module_id INTEGER NOT NULL,
+  "vak/cursus_id" INTEGER,
   voortgang_id INTEGER NOT NULL,
   opdracht_id INTEGER NOT NULL,
   chalenge_id INTEGER NOT NULL,
@@ -140,7 +148,9 @@ CREATE TABLE modules(
   CONSTRAINT module_id_module_id
     FOREIGN KEY (module_id) REFERENCES cursussen (module_id),
   CONSTRAINT gebruikers_id_gebruikers_id
-    FOREIGN KEY (gebruikers_id) REFERENCES cursussen (gebruikers_id)
+    FOREIGN KEY (gebruikers_id) REFERENCES cursussen (gebruikers_id),
+  CONSTRAINT "vak/cursus_id_vak/cursus_id"
+    FOREIGN KEY ("vak/cursus_id") REFERENCES cursussen ("vak/cursus_id")
 );
 
 CREATE TABLE core_assignment(
@@ -157,8 +167,8 @@ CREATE TABLE core_assignment(
     FOREIGN KEY (gebruikers_id) REFERENCES modules (gebruikers_id)
 );
 
-CREATE TABLE chalenges(
-  chalenge_id INTEGER NOT NULL,
+CREATE TABLE challenges(
+  challenge_id INTEGER NOT NULL,
   activiteit_id INTEGER,
   gebruikers_id INTEGER,
   "point/concept chalenge" INTEGER,
@@ -170,7 +180,7 @@ CREATE TABLE chalenges(
   CONSTRAINT chalenge_id_chalenge_id
     FOREIGN KEY
       (
-        chalenge_id,
+        challenge_id,
         modules_voortgang_id,
         modules_opdracht_id,
         modules_chalenge_id,
@@ -186,4 +196,16 @@ CREATE TABLE chalenges(
         ),
   CONSTRAINT gebruikers_id_gebruikers_id
     FOREIGN KEY (gebruikers_id) REFERENCES modules (gebruikers_id)
+);
+
+CREATE TABLE "Onderwijsperiode"(
+  onderwijsperiode_id INTEGER NOT NULL,
+  cursusjaar_id INTEGER,
+  domein_id INTEGER,
+  periode INTEGER,
+  PRIMARY KEY(onderwijsperiode_id),
+  CONSTRAINT cursusjaar_id_cursusjaar_id
+    FOREIGN KEY (cursusjaar_id) REFERENCES cursusjaar (cursusjaar_id),
+  CONSTRAINT domein_id_domein_id
+    FOREIGN KEY (domein_id) REFERENCES cursusjaar (domein_id)
 );
