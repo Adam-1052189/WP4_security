@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { StyleSheet, Text, View, TextInput, Button } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import DocentDashboardMobile from "./src/screens/DocentDashboardMobile";
+import DocentDashboard from "./components/DocentDashboard";
+import WelcomeScreen from './components/WelcomeScreen';
 
 function LoginScreen({ navigation }) {
     const [username, setUsername] = useState('');
@@ -27,17 +28,20 @@ function LoginScreen({ navigation }) {
 
 const Stack = createStackNavigator();
 
-export default function App() {
-  return (
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName="Login">
-        <Stack.Screen name="Login" component={LoginScreen} />
-        <Stack.Screen name="DocentDashboard" component={DocentDashboardMobile} />
-        {/* Andere schermen na login */}
-      </Stack.Navigator>
-    </NavigationContainer>
-  );
-}
+const App = () => {
+    return (
+        <NavigationContainer>
+            <Stack.Navigator initialRouteName="Welkom">
+                <Stack.Screen name="Welkom" component={WelcomeScreen}/>
+                <Stack.Screen name="Login" component={LoginScreen}/>
+                <Stack.Screen name="DocentDashboard" component={DocentDashboard}/>
+                {/* Andere schermen na login */}
+            </Stack.Navigator>
+        </NavigationContainer>
+    );
+};
+
+export default App;
 
 const styles = StyleSheet.create({
   container: {
