@@ -1,30 +1,32 @@
 import React, { useState } from 'react';
 import { View, TextInput, Button, StyleSheet, Text, TouchableOpacity, Linking } from 'react-native';
+import axios from 'axios';
 
 function Login({ navigation}) {
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleSubmit = async () => {
-    const response = await fetch('http://localhost:8000/api-auth/login/', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ username, password })
-    });
-    const data = await response.json();
-    console.log(data);
-  };
+const handleSubmit = async () => {
+    try {
+        const response = await axios.post('http://localhost:8000/api-auth/login/', {
+            email: email,
+            password: password
+        });
+        const token = response.data.token;
+        console.log(token);
+    } catch (error) {
+        console.log(error.response.data.error);
+    }
+};
 
   return (
     <View style={styles.container}>
       <Text style={styles.loginText}>Inloggen</Text>
       <TextInput
         style={styles.input}
-        placeholder="Gebruikersnaam"
-        onChangeText={setUsername}
-        value={username}
+        placeholder="Email"
+        onChangeText={setEmail}
+        value={email}
       />
       <TextInput
         style={styles.input}
@@ -48,6 +50,8 @@ function Login({ navigation}) {
     </View>
   );
 }
+
+// ... rest of your code ...
 
 const styles = StyleSheet.create({
   container: {

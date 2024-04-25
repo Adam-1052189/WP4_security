@@ -1,14 +1,48 @@
+from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 from django.db import models
 
-class Gebruiker(models.Model):
-    gebruikers_id = models.AutoField(primary_key=True)
+class CustomUserManager(BaseUserManager):
+    def create_user(self, email, user_type, password=None):
+        if not email:
+            raise ValueError('The Email field must be set')
+        email = self.normalize_email(email)
+        user = self.model(email=email, user_type=user_type)
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_superuser(self, email, user_type, password):
+        user = self.create_user(email, user_type, password)
+        user.is_staff = True
+        user.is_superuser = True
+        user.save(using=self._db)
+        return user
+
+class Gebruiker(AbstractBaseUser, PermissionsMixin):
+    ADMIN = 'ADMIN'
+    DOCENT = 'DOCENT'
+    STUDENT = 'STUDENT'
+    USER_TYPES = [
+        (ADMIN, 'Admin'),
+        (DOCENT, 'Docent'),
+        (STUDENT, 'Student'),
+    ]
+
+    email = models.EmailField(unique=True)
+    user_type = models.CharField(max_length=7, choices=USER_TYPES, default=STUDENT)
+    is_active = models.BooleanField(default=True)
+    is_staff = models.BooleanField(default=False)
     voortgang = models.ForeignKey('Voortgang', on_delete=models.CASCADE, null=True, related_name='gebruikers_voortgang')
-    admin_docent_student = models.CharField(max_length=50)
-    email = models.EmailField()
-    username = models.CharField(max_length=100)
-    password = models.CharField(max_length=100)
     profielfoto = models.ImageField(null=True, upload_to='profielfotos/')
     bio = models.TextField(null=True)
+
+    objects = CustomUserManager()
+
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['user_type']
+
+    def __str__(self):
+        return self.email
 
 class Notificatie(models.Model):
     notificatie_id = models.AutoField(primary_key=True)
