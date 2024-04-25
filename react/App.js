@@ -1,19 +1,22 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import DocentDashboardMobile from "./src/screens/DocentDashboardMobile";
-import Login from './components/Login';
+import DocentDashboard from "./components/DocentDashboard";
+import WelcomeScreen from './components/WelcomeScreen';
+
+
 
 const Stack = createStackNavigator();
 
-export default function App() {
+const App = () => {
   return (
-      <NavigationContainer>
-          <Stack.Navigator initialRouteName="">
-              <Stack.Screen name="Login" component={Login}/>
-              <Stack.Screen name="DocentDashboard" component={DocentDashboardMobile}/>
-              {/* Andere schermen na login */}
-          </Stack.Navigator>
-      </NavigationContainer>
-);
-}
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="Welkom">
+        <Stack.Screen name="Welkom" component={WelcomeScreen}/>
+        <Stack.Screen name="Login" component={Login} />
+        <Stack.Screen name="DocentDashboard" component={DocentDashboard} />
+        {/* Andere schermen na login */}
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+};

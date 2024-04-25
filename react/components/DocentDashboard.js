@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
-const DocentDashboardMobile = () => {
+const DocentDashboard = () => {
     return (
         <View style={styles.container}>
             <Text style={styles.title}>Docenten Dashboard</Text>
@@ -22,4 +22,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default DocentDashboardMobile;
+export default DocentDashboard;
