@@ -1,1 +1,33 @@
+# PyCharm files
 .idea/
+*.iml
+
+# Python files
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+*.eggs/
+
+# Virtual environment
+venv/
+ENV/
+
+# Django files
+*.log
+*.pot
+*.pyc
+db.sqlite3
+media
+
+# Flask files
+instance/
+.webassets-cache
+
+# Scrapy files
+.scrapy
