@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, TextInput, Button, StyleSheet, Text, TouchableOpacity, Linking } from 'react-native';
 
-function Login() {
+function Login({ navigation}) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
@@ -34,6 +34,9 @@ function Login() {
         value={password}
       />
       <Button title="Login" onPress={handleSubmit} />
+      <TouchableOpacity style={styles.loginButton} onPress={() => navigation.navigate('Registreren')}>
+        <Text style={styles.loginButtonText}>Registreren</Text>
+      </TouchableOpacity>
       <View style={styles.footer}>
         <TouchableOpacity onPress={() => Linking.openURL('tel:+310107941111')}>
           <Text style={styles.footerText}>010 - 794 1111</Text>

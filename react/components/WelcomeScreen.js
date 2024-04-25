@@ -5,9 +5,9 @@ import { View, Text, StyleSheet, Button } from 'react-native';
 const WelcomeScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Welcome bij G.L.I.T.C.H!</Text>
+      <Text style={styles.title}>Welkom bij G.L.I.T.C.H!</Text>
       <Button
-        title="Login"
+        title="Inloggen/Registreren"
         color="#d30f4c"
         onPress={() => navigation.navigate('Login')}
       />
