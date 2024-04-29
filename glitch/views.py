@@ -9,7 +9,7 @@ from rest_framework import status
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 
-User = get_user_model()
+user = get_user_model()
 
 class LoginView(APIView):
     def post(self, request, *args, **kwargs):
