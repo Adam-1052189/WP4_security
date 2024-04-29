@@ -12,15 +12,14 @@ from django.views.decorators.csrf import csrf_exempt
 user = get_user_model()
 
 class LoginView(APIView):
-    def post(self, request, *args, **kwargs):
-        email = request.data.get("email")
-        password = request.data.get("password")
-        user = authenticate(email=email, password=password)
+    def post(self, request):
+        email = request.data.get('email')
+        password = request.data.get('password')
+        user = authenticate(request, email=email, password=password)
         if user is not None:
-            token, created = Token.objects.get_or_create(user=user)
-            return Response({"token": token.key})
+            return Response({'status': 'success', 'user_type': user.user_type}, status=status.HTTP_200_OK)
         else:
-            return Response({"error": "Wrong Credentials"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'status': 'error', 'message': 'Invalid credentials'}, status=status.HTTP_400_BAD_REQUEST)
 
 @csrf_exempt
 def register(request):

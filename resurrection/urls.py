@@ -17,9 +17,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from glitch import views
+from glitch.views import LoginView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('api-auth/register/', views.register, name='register'),
+    path('glitch/', include('glitch.urls')),
+    path('login/', LoginView.as_view(), name='login'),
 ]

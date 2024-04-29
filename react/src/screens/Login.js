@@ -1,61 +1,42 @@
-import React, {useState} from 'react';
-import {View, TextInput, Button, StyleSheet, Text, TouchableOpacity, Linking} from 'react-native';
-import axios from 'axios';
+import React, { useState } from 'react';
+import { Button, TextInput, View, StyleSheet, Text, TouchableOpacity, Linking, Alert } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
+const Login = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const navigation = useNavigation();
 
-function Login({navigation}) {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-
-    const handleSubmit = async () => {
-        try {
-            const response = await fetch('http://localhost:8000/api-auth/login/', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({email, password}),
-                credentials: 'include',
-            });
-
-            const data = await response.json();
-
-            if (response.ok) {
-                console.log(`ingelogd: ${email}, en wachtwoord: ${password}`);
-            } else {
-                console.log(' mislukt:', data);
-            }
-        } catch (error) {
-            console.error('Er is een fout opgetreden:', error);
+  const handleLogin = () => {
+    fetch('http://localhost:8000/login/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email: email,
+        password: password,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.status === 'success') {
+          Alert.alert('Logged in successfully');
+          if (data.user_type === 'DOCENT') {
+            navigation.navigate('DocentDashboard');
+          } else if (data.user_type === 'STUDENT') {
+            navigation.navigate('StudentDashboard');
+          }
+        } else {
+          Alert.alert('Error', data.message);
         }
-    };
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+  };
 
-    // if (!response.ok) {
-    //     throw new Error(`HTTP error! status: ${response.status}`);
-    // }
-
-//     const token = data.token;
-//     const userType = data.user_type; // U moet ervoor zorgen dat uw server het user_type retourneert in de response
-//     console.log(token);
-//
-//     // Navigeer naar het juiste dashboard op basis van het user_type
-//     if (userType === 'Docent') {
-//         navigation.navigate('DocentDashboard');
-//     } else if (userType === 'Student') {
-//         navigation.navigate('StudentDashboard');
-//     } else {
-//         console.log('Onbekend user_type: ', userType);
-//     }
-// }
-//
-// catch
-// (error)
-// {
-//     console.log(error.message);
-// }
-// }
-// ;
-return (
+  return (
     <View style={styles.container}>
         <Text style={styles.loginText}>Inloggen</Text>
         <TextInput
@@ -71,7 +52,7 @@ return (
             onChangeText={setPassword}
             value={password}
         />
-        <Button title="Login" onPress={handleSubmit}/>
+        <Button title="Login" onPress={handleLogin}/>
         <TouchableOpacity style={styles.loginButton} onPress={() => navigation.navigate('Registreren')}>
             <Text style={styles.loginButtonText}>Registreren</Text>
         </TouchableOpacity>
@@ -84,10 +65,8 @@ return (
             </TouchableOpacity>
         </View>
     </View>
-);
-}
-
-// ... rest of your code ...
+  );
+};
 
 const styles = StyleSheet.create({
     container: {

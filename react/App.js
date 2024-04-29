@@ -3,7 +3,7 @@ import {NavigationContainer} from '@react-navigation/native'
 import {createStackNavigator} from '@react-navigation/stack'
 import DocentDashboard from "./components/DocentDashboard"
 import WelcomeScreen from './components/WelcomeScreen'
-import Login from "./components/Login"
+import Login from "./src/screens/Login"
 import RegisterScreen from "./src/screens/RegisterScreen"
 import StudentDashboard from "./components/StudentDashboard"
 
