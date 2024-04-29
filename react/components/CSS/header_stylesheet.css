@@ -1,0 +1,19 @@
+header nav ul {
+    list-style-type: none;
+    padding: 0;
+    background-color: #334CFF;
+    color: white;
+}
+
+header nav ul li {
+    display: inline;
+    margin-right: 20px;
+    color: white;
+}
+header nav ul li a{
+    color: white;
+}
+
+header nav ul li:last-child {
+    margin-right: 0;
+}
