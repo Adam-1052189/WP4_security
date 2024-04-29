@@ -1,71 +1,85 @@
-import React, { useState } from 'react';
-import { Button, TextInput, View, StyleSheet, Text, TouchableOpacity, Linking, Alert } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import React, {useState} from 'react';
+import Toast from "react-native-toast-message";
+import {Button, TextInput, View, StyleSheet, Text, TouchableOpacity, Linking, Alert} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 
 const Login = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const navigation = useNavigation();
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const navigation = useNavigation();
 
-  const handleLogin = () => {
-    fetch('http://localhost:8000/login/', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        email: email,
-        password: password,
-      }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.status === 'success') {
-          Alert.alert('Logged in successfully');
-          if (data.user_type === 'DOCENT') {
-            navigation.navigate('DocentDashboard');
-          } else if (data.user_type === 'STUDENT') {
-            navigation.navigate('StudentDashboard');
-          }
-        } else {
-          Alert.alert('Error', data.message);
+    const handleLogin = () => {
+  fetch('http://localhost:8000/login/', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      email: email,
+      password: password,
+    }),
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.status === 'success') {
+        Toast.show({
+          type: 'success',
+          text1: 'Succes',
+          text2: 'Je bent succesvol aangemeld',
+        });
+        if (data.user_type === 'DOCENT') {
+          navigation.navigate('DocentDashboard');
+        } else if (data.user_type === 'STUDENT') {
+          navigation.navigate('StudentDashboard');
         }
-      })
-      .catch((error) => {
-        console.error('Error:', error);
+      } else {
+        Toast.show({
+          type: 'error',
+          text1: 'Fout',
+          text2: 'Onjuiste aanmeldgegevens',
+        });
+      }
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+      Toast.show({
+        type: 'error',
+        text1: 'Fout',
+        text2: 'Er is een fout opgetreden tijdens het aanmelden',
       });
-  };
+    });
+};
 
-  return (
-    <View style={styles.container}>
-        <Text style={styles.loginText}>Inloggen</Text>
-        <TextInput
-            style={styles.input}
-            placeholder="Email"
-            onChangeText={setEmail}
-            value={email}
-        />
-        <TextInput
-            style={styles.input}
-            placeholder="Wachtwoord"
-            secureTextEntry
-            onChangeText={setPassword}
-            value={password}
-        />
-        <Button title="Login" onPress={handleLogin}/>
-        <TouchableOpacity style={styles.loginButton} onPress={() => navigation.navigate('Registreren')}>
-            <Text style={styles.loginButtonText}>Registreren</Text>
-        </TouchableOpacity>
-        <View style={styles.footer}>
-            <TouchableOpacity onPress={() => Linking.openURL('tel:+310107941111')}>
-                <Text style={styles.footerText}>010 - 794 1111</Text>
+    return (
+        <View style={styles.container}>
+            <Text style={styles.loginText}>Inloggen</Text>
+            <TextInput
+                style={styles.input}
+                placeholder="Email"
+                onChangeText={setEmail}
+                value={email}
+            />
+            <TextInput
+                style={styles.input}
+                placeholder="Wachtwoord"
+                secureTextEntry
+                onChangeText={setPassword}
+                value={password}
+            />
+            <Button title="Login" onPress={handleLogin}/>
+            <TouchableOpacity style={styles.loginButton} onPress={() => navigation.navigate('Registreren')}>
+                <Text style={styles.loginButtonText}>Registreren</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => Linking.openURL('mailto:service@hr.nl')}>
-                <Text style={styles.footerText}>service@hr.nl</Text>
-            </TouchableOpacity>
+            <View style={styles.footer}>
+                <TouchableOpacity onPress={() => Linking.openURL('tel:+310107941111')}>
+                    <Text style={styles.footerText}>010 - 794 1111</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => Linking.openURL('mailto:service@hr.nl')}>
+                    <Text style={styles.footerText}>service@hr.nl</Text>
+                </TouchableOpacity>
+            </View>
         </View>
-    </View>
-  );
+    );
 };
 
 const styles = StyleSheet.create({

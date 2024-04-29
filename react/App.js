@@ -6,8 +6,7 @@ import WelcomeScreen from './components/WelcomeScreen'
 import Login from "./src/screens/Login"
 import RegisterScreen from "./src/screens/RegisterScreen"
 import StudentDashboard from "./components/StudentDashboard"
-
-
+import Toast from 'react-native-toast-message';
 
 const Stack = createStackNavigator();
 
@@ -70,6 +69,7 @@ const App = () => {
                 <Stack.Screen name="StudentDashboard" component={StudentDashboard}/>
                 {/* Andere schermen na login */}
             </Stack.Navigator>
+            <Toast ref={(ref) => Toast.setRef(ref)} /> {}
         </NavigationContainer>
     );
 };
