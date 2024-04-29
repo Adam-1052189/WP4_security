@@ -1,15 +1,13 @@
 import json
 from django.contrib.auth import get_user_model, authenticate
-from django.contrib.auth.models import User
 from django.contrib.auth.hashers import make_password
-from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 
-user = get_user_model()
+User = get_user_model()
 
 class LoginView(APIView):
     def post(self, request):
