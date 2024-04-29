@@ -30,4 +30,4 @@ instance/
 .webassets-cache
 
 # Scrapy files
-.scrapy
+.scrapy!/db.sqlite3

@@ -2,21 +2,39 @@ import React, { useState } from 'react';
 import { View, TextInput, Button, StyleSheet } from 'react-native';
 
 function RegisterScreen() {
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   const handleSubmit = async () => {
-    // registratielogica hier
-    // console.log(`Geregistreerd met gebruikersnaam: ${username}, en wachtwoord: ${password}`);
+      try {
+          const response = await fetch('http://localhost:8000/api-auth/api-auth/register/', {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({email, password})
+          });
+
+          const data = await response.json();
+
+          if (response.ok) {
+              console.log(`Geregistreerd met email: ${email}, en wachtwoord: ${password}`);
+          } else {
+              console.log('Registratie mislukt:', data);
+          }
+      } catch (error) {
+          console.error('Er is een fout opgetreden:', error);
+      }
   };
+
 
   return (
     <View style={styles.container}>
       <TextInput
         style={styles.input}
         placeholder="Studentnummer of personeelscode"
-        onChangeText={setUsername}
-        value={username}
+        onChangeText={setEmail}
+        value={email}
       />
       <TextInput
         style={styles.input}
