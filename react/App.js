@@ -1,10 +1,12 @@
-import React from 'react';
-import {NavigationContainer} from '@react-navigation/native';
-import {createStackNavigator} from '@react-navigation/stack';
-import DocentDashboard from "./components/DocentDashboard";
-import WelcomeScreen from './components/WelcomeScreen';
-import Login from "./components/Login";
-import RegisterScreen from "./src/screens/RegisterScreen";
+import React from 'react'
+import {NavigationContainer} from '@react-navigation/native'
+import {createStackNavigator} from '@react-navigation/stack'
+import DocentDashboard from "./components/DocentDashboard"
+import WelcomeScreen from './components/WelcomeScreen'
+import Login from "./components/Login"
+import RegisterScreen from "./src/screens/RegisterScreen"
+import StudentDashboard from "./components/StudentDashboard"
+
 
 
 const Stack = createStackNavigator();
@@ -65,6 +67,7 @@ const App = () => {
                     }}
                 />
                 <Stack.Screen name="Registreren" component={RegisterScreen}/>
+                <Stack.Screen name="StudentDashboard" component={StudentDashboard}/>
                 {/* Andere schermen na login */}
             </Stack.Navigator>
         </NavigationContainer>
