@@ -18,6 +18,12 @@ class CustomUserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
+    def create_docent(self, email, password):
+        user = self.create_user(email, 'DOCENT', password)
+        user.is_staff = True
+        user.save(using=self._db)
+        return user
+
 class Gebruiker(AbstractBaseUser, PermissionsMixin):
     ADMIN = 'ADMIN'
     DOCENT = 'DOCENT'

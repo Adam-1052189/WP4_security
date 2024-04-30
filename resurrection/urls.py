@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from glitch import views
-from glitch.views import LoginView
+from glitch.views import LoginView, register_docent
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -25,4 +25,5 @@ urlpatterns = [
     path('api-auth/register/', views.register, name='register'),
     path('glitch/', include('glitch.urls')),
     path('login/', LoginView.as_view(), name='login'),
+    path('api-auth/register-docent/', register_docent, name='register_docent'),
 ]

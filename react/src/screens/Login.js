@@ -60,6 +60,7 @@ const Login = () => {
                 placeholder="Email"
                 onChangeText={setEmail}
                 value={email}
+                onSubmitEditing={handleLogin}
             />
             <TextInput
                 style={styles.input}

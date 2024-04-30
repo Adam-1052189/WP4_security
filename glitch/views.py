@@ -36,3 +36,20 @@ def register(request):
         user.save()
 
         return JsonResponse({'success': 'Gebruiker succesvol geregistreerd'}, status=201)
+
+@csrf_exempt
+def register_docent(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        email = data.get('email', '')
+        password = data.get('password', '')
+
+        if not email or not password:
+            return JsonResponse({'error': 'Vul alle velden in'}, status=400)
+
+        if User.objects.filter(email=email).exists():
+            return JsonResponse({'error': 'Email bestaat al'}, status=400)
+
+        user = User.objects.create_docent(email=email, password=password)
+
+        return JsonResponse({'success': 'Docent succesvol geregistreerd'}, status=201)
