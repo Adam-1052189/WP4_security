@@ -48,6 +48,7 @@ function RegisterScreen() {
         placeholder="Studentnummer of personeelscode"
         onChangeText={setEmail}
         value={email}
+        onSubmitEditing={handleSubmit}
       />
       <TextInput
         style={styles.input}
@@ -55,6 +56,7 @@ function RegisterScreen() {
         secureTextEntry
         onChangeText={setPassword}
         value={password}
+        onSubmitEditing={handleSubmit}
       />
       <Button
           title="Registreer" onPress={handleSubmit}
