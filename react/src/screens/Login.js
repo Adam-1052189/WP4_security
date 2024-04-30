@@ -67,6 +67,7 @@ const Login = () => {
                 secureTextEntry
                 onChangeText={setPassword}
                 value={password}
+                onSubmitEditing={handleLogin}
             />
             <Button title="Login" onPress={handleLogin}/>
             <TouchableOpacity style={styles.loginButton} onPress={() => navigation.navigate('Registreren')}>
