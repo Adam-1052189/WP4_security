@@ -3,9 +3,11 @@ from django.contrib.auth import get_user_model, authenticate
 from django.contrib.auth.hashers import make_password
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework import status
+from rest_framework import status, generics
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from .models import Domein
+from .serializers import DomeinSerializer
 
 User = get_user_model()
 
@@ -36,6 +38,12 @@ def register(request):
         user.save()
 
         return JsonResponse({'success': 'Gebruiker succesvol geregistreerd'}, status=201)
+
+
+
+class DomeinList(generics.ListAPIView):
+    queryset = Domein.objects.all()
+    serializer_class = DomeinSerializer
 
 @csrf_exempt
 def register_docent(request):
