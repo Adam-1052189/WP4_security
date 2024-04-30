@@ -1,5 +1,6 @@
 from django.urls import path
-from . import views
+from .views import DomeinList
 
 urlpatterns = [
+    path('domeinen/', DomeinList.as_view(), name='domeinen'),
 ]
