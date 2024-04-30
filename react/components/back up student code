@@ -1,0 +1,43 @@
+const StudentScreen = ({ navigation }) => {
+  return (
+    <View style={styles.container}>
+      <Text style={styles.title}>student</Text>
+      <Button
+        title="student"
+        color="#d30f4c"
+        onPress={() => navigation.navigate('StudentDashboard')}
+      />
+    </View>
+  );
+};
+
+<Stack.Screen
+                    name="StudentScreen"
+                    component={StudentScreen}
+                    options={{
+                        title: 'Studenten Scherm',
+                        headerStyle: {
+                            borderBottomColor: '#fff7ea',
+                            backgroundColor: '#fff7ea',
+                        },
+                        headerTintColor: '#001e48',
+                        headerTitleStyle: {
+                            fontSize: 24,
+                            fontWeight: 'bold',
+                            fontFamily: 'Poppins-extra-bold',
+                        },
+                    }}
+                />
+
+const StudentScreen = ({ navigation }) => {
+  return (
+    <View style={styles.container}>
+      <Text style={styles.title}>student</Text>
+      <Button
+        title="student"
+        color="#d30f4c"
+        onPress={() => navigation.navigate('StudentDashboard')}
+      />
+    </View>
+  );
+};

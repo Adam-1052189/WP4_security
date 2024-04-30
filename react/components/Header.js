@@ -1,6 +1,7 @@
 import React from "react"
 import "./CSS/header_stylesheet"
-import "./Images/Glitch_logo.png"
+import {View, Text, Image} from "react-native"
+const logoImg = require("./Images/Glitch_logo.png")
 
 function Header() {
     return (
@@ -13,6 +14,7 @@ function Header() {
                     <li><a href="/meldingen">meldingen</a></li>
                     <li><a href="/profiel">profiel</a></li>
                 </ul>
+                <Image source={logoImg}/>
             </nav>
         </header>
 
