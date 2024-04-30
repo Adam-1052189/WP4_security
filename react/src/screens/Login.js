@@ -31,6 +31,8 @@ const Login = () => {
           navigation.navigate('DocentDashboard');
         } else if (data.user_type === 'STUDENT') {
           navigation.navigate('StudentDashboard');
+        } else if (data.user_type === 'ADMIN') {
+          navigation.navigate('AdminDashboard');
         }
       } else {
         Toast.show({
@@ -65,6 +67,7 @@ const Login = () => {
                 secureTextEntry
                 onChangeText={setPassword}
                 value={password}
+                onSubmitEditing={handleLogin}
             />
             <Button title="Login" onPress={handleLogin}/>
             <TouchableOpacity style={styles.loginButton} onPress={() => navigation.navigate('Registreren')}>
