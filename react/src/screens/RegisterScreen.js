@@ -1,32 +1,45 @@
 import React, { useState } from 'react';
-import { View, TextInput, Button, StyleSheet } from 'react-native';
+import { View, TextInput, Button, StyleSheet } from 'react-native'
+import Toast from "react-native-toast-message";
 
 function RegisterScreen() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   const handleSubmit = async () => {
-      try {
-          const response = await fetch('http://localhost:8000/api-auth/register/', {
-              method: 'POST',
-              headers: {
-                  'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({email, password})
-          });
+    try {
+        const response = await fetch('http://localhost:8000/api-auth/register/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({email, password})
+        });
 
-          const data = await response.json();
+        const data = await response.json();
 
-          if (response.ok) {
-              console.log(`Geregistreerd met email: ${email}, en wachtwoord: ${password}`);
-          } else {
-              console.log('Registratie mislukt:', data);
-          }
-      } catch (error) {
-          console.error('Er is een fout opgetreden:', error);
-      }
-  };
-
+        if (response.ok) {
+            Toast.show({
+                type: 'success',
+                text1: 'Succes',
+                text2: 'Je bent succesvol geregistreerd',
+            });
+        } else {
+            Toast.show({
+                type: 'error',
+                text1: 'Fout',
+                text2: 'Registratie mislukt',
+            });
+        }
+    } catch (error) {
+        console.error('Er is een fout opgetreden:', error);
+        Toast.show({
+            type: 'error',
+            text1: 'Fout',
+            text2: 'Er is een fout opgetreden tijdens het registreren',
+        });
+    }
+};
 
   return (
     <View style={styles.container}>
