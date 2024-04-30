@@ -7,6 +7,7 @@ import Login from "./src/screens/Login"
 import RegisterScreen from "./src/screens/RegisterScreen"
 import StudentDashboard from "./components/StudentDashboard"
 import Toast from 'react-native-toast-message';
+import DocentRegister from "./src/screens/AdminDashboard";
 
 const Stack = createStackNavigator();
 
@@ -67,6 +68,7 @@ const App = () => {
                 />
                 <Stack.Screen name="Registreren" component={RegisterScreen}/>
                 <Stack.Screen name="StudentDashboard" component={StudentDashboard}/>
+                <Stack.Screen name={"AdminDashboard"} component={DocentRegister}/>
                 {/* Andere schermen na login */}
             </Stack.Navigator>
             <Toast ref={(ref) => Toast.setRef(ref)} /> {}
