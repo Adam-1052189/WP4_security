@@ -49,24 +49,27 @@ function AdminDashboard() {
 
     return (
         <View style={styles.container}>
-            <TextInput
-                style={styles.input}
-                placeholder="Email"
-                onChangeText={setEmail}
-                value={email}
-                onSubmitEditing={handleSubmit}
-            />
-            <TextInput
-                style={styles.input}
-                placeholder="Wachtwoord"
-                secureTextEntry
-                onChangeText={setPassword}
-                value={password}
-                onSubmitEditing={handleSubmit}
-            />
-            <Button
-                title="Maak Docent" onPress={handleSubmit}
-                color="#d30f4c"/>
+            <View style={styles.formContainer}>
+                <Text>Maak een nieuw docent aan:</Text>
+                <TextInput
+                    style={styles.input}
+                    placeholder="Email"
+                    onChangeText={setEmail}
+                    value={email}
+                    onSubmitEditing={handleSubmit}
+                />
+                <TextInput
+                    style={styles.input}
+                    placeholder="Wachtwoord"
+                    secureTextEntry
+                    onChangeText={setPassword}
+                    value={password}
+                    onSubmitEditing={handleSubmit}
+                />
+                <Button
+                    title="Maak Docent" onPress={handleSubmit}
+                    color="#d30f4c"/>
+            </View>
         </View>
     );
 }
@@ -74,9 +77,16 @@ function AdminDashboard() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'center',
+        justifyContent: 'flex-start',
+        alignItems: 'flex-start',
         padding: 10,
         backgroundColor: '#fff7ea',
+    },
+    formContainer: {
+        width: '50%',
+        padding: 20,
+        borderWidth: 1,
+        borderRadius: 10,
     },
     input: {
         height: 40,

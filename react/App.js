@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useEffect, useState} from 'react'
 import {NavigationContainer} from '@react-navigation/native'
 import {createStackNavigator} from '@react-navigation/stack'
 import DocentDashboard from "./src/screens/DocentDashboard"
@@ -8,10 +8,25 @@ import RegisterScreen from "./src/screens/RegisterScreen"
 import StudentDashboard from "./components/StudentDashboard"
 import Toast from 'react-native-toast-message';
 import DocentRegister from "./src/screens/AdminDashboard";
+import * as Font from 'expo-font';
 
 const Stack = createStackNavigator();
 
 const App = () => {
+    const [fontLoaded, setFontLoaded] = useState(false);
+
+    useEffect(() => {
+        async function loadFonts() {
+            await Font.loadAsync({
+                'Poppins-extra-bold': require('./assets/fonts/Poppins-ExtraBold.ttf'),
+            });
+            setFontLoaded(true);
+        }
+        loadFonts();
+    }, []);
+    if (!fontLoaded) {
+        return null;
+    }
     return (
         <NavigationContainer>
             <Stack.Navigator initialRouteName="Welkom">
@@ -71,7 +86,7 @@ const App = () => {
                 <Stack.Screen name={"AdminDashboard"} component={DocentRegister}/>
                 {/* Andere schermen na login */}
             </Stack.Navigator>
-            <Toast ref={(ref) => Toast.setRef(ref)} /> {}
+            <Toast />
         </NavigationContainer>
     );
 };
