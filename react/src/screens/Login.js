@@ -1,12 +1,28 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import Toast from "react-native-toast-message";
 import {Button, TextInput, View, StyleSheet, Text, TouchableOpacity, Linking, Alert} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
+import * as Font from 'expo-font';
 
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [fontLoaded, setFontLoaded] = useState(false);
     const navigation = useNavigation();
+
+    useEffect(() => {
+        async function loadFonts() {
+            await Font.loadAsync({
+                'Poppins': require('../assets/fonts/Poppins-Regular.ttf'),
+            });
+            setFontLoaded(true);
+        }
+        loadFonts();
+    }, []);
+
+    if (!fontLoaded) {
+        return null;
+    }
 
     const handleLogin = () => {
   fetch('http://localhost:8000/login/', {
@@ -96,7 +112,7 @@ const styles = StyleSheet.create({
     loginText: {
         color: '#001e48',
         fontSize: 24,
-        fontFamily: 'Poppins',
+        fontFamily: 'poppins',
         textAlign: 'center',
         marginBottom: 20,
         marginTop: 50,

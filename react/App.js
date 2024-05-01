@@ -18,7 +18,7 @@ const App = () => {
     useEffect(() => {
         async function loadFonts() {
             await Font.loadAsync({
-                'Poppins-extra-bold': require('./assets/fonts/Poppins-ExtraBold.ttf'),
+                'Poppins-extra-bold': require('./src/assets/fonts/Poppins-ExtraBold.ttf'),
             });
             setFontLoaded(true);
         }
