@@ -1,10 +1,27 @@
-import React, {useState} from 'react';
-import {View, TextInput, Button, StyleSheet} from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {View, TextInput, Button, StyleSheet, Text, FlatList} from 'react-native';
 import Toast from 'react-native-toast-message';
 
 function AdminDashboard() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [users, setUsers] = useState([]);
+
+    useEffect(() => {
+        fetchUsers();
+    }, []);
+
+    const fetchUsers = async () => {
+        try {
+            const response = await fetch('http://localhost:8000/glitch/gebruikers');
+            let data = await response.json();
+            data = JSON.parse(data);
+            data = data.map(item => item.fields);
+            setUsers(data);
+        } catch (error) {
+            console.error(error);
+        }
+    };
 
     const handleSubmit = async () => {
         try {
@@ -70,6 +87,19 @@ function AdminDashboard() {
                     title="Maak Docent" onPress={handleSubmit}
                     color="#d30f4c"/>
             </View>
+            <View style={styles.gebruikerListContainer}>
+                <Text>Gebruikers:</Text>
+                {users.map((user, index) => (
+                    <View key={index}>
+                        <Text>{user.id}</Text>
+                        <Text>{user.email}</Text>
+                        <Text>{user.is_superuser}</Text>
+                        <Text>{user.user_type}</Text>
+                        <Text>{user.is_staff}</Text>
+                        <Text>{user.is_active}</Text>
+                    </View>
+                ))}
+            </View>
         </View>
     );
 }
@@ -93,6 +123,10 @@ const styles = StyleSheet.create({
         margin: 12,
         borderWidth: 1,
         padding: 10,
+    },
+    gebruikerListContainer: {
+        flex: 1,
+        marginTop: 20,
     },
 });
 

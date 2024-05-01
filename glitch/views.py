@@ -8,6 +8,9 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from .models import Domein
 from .serializers import DomeinSerializer
+from django.views import View
+from django.core import serializers
+from .models import Gebruiker
 
 User = get_user_model()
 
@@ -61,3 +64,9 @@ def register_docent(request):
         user = User.objects.create_docent(email=email, password=password)
 
         return JsonResponse({'success': 'Docent succesvol geregistreerd'}, status=201)
+
+class GebruikerList(View):
+    def get(self, request):
+        gebruikers = Gebruiker.objects.all()
+        data = serializers.serialize('json', gebruikers)
+        return JsonResponse(data, safe=False)
