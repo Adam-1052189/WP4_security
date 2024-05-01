@@ -7,6 +7,11 @@ function StudentDashboard() {
     return (
         <div>
             <Header />
+                <div>
+                    <p>hier komt te staan welkom naam gebruiker</p>
+                    <p>hier staan de vakken</p>
+                </div>
+
             <Footer />
         </div>
     )

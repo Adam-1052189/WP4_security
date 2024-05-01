@@ -5,7 +5,7 @@ import DocentDashboard from "./src/screens/DocentDashboard"
 import WelcomeScreen from './src/screens/WelcomeScreen'
 import Login from "./src/screens/Login"
 import RegisterScreen from "./src/screens/RegisterScreen"
-import StudentDashboard from "./components/StudentDashboard"
+import StudentDashboard from "./src/screens/StudentDashboard"
 import Toast from 'react-native-toast-message';
 import DocentRegister from "./src/screens/AdminDashboard";
 import * as Font from 'expo-font';
