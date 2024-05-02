@@ -15,6 +15,30 @@ const Stack = createStackNavigator();
 const App = () => {
     const [fontLoaded, setFontLoaded] = useState(false);
 
+    const [gebruiker, setGebruiker] = useState(null);
+    const [gebruikerId, setGebruikerId] = useState(null);
+
+    useEffect(() => {
+        async function fetchUser() {
+            try {
+                const loggedInGebruikerId = await Login();
+                setGebruikerId(loggedInGebruikerId);
+
+                const response = await fetch(`http://localhost:8000/glitch/gebruikers/${loggedInGebruikerId}/`);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                setGebruiker(data);
+            } catch (error) {
+                console.error('Er is een fout opgetreden: ' + error);
+            }
+            }
+
+
+        fetchUser();
+    }, []);
+
     useEffect(() => {
         async function loadFonts() {
             await Font.loadAsync({
@@ -27,6 +51,8 @@ const App = () => {
     if (!fontLoaded) {
         return null;
     }
+
+
     return (
         <NavigationContainer>
             <Stack.Navigator initialRouteName="Welkom">
@@ -68,7 +94,7 @@ const App = () => {
                     name="DocentDashboard"
                     component={DocentDashboard}
                     options={{
-                        title: 'Docenten Dashboard',
+                        title: gebruiker ? `${gebruiker.voornaam}, ${gebruiker.achternaam}` : 'Docenten Dashboard',
                         headerStyle: {
                             borderBottomColor: '#fff7ea',
                             backgroundColor: '#fff7ea',

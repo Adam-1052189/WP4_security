@@ -34,6 +34,8 @@ class Gebruiker(AbstractBaseUser, PermissionsMixin):
         (STUDENT, 'Student'),
     ]
 
+    voornaam = models.CharField(max_length=32)
+    achternaam = models.CharField(max_length=32)
     email = models.EmailField(unique=True)
     user_type = models.CharField(max_length=7, choices=USER_TYPES, default=STUDENT)
     is_active = models.BooleanField(default=True)
