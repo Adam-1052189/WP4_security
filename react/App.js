@@ -16,29 +16,6 @@ const Stack = createStackNavigator();
 const App = () => {
     const [fontLoaded, setFontLoaded] = useState(false);
 
-    const [gebruiker, setGebruiker] = useState(null);
-    const [gebruikerId, setGebruikerId] = useState(null);
-
-    useEffect(() => {
-        async function fetchUser() {
-            try {
-                const loggedInGebruikerId = await Login();
-                setGebruikerId(loggedInGebruikerId);
-
-                const response = await fetch(`http://localhost:8000/glitch/gebruikers/${loggedInGebruikerId}/`);
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                const data = await response.json();
-                setGebruiker(data);
-            } catch (error) {
-                console.error('Er is een fout opgetreden: ' + error);
-            }
-            }
-
-
-        fetchUser();
-    }, []);
 
     useEffect(() => {
         async function loadFonts() {
@@ -94,8 +71,8 @@ const App = () => {
                 <Stack.Screen
                     name="DocentDashboard"
                     component={DocentDashboard}
-                    options={{
-                        title: gebruiker ? `${gebruiker.voornaam}, ${gebruiker.achternaam}` : 'Docenten Dashboard',
+                    options={({route}) => ({
+                        title: route.params ? `${route.params.voornaam}, ${route.params.achternaam}` : 'Docenten Dashboard',
                         headerStyle: {
                             borderBottomColor: '#fff7ea',
                             backgroundColor: '#fff7ea',
@@ -106,12 +83,27 @@ const App = () => {
                             fontWeight: 'bold',
                             fontFamily: 'Poppins-extra-bold',
                         },
-                    }}
+                    })}
                 />
                 <Stack.Screen name="Registreren" component={RegisterScreen}/>
                 <Stack.Screen name="StudentDashboard" component={StudentDashboard}/>
-                <Stack.Screen name={"AdminDashboard"} component={AdminDashboard}/>
-                {/* Andere schermen na login */}
+                <Stack.Screen
+                    name={"AdminDashboard"}
+                    component={AdminDashboard}
+                    options={({route}) => ({
+                        title: route.params ? `${route.params.voornaam}, ${route.params.achternaam}` : 'Admin Dashboard',
+                        headerStyle: {
+                            borderBottomColor: '#fff7ea',
+                            backgroundColor: '#fff7ea',
+                        },
+                        headerTintColor: '#001e48',
+                        headerTitleStyle: {
+                            fontSize: 24,
+                            fontWeight: 'bold',
+                            fontFamily: 'Poppins-extra-bold',
+                        },
+                    })}
+                />
             </Stack.Navigator>
             <Toast />
         </NavigationContainer>
