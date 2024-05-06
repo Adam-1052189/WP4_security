@@ -104,11 +104,13 @@ function AdminDashboard() {
                     title="Maak Docent" onPress={handleSubmit}
                     color="#d30f4c"/>
             </View>
-            <Button
-                title="Ga naar Gebruikerslijst"
+            <TouchableOpacity
+                style={styles.buttonContainer}
                 onPress={() => setShowUserList(!showUserList)}
-            />
-            {showUserList && <GebruikerList gebruikers={users} />}
+            >
+                <Text style={styles.buttonText}>Ga naar Gebruikerslijst</Text>
+            </TouchableOpacity>
+            {showUserList && <GebruikerList gebruikers={users}/>}
         </View>
     );
 }
@@ -116,8 +118,8 @@ function AdminDashboard() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'flex-start',
-        alignItems: 'flex-start',
+        justifyContent: 'center-top',
+        alignItems: 'center',
         padding: 10,
         backgroundColor: '#fff7ea',
     },
@@ -126,6 +128,7 @@ const styles = StyleSheet.create({
         padding: 20,
         borderWidth: 1,
         borderRadius: 10,
+        marginTop: 50,
     },
     input: {
         height: 40,
@@ -148,6 +151,18 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         marginBottom: 20,
     },
+    buttonContainer: {
+        marginTop: 20,
+        backgroundColor: "#2196F3FF",
+        padding: 9,
+        alignItems: 'center',
+        borderRadius: 5,
+    },
+    buttonText: {
+        color: 'white',
+        fontSize: 16,
+        fontWeight: 'bold',
+    }
 });
 
 export default AdminDashboard;
