@@ -2,11 +2,11 @@ from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseU
 from django.db import models
 
 class CustomUserManager(BaseUserManager):
-    def create_user(self, email, user_type, password=None):
+    def create_user(self, email, user_type, password=None, voornaam=None, achternaam=None):
         if not email:
             raise ValueError('The Email field must be set')
         email = self.normalize_email(email)
-        user = self.model(email=email, user_type=user_type)
+        user = self.model(email=email, user_type=user_type, voornaam=voornaam, achternaam=achternaam)
         user.set_password(password)
         user.save(using=self._db)
         return user

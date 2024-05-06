@@ -9,19 +9,25 @@ class Command(BaseCommand):
         Gebruiker.objects.create_user(
             email='admin@hr.nl',
             user_type=Gebruiker.ADMIN,
-            password='admin'
+            password='admin',
+            voornaam='Admin',
+            achternaam='Admin'
         )
 
         # Create a docent user
         Gebruiker.objects.create_user(
             email='docent@hr.nl',
             user_type=Gebruiker.DOCENT,
-            password='docent'
+            password='docent',
+            voornaam='Docent',
+            achternaam='Docent'
         )
 
         # Create a student user
         Gebruiker.objects.create_user(
             email='student@hr.nl',
             user_type=Gebruiker.STUDENT,
-            password='student'
+            password='student',
+            voornaam='Student',
+            achternaam='Student'
         )
