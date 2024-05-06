@@ -5,6 +5,8 @@ import Toast from "react-native-toast-message";
 function RegisterScreen() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [voornaam, setVoornaam] = useState('');
+  const [achternaam, setAchternaam] = useState('');
 
   const handleSubmit = async () => {
     try {
@@ -13,18 +15,20 @@ function RegisterScreen() {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({email, password})
+            body: JSON.stringify({email, password, voornaam, achternaam})
         });
 
         const data = await response.json();
 
         if (response.ok) {
+            console.log('Succesvol geregistreerd:', data);
             Toast.show({
                 type: 'success',
                 text1: 'Succes',
                 text2: 'Je bent succesvol geregistreerd',
             });
         } else {
+            console.log('Er is een fout opgetreden:', data);
             Toast.show({
                 type: 'error',
                 text1: 'Fout',
@@ -43,6 +47,18 @@ function RegisterScreen() {
 
   return (
     <View style={styles.container}>
+      <TextInput
+        style={styles.input}
+        placeholder="Voornaam"
+        onChangeText={setVoornaam}
+        value={voornaam}
+      />
+      <TextInput
+          style={styles.input}
+          placeholder="Achternaam"
+          onChangeText={setAchternaam}
+          value={achternaam}
+      />
       <TextInput
         style={styles.input}
         placeholder="Studentnummer of personeelscode"
