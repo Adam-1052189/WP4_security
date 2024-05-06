@@ -5,6 +5,8 @@ import Toast from 'react-native-toast-message';
 function AdminDashboard() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [voornaam, setVoornaam] = useState('');
+    const [achternaam, setAchternaam] = useState('');
     const [users, setUsers] = useState([]);
     const [filter, setFilter] = useState('all');
 
@@ -51,6 +53,8 @@ function AdminDashboard() {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
+                    voornaam,
+                    achternaam,
                     email,
                     password
                 })
@@ -59,7 +63,7 @@ function AdminDashboard() {
             const data = await response.json();
 
             if (response.ok) {
-                console.log(`Docent aangemaakt met email: ${email}, en wachtwoord: ${password}`);
+                console.log(`Docent aangemaakt met voornaam: ${voornaam}, achternaam: ${achternaam}, email: ${email}, en wachtwoord: ${password}`);
                 Toast.show({
                     type: 'success',
                     text1: 'Succes',
@@ -87,6 +91,18 @@ function AdminDashboard() {
         <View style={styles.container}>
             <View style={styles.formContainer}>
                 <Text>Maak een nieuw docent aan:</Text>
+                <TextInput
+                    style={styles.input}
+                    placeholder="Voornaam"
+                    onChangeText={setVoornaam}
+                    value={voornaam}
+                />
+                <TextInput
+                    style={styles.input}
+                    placeholder="Achternaam"
+                    onChangeText={setAchternaam}
+                    value={achternaam}
+                />
                 <TextInput
                     style={styles.input}
                     placeholder="Email"
