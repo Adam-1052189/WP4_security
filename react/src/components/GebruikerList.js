@@ -1,20 +1,21 @@
 import React, {useState, useEffect} from 'react';
-import {View, Text, FlatList, StyleSheet, Button} from 'react-native';
+import {View, Text, FlatList, StyleSheet, Button, TextInput} from 'react-native';
 
 function GebruikerList({ gebruikers }) {
     const [filter, setFilter] = useState('all');
+    const [zoekTerm, setZoekTerm] = useState('');
 
     const filteredUsers = gebruikers.filter(user => {
-        if (filter === 'all') return true;
-        if (filter === 'ADMIN') return user.user_type === 'ADMIN';
-        if (filter === 'DOCENT') return user.user_type === 'DOCENT';
-        if (filter === 'STUDENT') return user.user_type === 'STUDENT';
+        if (filter !== 'all' && user.user_type !== filter) return false;
+        if (zoekTerm && !`${user.voornaam} ${user.achternaam}`.toLowerCase().includes(zoekTerm.toLowerCase())) return false;
         return true;
     });
 
     const renderItem = ({item}) => (
         <View style={styles.gebruikerContainer}>
             <Text>Id: {item.id}</Text>
+            <Text>Voornaam: {item.voornaam}</Text>
+            <Text>Achternaam: {item.achternaam}</Text>
             <Text>Email: {item.email}</Text>
             <Text>Is superuser: {item.is_superuser ? 'Ja' : 'Nee'}</Text>
             <Text>Type: {item.user_type}</Text>
@@ -31,6 +32,12 @@ function GebruikerList({ gebruikers }) {
                 <Button title="Docent" onPress={() => setFilter('DOCENT')} />
                 <Button title="Student" onPress={() => setFilter('STUDENT')} />
             </View>
+            <TextInput
+                style={styles.zoekInput}
+                placeholder="Zoek op naam"
+                onChangeText={setZoekTerm}
+                value={zoekTerm}
+            />
             <FlatList
                 data={filteredUsers}
                 renderItem={renderItem}
@@ -57,6 +64,13 @@ const styles = StyleSheet.create({
     filterContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
+        marginBottom: 20,
+    },
+    zoekInput: {
+        height: 40,
+        borderColor: 'gray',
+        borderWidth: 1,
+        paddingLeft: 10,
         marginBottom: 20,
     },
 });
