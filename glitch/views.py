@@ -30,14 +30,16 @@ def register(request):
         data = json.loads(request.body)
         email = data.get('email', '')
         password = data.get('password', '')
+        voornaam = data.get('voornaam', '')
+        achternaam = data.get('achternaam', '')
 
-        if not email or not password:
+        if not email or not password or not voornaam or not achternaam:
             return JsonResponse({'error': 'Vul alle velden in'}, status=400)
 
         if User.objects.filter(email=email).exists():
             return JsonResponse({'error': 'Email bestaat al'}, status=400)
 
-        user = User(email=email, password=make_password(password))
+        user = User(email=email, password=make_password(password), voornaam=voornaam, achternaam=achternaam)
         user.save()
 
         return JsonResponse({'success': 'Gebruiker succesvol geregistreerd'}, status=201)
