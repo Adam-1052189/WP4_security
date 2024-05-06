@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react';
-import {View, TextInput, Button, StyleSheet, Text, FlatList, TouchableOpacity} from 'react-native';
+import {View, TextInput, Button, StyleSheet, Text, TouchableOpacity} from 'react-native';
 import Toast from 'react-native-toast-message';
+import GebruikerList from '../components/GebruikerList';
 
 function AdminDashboard() {
     const [email, setEmail] = useState('');
@@ -8,7 +9,7 @@ function AdminDashboard() {
     const [voornaam, setVoornaam] = useState('');
     const [achternaam, setAchternaam] = useState('');
     const [users, setUsers] = useState([]);
-    const [filter, setFilter] = useState('all');
+    const [showUserList, setShowUserList] = useState(false);
 
     useEffect(() => {
         fetchUsers();
@@ -25,25 +26,6 @@ function AdminDashboard() {
             console.error(error);
         }
     };
-
-    const filteredUsers = users.filter(user => {
-        if (filter === 'all') return true;
-        if (filter === 'ADMIN') return user.user_type === 'ADMIN';
-        if (filter === 'DOCENT') return user.user_type === 'DOCENT';
-        if (filter === 'STUDENT') return user.user_type === 'STUDENT';
-        return true;
-    });
-
-    const renderItem = ({item}) => (
-        <View style={styles.userContainer}>
-            <Text>Id: {item.id}</Text>
-            <Text>Email: {item.email}</Text>
-            <Text>Is superuser: {item.is_superuser ? 'Ja' : 'Nee'}</Text>
-            <Text>Type: {item.user_type}</Text>
-            <Text>Is staff: {item.is_staff ? 'Ja' : 'Nee'}</Text>
-            <Text>Is active: {item.is_active ? 'Ja' : 'Nee'}</Text>
-        </View>
-    );
 
     const handleSubmit = async () => {
         try {
@@ -122,17 +104,11 @@ function AdminDashboard() {
                     title="Maak Docent" onPress={handleSubmit}
                     color="#d30f4c"/>
             </View>
-            <View style={styles.filterContainer}>
-                <Button title="All" onPress={() => setFilter('all')} />
-                <Button title="Admin" onPress={() => setFilter('ADMIN')} />
-                <Button title="Docent" onPress={() => setFilter('DOCENT')} />
-                <Button title="Student" onPress={() => setFilter('STUDENT')} />
-            </View>
-            <FlatList
-                data={filteredUsers.slice(0, 5)}
-                renderItem={renderItem}
-                keyExtractor={item => item.id.toString()}
+            <Button
+                title="Ga naar Gebruikerslijst"
+                onPress={() => setShowUserList(!showUserList)}
             />
+            {showUserList && <GebruikerList gebruikers={users} />}
         </View>
     );
 }

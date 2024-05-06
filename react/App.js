@@ -9,6 +9,7 @@ import StudentDashboard from "./src/screens/StudentDashboard"
 import Toast from 'react-native-toast-message';
 import DocentRegister from "./src/screens/AdminDashboard";
 import * as Font from 'expo-font';
+import AdminDashboard from "./src/screens/AdminDashboard";
 
 const Stack = createStackNavigator();
 
@@ -109,7 +110,7 @@ const App = () => {
                 />
                 <Stack.Screen name="Registreren" component={RegisterScreen}/>
                 <Stack.Screen name="StudentDashboard" component={StudentDashboard}/>
-                <Stack.Screen name={"AdminDashboard"} component={DocentRegister}/>
+                <Stack.Screen name={"AdminDashboard"} component={AdminDashboard}/>
                 {/* Andere schermen na login */}
             </Stack.Navigator>
             <Toast />
