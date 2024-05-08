@@ -7,7 +7,7 @@
     "android": "expo run:android",
     "ios": "expo run:ios",
     "web": "expo start --web",
-    "totaal": "npm run free-port && concurrently \"py ../manage.py runserver 8000\" \"npm install\" \"npm start\"",
+    "totaal": "npm run free-port && concurrently \"pip install -r ../requirements.txt\" \"py ../manage.py runserver 8000\" \"npm install\" \"npm start\"",
     "free-port": "powershell -Command \"Get-NetTCPConnection -LocalPort 8087 -ErrorAction SilentlyContinue | Select-Object -ExpandProperty OwningProcess | ForEach-Object { Stop-Process -Id $_ -Force }\" || echo Port 8087 is free"
   },
   "dependencies": {
