@@ -1,6 +1,7 @@
 # wp4-2024-starter
 Template voor WP4 opdracht 2024 "GLITCH". Vul dit document aan zoals beschreven in eisen rondom opleveren (zie GLITCH-assignment.pdf)
 
+Download en installeer Node.js vanaf https://nodejs.org/en/download
 
 Staan waarschijnlijk al goed in package.json
 ```bash
