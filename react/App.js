@@ -72,7 +72,7 @@ const App = () => {
                     name="DocentDashboard"
                     component={DocentDashboard}
                     options={({route}) => ({
-                        title: route.params ? `${route.params.voornaam}, ${route.params.achternaam}` : 'Docenten Dashboard',
+                        title: route.params ? `${route.params.achternaam}, ${route.params.voornaam}` : 'Docenten Dashboard',
                         headerStyle: {
                             borderBottomColor: '#fff7ea',
                             backgroundColor: '#fff7ea',
@@ -86,12 +86,28 @@ const App = () => {
                     })}
                 />
                 <Stack.Screen name="Registreren" component={RegisterScreen}/>
-                <Stack.Screen name="StudentDashboard" component={StudentDashboard}/>
+                <Stack.Screen
+                    name="StudentDashboard"
+                    component={StudentDashboard}
+                    options={({route}) => ({
+                        title: route.params ? `${route.params.achternaam}, ${route.params.voornaam}` : 'Admin Dashboard',
+                        headerStyle: {
+                            borderBottomColor: '#fff7ea',
+                            backgroundColor: '#fff7ea',
+                        },
+                        headerTintColor: '#001e48',
+                        headerTitleStyle: {
+                            fontSize: 24,
+                            fontWeight: 'bold',
+                            fontFamily: 'Poppins-extra-bold',
+                        },
+                    })}
+                />
                 <Stack.Screen
                     name={"AdminDashboard"}
                     component={AdminDashboard}
                     options={({route}) => ({
-                        title: route.params ? `${route.params.voornaam}, ${route.params.achternaam}` : 'Admin Dashboard',
+                        title: route.params ? `${route.params.achternaam}, ${route.params.voornaam}` : 'Admin Dashboard',
                         headerStyle: {
                             borderBottomColor: '#fff7ea',
                             backgroundColor: '#fff7ea',
