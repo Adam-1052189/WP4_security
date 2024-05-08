@@ -1,5 +1,5 @@
-import React from "react";
-import {View, Text, Image, StyleSheet} from "react-native";
+import React from "react"
+import {View, Text, Image, StyleSheet} from "react-native"
 
 const logoImg = require("./Images/Glitch_logo.png");
 
@@ -28,13 +28,13 @@ function Header() {
             <nav>
                 <View style={styles.listItem}>
                     <Image source={logoImg} style={styles.logo}/>
-                    <Text style={styles.text}>meldingen</Text>
-                    <Text style={styles.text}>profiel</Text>
+                    <Text style={styles.text}>Meldingen</Text>
                     <Text style={styles.text}>Instellingen</Text>
+                    <Text style={styles.text}>Profielfoto</Text>
                 </View>
             </nav>
         </header>
     );
 }
 
-export default Header;
+export default Header
