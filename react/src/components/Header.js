@@ -1,5 +1,6 @@
-import React from "react"
-import {View, Text, Image, StyleSheet} from "react-native"
+import React, {useState, useEffect} from "react"
+import {View, Text, Image, StyleSheet, TouchableOpacity} from "react-native"
+import {useNavigation} from '@react-navigation/native'
 
 const logoImg = require("./Images/Glitch_logo.png");
 
@@ -20,9 +21,29 @@ const styles = StyleSheet.create({
         width: 150,
         height:75,
     },
+    profielfoto: {
+        height: 40,
+        width: 40,
+        borderRadius: 20,
+    },
 });
 
 function Header() {
+    const navigation = useNavigation();
+    const [profilePic, setProfilePic] = useState(null)
+
+    const laad_profiel_foto = () => {
+        const url = '/static/img/profiel1.png'; // Relatief pad naar je afbeelding
+        setProfilePic(url);
+    };
+
+    useEffect(() => {
+        laad_profiel_foto();
+    }, []);
+
+    const handleLogout = () => {
+        navigation.navigate('Login');
+    }
     return (
         <header style={styles.container}>
             <nav>
@@ -31,6 +52,12 @@ function Header() {
                     <Text style={styles.text}>Meldingen</Text>
                     <Text style={styles.text}>Instellingen</Text>
                     <Text style={styles.text}>Profielfoto</Text>
+                    <TouchableOpacity onPress={handleLogout}>
+                        <Text style={styles.text}>Uitloggen</Text>
+                    </TouchableOpacity>
+                    {profilePic !== null && (
+                        <Image source={{uri: profilePic}} style={styles.profielfoto}/>
+                    )}
                 </View>
             </nav>
         </header>
