@@ -57,10 +57,6 @@ CORS_ALLOW_CREDENTIALS = True
 
 CORS_ORIGIN_ALLOW_ALL = True
 
-CORS_ORIGIN_WHITELIST = [
-    "http://localhost:8081",
-    "http://127.0.0.1:8081",
-]
 
 ROOT_URLCONF = 'resurrection.urls'
 
