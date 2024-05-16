@@ -52,6 +52,11 @@ function AdminDashboard() {
                     text2: 'Docent succesvol aangemaakt',
                 });
                 await fetchUsers();
+
+                setVoornaam('');
+                setAchternaam('');
+                setEmail('');
+                setPassword('');
             } else {
                 console.log('Aanmaken docent mislukt:', data);
                 Toast.show({

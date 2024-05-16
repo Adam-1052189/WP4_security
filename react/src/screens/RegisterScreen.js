@@ -27,6 +27,11 @@ function RegisterScreen() {
                 text1: 'Succes',
                 text2: 'Je bent succesvol geregistreerd',
             });
+
+            setVoornaam('');
+            setAchternaam('');
+            setEmail('');
+            setPassword('');
         } else {
             console.log('Er is een fout opgetreden:', data);
             Toast.show({
@@ -61,7 +66,7 @@ function RegisterScreen() {
       />
       <TextInput
         style={styles.input}
-        placeholder="Studentnummer of personeelscode"
+        placeholder="Email"
         onChangeText={setEmail}
         value={email}
         onSubmitEditing={handleSubmit}
