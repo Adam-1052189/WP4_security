@@ -89,7 +89,6 @@ class Cursusjaar(models.Model):
     cursusjaar_id = models.AutoField(primary_key=True)
     domein = models.ForeignKey('Domein', on_delete=models.CASCADE)
     gebruiker = models.ForeignKey('Gebruiker', on_delete=models.CASCADE, null=True)
-    naam = models.CharField(max_length=100)
     cursusjaar = models.CharField(max_length=100)
 
 class Module(models.Model):
