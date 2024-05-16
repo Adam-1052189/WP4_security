@@ -51,6 +51,7 @@ function AdminDashboard() {
                     text1: 'Succes',
                     text2: 'Docent succesvol aangemaakt',
                 });
+                await fetchUsers();
             } else {
                 console.log('Aanmaken docent mislukt:', data);
                 Toast.show({
