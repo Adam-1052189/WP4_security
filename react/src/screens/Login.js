@@ -26,78 +26,85 @@ const Login = () => {
     }
 
     const handleLogin = () => {
-    fetch('http://localhost:8000/login/', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            email: email,
-            password: password,
-        }),
-    })
-    .then((response) => response.json())
-    .then((data) => {
-        if (data.status === 'success') {
-            fetch(`http://localhost:8000/glitch/gebruikers/${data.user_id}/`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            })
+        fetch('http://localhost:8000/login/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                email: email + '@hr.nl',
+                password: password,
+            }),
+        })
             .then((response) => response.json())
-            .then((userData) => {
-                Toast.show({
-                    type: 'success',
-                    text1: 'Succes',
-                    text2: 'Je bent succesvol aangemeld',
-                });
-                if (data.user_type === 'DOCENT') {
-                    navigation.navigate('DocentDashboard', {
-                        voornaam: userData.voornaam,
-                        achternaam: userData.achternaam,
-                    });
-                } else if (data.user_type === 'STUDENT') {
-                    navigation.navigate('StudentDashboard', {
-                        voornaam: userData.voornaam,
-                        achternaam: userData.achternaam,
-                    });
-                } else if (data.user_type === 'ADMIN') {
-                    navigation.navigate('AdminDashboard', {
-                        voornaam: userData.voornaam,
-                        achternaam: userData.achternaam,
+            .then((data) => {
+                if (data.status === 'success') {
+                    fetch(`http://localhost:8000/glitch/gebruikers/${data.user_id}/`, {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                    })
+                        .then((response) => response.json())
+                        .then((userData) => {
+                            Toast.show({
+                                type: 'success',
+                                text1: 'Succes',
+                                text2: 'Je bent succesvol aangemeld',
+                            });
+                            if (data.user_type === 'DOCENT') {
+                                navigation.navigate('DocentDashboard', {
+                                    voornaam: userData.voornaam,
+                                    achternaam: userData.achternaam,
+                                });
+                            } else if (data.user_type === 'STUDENT') {
+                                navigation.navigate('StudentDashboard', {
+                                    voornaam: userData.voornaam,
+                                    achternaam: userData.achternaam,
+                                });
+                            } else if (data.user_type === 'ADMIN') {
+                                navigation.navigate('AdminDashboard', {
+                                    voornaam: userData.voornaam,
+                                    achternaam: userData.achternaam,
+                                });
+                            }
+                        });
+                } else {
+                    Toast.show({
+                        type: 'error',
+                        text1: 'Fout',
+                        text2: 'Onjuiste aanmeldgegevens',
                     });
                 }
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                Toast.show({
+                    type: 'error',
+                    text1: 'Fout',
+                    text2: 'Er is een fout opgetreden tijdens het aanmelden',
+                });
             });
-        } else {
-            Toast.show({
-                type: 'error',
-                text1: 'Fout',
-                text2: 'Onjuiste aanmeldgegevens',
-            });
-        }
-    })
-    .catch((error) => {
-        console.error('Error:', error);
-        Toast.show({
-            type: 'error',
-            text1: 'Fout',
-            text2: 'Er is een fout opgetreden tijdens het aanmelden',
-        });
-    });
-}
+    }
 
 
     return (
         <View style={styles.container}>
             <Text style={styles.loginText}>Inloggen</Text>
-            <TextInput
-                style={styles.input}
-                placeholder="Email"
-                onChangeText={setEmail}
-                value={email}
-                onSubmitEditing={handleLogin}
-            />
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <TextInput
+                    style={styles.emailinput}
+                    placeholder="Email"
+                    onChangeText={setEmail}
+                    value={email}
+                    onSubmitEditing={handleLogin}
+                />
+                <TextInput
+                    styles={styles.input}
+                    value="@hr.nl"
+                    editable={false}
+                />
+            </View>
             <TextInput
                 style={styles.input}
                 placeholder="Wachtwoord"
@@ -106,8 +113,10 @@ const Login = () => {
                 value={password}
                 onSubmitEditing={handleLogin}
             />
-            <Button title="Login" onPress={handleLogin}/>
-            <TouchableOpacity style={styles.loginButton} onPress={() => navigation.navigate('Registreren')}>
+            <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
+                <Text style={styles.loginButtonText}>Login</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.registerButton} onPress={() => navigation.navigate('Registreren')}>
                 <Text style={styles.loginButtonText}>Registreren</Text>
             </TouchableOpacity>
             <View style={styles.footer}>
@@ -128,6 +137,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         padding: 0,
         backgroundColor: '#fff7ea',
+        alignItems: 'center',
     },
     loginText: {
         color: '#001e48',
@@ -137,19 +147,38 @@ const styles = StyleSheet.create({
         marginBottom: 20,
         marginTop: 50,
     },
-    input: {
+    emailinput: {
         height: 40,
         margin: 12,
         borderWidth: 1,
         padding: 10,
     },
+    input: {
+        height: 40,
+        margin: 12,
+        borderWidth: 1,
+        padding: 10,
+        width: '20%',
+        position: 'relative',
+        right: '3%',
+    },
     loginButton: {
+        height: 50,
+        backgroundColor: '#198ee1',
+        justifyContent: 'center',
+        alignItems: 'center',
+        margin: 12,
+        borderRadius: 5,
+        width: '40%',
+    },
+    registerButton: {
         height: 50,
         backgroundColor: '#d30f4c',
         justifyContent: 'center',
         alignItems: 'center',
         margin: 12,
         borderRadius: 5,
+        width: '40%',
     },
     loginButtonText: {
         color: '#fff',
