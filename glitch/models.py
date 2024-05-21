@@ -43,6 +43,9 @@ class Gebruiker(AbstractBaseUser, PermissionsMixin):
     voortgang = models.ForeignKey('Voortgang', on_delete=models.CASCADE, null=True, related_name='gebruikers_voortgang')
     profielfoto = models.ImageField(null=True, upload_to='profielfotos/')
     bio = models.TextField(null=True)
+    domeinen = models.ManyToManyField('Domein')
+    cursussen = models.ManyToManyField('Cursus')
+    cursusjaren = models.ManyToManyField('Cursusjaar')
 
     objects = CustomUserManager()
 
@@ -66,9 +69,8 @@ class Voortgang(models.Model):
 
 class Domein(models.Model):
     domein_id = models.AutoField(primary_key=True)
-    gebruiker = models.ForeignKey('Gebruiker', on_delete=models.CASCADE, null=True)
+    gebruikers = models.ManyToManyField('Gebruiker')
     domeinnaam = models.CharField(max_length=100)
-    bovenliggend_domein = models.ForeignKey('self', on_delete=models.CASCADE, null=True)
 
 class Activiteit(models.Model):
     activiteit_id = models.AutoField(primary_key=True)
@@ -78,17 +80,18 @@ class Activiteit(models.Model):
     taak = models.CharField(max_length=100, null=True)
     module = models.ForeignKey('Module', related_name='activiteiten', on_delete=models.CASCADE)
 
+
 class Cursus(models.Model):
     vak_cursus_id = models.AutoField(primary_key=True)
-    onderwijsperiode = models.ForeignKey('Onderwijsperiode', on_delete=models.CASCADE, null=True)
-    domein = models.ForeignKey('Domein', on_delete=models.CASCADE, null=True)
-    gebruiker = models.ForeignKey('Gebruiker', on_delete=models.CASCADE, null=True)
+    gebruikers = models.ManyToManyField('Gebruiker')
     vaknaam = models.CharField(max_length=100)
+    cursusnaam = models.CharField(max_length=200)
+    cursusjaar = models.ForeignKey('Cursusjaar', on_delete=models.CASCADE, null=True)
 
 class Cursusjaar(models.Model):
     cursusjaar_id = models.AutoField(primary_key=True)
     domein = models.ForeignKey('Domein', on_delete=models.CASCADE)
-    gebruiker = models.ForeignKey('Gebruiker', on_delete=models.CASCADE, null=True)
+    gebruikers = models.ManyToManyField('Gebruiker')
     cursusjaar = models.CharField(max_length=100)
 
 class Module(models.Model):
@@ -117,9 +120,3 @@ class Challenge(models.Model):
     gebruiker = models.ForeignKey('Gebruiker', on_delete=models.CASCADE, null=True)
     point_concept_chalenge = models.IntegerField()
     verzamelde_punten = models.IntegerField(null=True)
-
-class Onderwijsperiode(models.Model):
-    onderwijsperiode_id = models.AutoField(primary_key=True)
-    cursusjaar = models.ForeignKey('Cursusjaar', on_delete=models.CASCADE, null=True)
-    domein = models.ForeignKey('Domein', on_delete=models.CASCADE, null=True)
-    periode = models.CharField(max_length=100)
