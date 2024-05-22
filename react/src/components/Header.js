@@ -30,20 +30,31 @@ const styles = StyleSheet.create({
 
 function Header() {
     const navigation = useNavigation();
-    const [profilePic, setProfilePic] = useState(null)
-
-    const laad_profiel_foto = () => {
-        const url = '/static/img/profiel1.png'; // Relatief pad naar je afbeelding
-        setProfilePic(url);
-    };
+    const [profilePic, setProfilePic] = useState(null);
 
     useEffect(() => {
+        const laad_profiel_foto = async () => {
+            try {
+                const response = await fetch('http://localhost:8000/glitch/gebruikers/');
+                const data = await response.json();
+                const users = JSON.parse(data)
+                console.log('Profielfoto data:', data); // Controleer of de response correct is
+                console.log('Profielfoto data:', users); // Controleer of de response correct is
+                if (users.length > 0 && users[0].fields.profielfoto) {
+                    console.log('Profielfoto URL:', users[0].fields.profielfoto);
+                    setProfilePic(users[0].fields.profielfoto);
+                }
+            } catch (error) {
+                console.error('Error fetching profile picture:', error);
+            }
+        };
         laad_profiel_foto();
     }, []);
 
     const handleLogout = () => {
         navigation.navigate('Login');
-    }
+    };
+
     return (
         <header style={styles.container}>
             <nav>
@@ -55,8 +66,8 @@ function Header() {
                     <TouchableOpacity onPress={handleLogout}>
                         <Text style={styles.text}>Uitloggen</Text>
                     </TouchableOpacity>
-                    {profilePic !== null && (
-                        <Image source={{uri: profilePic}} style={styles.profielfoto}/>
+                    {profilePic && (
+                        <Image source={{uri: 'http://localhost:8000' + profilePic}} style={styles.profielfoto}/>
                     )}
                 </View>
             </nav>
