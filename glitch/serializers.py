@@ -10,7 +10,7 @@ class CursusjaarSerializer(serializers.ModelSerializer):
 class DomeinSerializer(serializers.ModelSerializer):
     class Meta:
         model = Domein
-        fields = ['domeinnaam']
+        fields = ['domein_id', 'domeinnaam']
 
 class GebruikerSerializer(serializers.ModelSerializer):
     class Meta:
