@@ -22,7 +22,7 @@ function DomeinItem({domein}) {
                 <h3>Cursusjaren:</h3>
                 {cursusjaren.length > 0 ? (
                     cursusjaren.map((cursusjaar) => (
-                        <p key={cursusjaar.cursusjaar_id}>{cursusjaar.cursusjaar}</p>
+                        <p key={cursusjaar.cursusjaar_cursusjaar}>{cursusjaar.cursusjaar}</p>
                     ))
                 ) : (
                     <p>Geen cursusjaren gevonden.</p>
