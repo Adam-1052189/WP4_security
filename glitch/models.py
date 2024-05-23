@@ -40,6 +40,7 @@ class Gebruiker(AbstractBaseUser, PermissionsMixin):
     user_type = models.CharField(max_length=7, choices=USER_TYPES, default=STUDENT)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
+    cursussen = models.ManyToManyField('Cursus', through='Deelname')
     voortgang = models.ForeignKey('Voortgang', on_delete=models.CASCADE, null=True, related_name='gebruikers_voortgang')
     profielfoto = models.ImageField(null=True, upload_to='profielfotos/')
     bio = models.TextField(null=True)
@@ -66,7 +67,6 @@ class Voortgang(models.Model):
 
 class Domein(models.Model):
     domein_id = models.AutoField(primary_key=True)
-    gebruiker = models.ForeignKey('Gebruiker', on_delete=models.CASCADE, null=True)
     domeinnaam = models.CharField(max_length=100)
     bovenliggend_domein = models.ForeignKey('self', on_delete=models.CASCADE, null=True)
 
@@ -81,14 +81,13 @@ class Activiteit(models.Model):
 class Cursus(models.Model):
     vak_cursus_id = models.AutoField(primary_key=True)
     domein = models.ForeignKey('Domein', on_delete=models.CASCADE, null=True)
-    gebruiker = models.ForeignKey('Gebruiker', on_delete=models.CASCADE, null=True)
     vaknaam = models.CharField(max_length=100)
 
 class Cursusjaar(models.Model):
     cursusjaar_id = models.AutoField(primary_key=True)
     domein = models.ForeignKey('Domein', on_delete=models.CASCADE)
-    gebruiker = models.ForeignKey('Gebruiker', on_delete=models.CASCADE, null=True)
     cursusjaar = models.CharField(max_length=100)
+    cursussen = models.ManyToManyField('Cursus', through='CursusjaarCursus')
 
 class Module(models.Model):
     module_id = models.AutoField(primary_key=True)
@@ -116,3 +115,12 @@ class Challenge(models.Model):
     gebruiker = models.ForeignKey('Gebruiker', on_delete=models.CASCADE, null=True)
     point_concept_challenge = models.IntegerField()
     verzamelde_punten = models.IntegerField(null=True)
+
+class Deelname(models.Model):
+    gebruiker = models.ForeignKey(Gebruiker, on_delete=models.CASCADE)
+    cursus = models.ForeignKey(Cursus, on_delete=models.CASCADE)
+
+
+class CursusjaarCursus(models.Model):
+    cursusjaar = models.ForeignKey(Cursusjaar, on_delete=models.CASCADE)
+    cursus = models.ForeignKey(Cursus, on_delete=models.CASCADE)
