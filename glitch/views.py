@@ -6,8 +6,8 @@ from rest_framework.views import APIView
 from rest_framework import status, generics
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from .models import Domein
-from .serializers import DomeinSerializer, GebruikerSerializer, CursusjaarSerializer
+from .models import Domein, Cursus
+from .serializers import DomeinSerializer, GebruikerSerializer, CursusjaarSerializer, CursusSerializer
 from django.views import View
 from django.core import serializers
 from .models import Gebruiker, Cursusjaar
@@ -88,4 +88,11 @@ class GetCursusjaren(APIView):
     def get(self, request, domein_id):
         cursusjaren = Cursusjaar.objects.filter(domein__domein_id=domein_id)
         serializer = CursusjaarSerializer(cursusjaren, many=True)
+        return Response(serializer.data)
+
+
+class GetCursussen(APIView):
+    def get(self, request, cursusjaar_id, format=None):
+        cursussen = Cursus.objects.filter(cursusjaar_id=cursusjaar_id)
+        serializer = CursusSerializer(cursussen, many=True)
         return Response(serializer.data)

@@ -2,9 +2,11 @@ import React, {useEffect, useState} from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import axios from "axios";
 import DomeinItem from "../components/DomeinItem";
+import CursusList from "../components/CursusList";
 
 const DocentDashboard = () => {
     const [domeinen, setDomeinen] = useState([]);
+    const [selectedCursusjaarId, setSelectedCursusjaarId] = useState(null);
 
     useEffect(() => {
         // Haal de domeinen op wanneer het component wordt geladen
@@ -24,6 +26,9 @@ const DocentDashboard = () => {
         fetchDomeinen();
     }, []);
 
+    const handleSelect = (cursusjaarId) => {
+        setSelectedCursusjaarId(cursusjaarId);
+    };
 
     return (
         <View style={styles.container}>
@@ -34,8 +39,10 @@ const DocentDashboard = () => {
                     key={domeinItem.domein_id}
                     domeinnaam={domeinItem.domeinnaam}
                     domein_id={domeinItem.domein_id.toString()}
+                    onSelect={handleSelect}
                 />
             ))}
+            {selectedCursusjaarId && <CursusList cursusjaarId={selectedCursusjaarId} />}
         </View>
     );
 }
