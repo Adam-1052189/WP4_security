@@ -80,7 +80,6 @@ class Activiteit(models.Model):
 
 class Cursus(models.Model):
     vak_cursus_id = models.AutoField(primary_key=True)
-    onderwijsperiode = models.ForeignKey('Onderwijsperiode', on_delete=models.CASCADE, null=True)
     domein = models.ForeignKey('Domein', on_delete=models.CASCADE, null=True)
     gebruiker = models.ForeignKey('Gebruiker', on_delete=models.CASCADE, null=True)
     vaknaam = models.CharField(max_length=100)
@@ -115,11 +114,5 @@ class Challenge(models.Model):
     challenge_id = models.AutoField(primary_key=True)
     activiteit = models.ForeignKey('Activiteit', on_delete=models.CASCADE, null=True)
     gebruiker = models.ForeignKey('Gebruiker', on_delete=models.CASCADE, null=True)
-    point_concept_chalenge = models.IntegerField()
+    point_concept_challenge = models.IntegerField()
     verzamelde_punten = models.IntegerField(null=True)
-
-class Onderwijsperiode(models.Model):
-    onderwijsperiode_id = models.AutoField(primary_key=True)
-    cursusjaar = models.ForeignKey('Cursusjaar', on_delete=models.CASCADE, null=True)
-    domein = models.ForeignKey('Domein', on_delete=models.CASCADE, null=True)
-    periode = models.CharField(max_length=100)
