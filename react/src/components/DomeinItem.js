@@ -47,6 +47,7 @@ function DomeinItem({domeinnaam, domein_id}) {
             )}
         </View>
     );
+}
 
     DomeinItem.propTypes = {
         domeinnaam: PropTypes.string.isRequired,
