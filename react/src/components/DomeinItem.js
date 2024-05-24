@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from 'react';
+import {Text, View} from 'react-native';
 import axios from 'axios';
 import PropTypes from 'prop-types';
 import CursusList from './CursusList';
@@ -24,32 +25,32 @@ function DomeinItem({domeinnaam, domein_id}) {
         setSelectedCursusjaar(cursusjaarId);
     };
 
+
     return (
-        <div>
-            <h2 onClick={handleClick}>{domeinnaam}</h2>
+        <View>
+            <Text onPress={handleClick}>{domeinnaam}</Text>
             {showDetails && (
-                <div>
-                    <h3>Cursusjaren:</h3>
+                <View>
+                    <Text>Cursusjaren:</Text>
                     {cursusjaren.length > 0 ? (
                         cursusjaren.map((cursusjaar) => (
-                            <p key={cursusjaar.cursusjaar}
-                               onClick={() => handleCursusjaarClick(cursusjaar.cursusjaar)}>{cursusjaar.cursusjaar}</p>
+                            <Text key={cursusjaar.cursusjaar}
+                                  onPress={() => handleCursusjaarClick(cursusjaar.cursusjaar)}>{cursusjaar.cursusjaar}</Text>
                         ))
                     ) : (
-                        <p>Geen cursusjaren gevonden.</p>
+                        <Text>Geen cursusjaren gevonden.</Text>
                     )}
                     {SelectedCursusjaar && (
                         <CursusList cursusjaarId={SelectedCursusjaar}/>
                     )}
-                </div>
+                </View>
             )}
-        </div>
+        </View>
     );
-}
 
-DomeinItem.propTypes = {
-    domeinnaam: PropTypes.string.isRequired,
-    domein_id: PropTypes.string.isRequired,
-};
+    DomeinItem.propTypes = {
+        domeinnaam: PropTypes.string.isRequired,
+        domein_id: PropTypes.string.isRequired,
+    };
 
-export default DomeinItem;
+    export default DomeinItem;
