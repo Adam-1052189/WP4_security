@@ -6,6 +6,15 @@ const CursusList = ({ cursusjaarId }) => {
     const [cursussen, setCursussen] = useState([]);
     const [showDetails, setShowDetails] = useState(false);
 
+    const [selectedCursusjaar, setSelectedCursusjaar] = useState(null);
+    const handleCursusjaarClick = (cursusjaarId) => {
+        if (selectedCursusjaar === cursusjaarId) {
+            setSelectedCursusjaar(null);
+        } else {
+            setSelectedCursusjaar(cursusjaarId);
+        }
+    };
+
     useEffect(() => {
         const fetchCursussen = async () => {
             try {
@@ -30,8 +39,8 @@ const CursusList = ({ cursusjaarId }) => {
             </TouchableOpacity>
             {showDetails && (
                 <View>
-                    {cursus.length > 0 ? (
-                        cursus.map((cursus) => (
+                    {cursussen.length > 0 ? (
+                        cursussen.map((cursus) => (
                             <Text key={cursus.vak_cursus_id}>{cursus.vaknaam}</Text>
                         ))
                     ) : (

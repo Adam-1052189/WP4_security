@@ -92,7 +92,7 @@ class GetCursusjaren(APIView):
 
 
 class GetCursussen(APIView):
-    def get(self, request, cursusjaar_id, format=None):
-        cursussen = Cursus.objects.filter(cursusjaar_id=cursusjaar_id)
+    def get(self, request, cursusjaar, format=None):
+        cursussen = Cursus.objects.filter(cursusjaarcursus__cursusjaar__cursusjaar=cursusjaar)
         serializer = CursusSerializer(cursussen, many=True)
         return Response(serializer.data)

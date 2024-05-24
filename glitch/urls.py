@@ -6,5 +6,5 @@ urlpatterns = [
     path('gebruikers/', GebruikerList.as_view(), name='gebruikers'),
     path('gebruikers/<int:pk>/', GebruikerDetail.as_view(), name='gebruiker-detail'),
     path('cursusjaren/<int:domein_id>/', GetCursusjaren.as_view(), name='get_cursusjaren'),
-    path('cursusjaren/<int:cursusjaar_id>/cursussen/', GetCursussen.as_view(), name='get_cursussen')
+    path('cursusjaren/<str:cursusjaar>/cursussen/', GetCursussen.as_view(), name='get_cursussen')
 ]
