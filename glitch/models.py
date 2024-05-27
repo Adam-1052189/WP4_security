@@ -83,13 +83,14 @@ class Activiteit(models.Model):
         (4, 'Niveau 4'),
     ]
     activiteit_id = models.AutoField(primary_key=True)
-    module = models.ForeignKey('Module', on_delete=models.CASCADE, null=True)
+    module = models.ForeignKey('Module', on_delete=models.SET_NULL, null=True)
     gebruiker = models.ForeignKey('Gebruiker', on_delete=models.CASCADE, null=True)
     stap = models.IntegerField(null=True)
     taak = models.CharField(max_length=100, null=True)
     module = models.ForeignKey('Module', related_name='activiteiten', on_delete=models.CASCADE)
     niveau = models.IntegerField(choices=NIVEAUS, default=1)
     afgevinkt = models.BooleanField(default=False)
+    core_assignment = models.ForeignKey('CoreAssignment', related_name='activiteiten', on_delete=models.CASCADE, null=True)
 
     def complete(self):
         self.afgevinkt = True
@@ -121,7 +122,7 @@ class Module(models.Model):
     activiteit = models.ForeignKey(Activiteit, related_name='modules', on_delete=models.CASCADE)
 
 class CoreAssignment(models.Model):
-    opdracht_id = models.AutoField(primary_key=True)
+    id = models.AutoField(primary_key=True)
     gebruiker = models.ForeignKey('Gebruiker', on_delete=models.CASCADE, null=True)
     opdrachtnaam = models.CharField(max_length=100)
     deadline = models.DateField(null=True)
@@ -132,13 +133,13 @@ class CoreAssignment(models.Model):
     afgevinkt = models.BooleanField(default=False)
 
     def check_completion(self):
-        all_tasks_completed = all(task.afgevinkt for task in self.module.activiteiten.all())
+        all_tasks_completed = all(task.afgevinkt for task in self.activiteiten.all())
         if all_tasks_completed:
             self.afgevinkt = True
             self.save()
 
     def check_point_challenge(self):
-        total_points = sum(task.niveau for task in self.module.activiteiten.all())
+        total_points = sum(task.niveau for task in self.activiteiten.all())
         if total_points >= self.point_challenge:
             self.gebruiker.update_xp(self.point_challenge)
             return True
