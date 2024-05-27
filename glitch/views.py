@@ -11,6 +11,7 @@ from .serializers import DomeinSerializer, GebruikerSerializer, CursusjaarSerial
 from django.views import View
 from django.core import serializers
 from .models import Gebruiker, Cursusjaar
+from rest_framework_simplejwt.tokens import RefreshToken
 
 
 User = get_user_model()
@@ -21,9 +22,17 @@ class LoginView(APIView):
         password = request.data.get('password')
         user = authenticate(request, email=email, password=password)
         if user is not None:
-            return Response({'status': 'success', 'user_type': user.user_type, 'user_id': user.id}, status=status.HTTP_200_OK)
+            refresh = RefreshToken.for_user(user)
+            return Response({
+                'status': 'success',
+                'user_type': user.user_type,
+                'user_id': user.id,
+                'access': str(refresh.access_token),
+                'refresh': str(refresh),
+            }, status=status.HTTP_200_OK)
         else:
             return Response({'status': 'error', 'message': 'Invalid credentials'}, status=status.HTTP_400_BAD_REQUEST)
+
 
 @csrf_exempt
 def register(request):

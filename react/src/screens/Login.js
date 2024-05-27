@@ -3,6 +3,8 @@ import Toast from "react-native-toast-message";
 import {Button, TextInput, View, StyleSheet, Text, TouchableOpacity, Linking, Alert} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import * as Font from 'expo-font';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 const Login = () => {
     const [email, setEmail] = useState('');
@@ -25,8 +27,9 @@ const Login = () => {
         return null;
     }
 
-    const handleLogin = () => {
-        fetch('http://localhost:8000/login/', {
+    const handleLogin = async () => {
+    try {
+        const response = await fetch('http://localhost:8000/glitch/api/login/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -35,57 +38,72 @@ const Login = () => {
                 email: email + '@hr.nl',
                 password: password,
             }),
-        })
-            .then((response) => response.json())
-            .then((data) => {
-                if (data.status === 'success') {
-                    fetch(`http://localhost:8000/glitch/gebruikers/${data.user_id}/`, {
-                        method: 'GET',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                    })
-                        .then((response) => response.json())
-                        .then((userData) => {
-                            Toast.show({
-                                type: 'success',
-                                text1: 'Succes',
-                                text2: 'Je bent succesvol aangemeld',
-                            });
-                            if (data.user_type === 'DOCENT') {
-                                navigation.navigate('DocentDashboard', {
-                                    voornaam: userData.voornaam,
-                                    achternaam: userData.achternaam,
-                                });
-                            } else if (data.user_type === 'STUDENT') {
-                                navigation.navigate('StudentDashboard', {
-                                    voornaam: userData.voornaam,
-                                    achternaam: userData.achternaam,
-                                });
-                            } else if (data.user_type === 'ADMIN') {
-                                navigation.navigate('AdminDashboard', {
-                                    voornaam: userData.voornaam,
-                                    achternaam: userData.achternaam,
-                                });
-                            }
-                        });
-                } else {
-                    Toast.show({
-                        type: 'error',
-                        text1: 'Fout',
-                        text2: 'Onjuiste aanmeldgegevens',
+        });
+        const data = await response.json();
+        console.log('Login response data:', data);
+        if (response.status === 200 || response.status === 201) {
+            await AsyncStorage.setItem('access_token', data.access);
+            await AsyncStorage.setItem('refresh_token', data.refresh);
+            await AsyncStorage.setItem('user_type', data.user_type);
+            await AsyncStorage.setItem('user_id', data.user_id);
+
+            Toast.show({
+                type: 'success',
+                text1: 'Succes',
+                text2: 'Je bent succesvol aangemeld',
+            });
+
+            const userResponse = await fetch(`http://localhost:8000/glitch/gebruikers/${data.user_id}/`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            const userData = await userResponse.json();
+            console.log('User data:', userData);
+
+
+            if (userResponse.status === 200) {
+                if (data.user_type === 'DOCENT') {
+                    navigation.navigate('DocentDashboard', {
+                        voornaam: userData.voornaam,
+                        achternaam: userData.achternaam,
+                    });
+                } else if (data.user_type === 'STUDENT') {
+                    navigation.navigate('StudentDashboard', {
+                        voornaam: userData.voornaam,
+                        achternaam: userData.achternaam,
+                    });
+                } else if (data.user_type === 'ADMIN') {
+                    navigation.navigate('AdminDashboard', {
+                        voornaam: userData.voornaam,
+                        achternaam: userData.achternaam,
                     });
                 }
-            })
-            .catch((error) => {
-                console.error('Error:', error);
+            } else {
                 Toast.show({
                     type: 'error',
                     text1: 'Fout',
-                    text2: 'Er is een fout opgetreden tijdens het aanmelden',
+                    text2: 'Er is een fout opgetreden bij het ophalen van gebruikersgegevens',
                 });
+            }
+        } else {
+            Toast.show({
+                type: 'error',
+                text1: 'Fout',
+                text2: 'Onjuiste aanmeldgegevens',
             });
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        Toast.show({
+            type: 'error',
+            text1: 'Fout',
+            text2: 'Er is een fout opgetreden tijdens het aanmelden',
+        });
     }
+};
 
 
     return (

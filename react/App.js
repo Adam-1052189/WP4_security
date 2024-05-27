@@ -10,12 +10,16 @@ import Toast from 'react-native-toast-message';
 import DocentRegister from "./src/screens/AdminDashboard";
 import * as Font from 'expo-font';
 import AdminDashboard from "./src/screens/AdminDashboard";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Button } from 'react-native';
+
+
 
 const Stack = createStackNavigator();
 
 const App = () => {
     const [fontLoaded, setFontLoaded] = useState(false);
-
+    const [initialRoute, setInitialRoute] = useState('Welkom');
 
     useEffect(() => {
         async function loadFonts() {
@@ -26,6 +30,38 @@ const App = () => {
         }
         loadFonts();
     }, []);
+
+    useEffect(() => {
+        const checkLoginStatus = async () => {
+            const accessToken = await AsyncStorage.getItem('access_token');
+            const userType = await AsyncStorage.getItem('user_type');
+            if (accessToken) {
+                if (userType === 'DOCENT') {
+                    setInitialRoute('DocentDashboard');
+                } else if (userType === 'STUDENT') {
+                    setInitialRoute('StudentDashboard');
+                } else if (userType === 'ADMIN') {
+                    setInitialRoute('AdminDashboard');
+                }
+            }
+        };
+
+        checkLoginStatus();
+    }, []);
+
+    const handleLogout = async (navigation) => {
+        await AsyncStorage.removeItem('access_token');
+        await AsyncStorage.removeItem('refresh_token');
+        await AsyncStorage.removeItem('user_type');
+        await AsyncStorage.removeItem('user_id');
+        Toast.show({
+            type: 'success',
+            text1: 'Uitgelogd',
+            text2: 'Je bent succesvol uitgelogd',
+        });
+        navigation.navigate('Login');
+    };
+
     if (!fontLoaded) {
         return null;
     }
@@ -33,7 +69,7 @@ const App = () => {
 
     return (
         <NavigationContainer>
-            <Stack.Navigator initialRouteName="Welkom">
+            <Stack.Navigator initialRouteName={initialRoute}>
                 <Stack.Screen
                     name="Welkom"
                     component={WelcomeScreen}
@@ -71,7 +107,7 @@ const App = () => {
                 <Stack.Screen
                     name="DocentDashboard"
                     component={DocentDashboard}
-                    options={({route}) => ({
+                    options={({navigation, route}) => ({
                         title: route.params ? `${route.params.achternaam}, ${route.params.voornaam}` : 'Docenten Dashboard',
                         headerStyle: {
                             borderBottomColor: '#fff7ea',
@@ -83,13 +119,20 @@ const App = () => {
                             fontWeight: 'bold',
                             fontFamily: 'Poppins-extra-bold',
                         },
+                        headerRight: () => (
+                            <Button
+                                onPress={() => handleLogout(navigation)}
+                                title="Uitloggen"
+                                color="#d30f4c"
+                            />
+                        ),
                     })}
                 />
                 <Stack.Screen name="Registreren" component={RegisterScreen}/>
                 <Stack.Screen
                     name="StudentDashboard"
                     component={StudentDashboard}
-                    options={({route}) => ({
+                    options={({navigation, route}) => ({
                         title: route.params ? `${route.params.achternaam}, ${route.params.voornaam}` : 'Admin Dashboard',
                         headerStyle: {
                             borderBottomColor: '#fff7ea',
@@ -101,12 +144,19 @@ const App = () => {
                             fontWeight: 'bold',
                             fontFamily: 'Poppins-extra-bold',
                         },
+                        headerRight: () => (
+                            <Button
+                                onPress={() => handleLogout(navigation)}
+                                title="Uitloggen"
+                                color="#d30f4c"
+                            />
+                        ),
                     })}
                 />
                 <Stack.Screen
                     name={"AdminDashboard"}
                     component={AdminDashboard}
-                    options={({route}) => ({
+                    options={({navigation, route}) => ({
                         title: route.params ? `${route.params.achternaam}, ${route.params.voornaam}` : 'Admin Dashboard',
                         headerStyle: {
                             borderBottomColor: '#fff7ea',
@@ -118,6 +168,13 @@ const App = () => {
                             fontWeight: 'bold',
                             fontFamily: 'Poppins-extra-bold',
                         },
+                        headerRight: () => (
+                            <Button
+                                onPress={() => handleLogout(navigation)}
+                                title="Uitloggen"
+                                color="#d30f4c"
+                            />
+                        ),
                     })}
                 />
             </Stack.Navigator>

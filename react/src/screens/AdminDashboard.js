@@ -29,7 +29,7 @@ function AdminDashboard() {
 
     const handleSubmit = async () => {
         try {
-            const response = await fetch('http://localhost:8000/api-auth/register-docent/', {
+            const response = await fetch('http://localhost:8000/glitch/api-auth/register-docent/', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
