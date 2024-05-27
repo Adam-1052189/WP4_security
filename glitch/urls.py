@@ -16,6 +16,5 @@ urlpatterns = [
     path('gebruikers/<int:pk>/', views.GebruikerDetail.as_view(), name='gebruiker-detail'),
     path('cursusjaren/<int:domein_id>/', views.GetCursusjaren.as_view(), name='get_cursusjaren'),
     path('cursusjaren/<str:cursusjaar>/cursussen/', views.GetCursussen.as_view(), name='get_cursussen'),
-    path('register/', views.register, name='register'),
     path('', include(router.urls)),
 ]
