@@ -42,6 +42,7 @@ class Gebruiker(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default=False)
     cursussen = models.ManyToManyField('Cursus', through='Deelname')
     voortgang = models.ForeignKey('Voortgang', on_delete=models.CASCADE, null=True, related_name='gebruikers_voortgang')
+    xp = models.IntegerField(default=0)
     profielfoto = models.ImageField(null=True, upload_to='profielfotos/')
     bio = models.TextField(null=True)
 
@@ -52,6 +53,10 @@ class Gebruiker(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.email
+
+    def update_xp(self, xp_to_add):
+        self.xp += xp_to_add
+        self.save()
 
 class Notificatie(models.Model):
     notificatie_id = models.AutoField(primary_key=True)
@@ -71,12 +76,26 @@ class Domein(models.Model):
     bovenliggend_domein = models.ForeignKey('self', on_delete=models.CASCADE, null=True)
 
 class Activiteit(models.Model):
+    NIVEAUS = [
+        (1, 'Niveau 1'),
+        (2, 'Niveau 2'),
+        (3, 'Niveau 3'),
+        (4, 'Niveau 4'),
+    ]
     activiteit_id = models.AutoField(primary_key=True)
     module = models.ForeignKey('Module', on_delete=models.CASCADE, null=True)
     gebruiker = models.ForeignKey('Gebruiker', on_delete=models.CASCADE, null=True)
     stap = models.IntegerField(null=True)
     taak = models.CharField(max_length=100, null=True)
     module = models.ForeignKey('Module', related_name='activiteiten', on_delete=models.CASCADE)
+    niveau = models.IntegerField(choices=NIVEAUS, default=1)
+    afgevinkt = models.BooleanField(default=False)
+
+    def complete(self):
+        self.afgevinkt = True
+        self.save()
+        xp_to_add = self.niveau
+        self.gebruiker.update_xp(xp_to_add)
 
 class Cursus(models.Model):
     vak_cursus_id = models.AutoField(primary_key=True)
@@ -108,6 +127,25 @@ class CoreAssignment(models.Model):
     deadline = models.DateField(null=True)
     score = models.IntegerField(null=True)
     bijlage = models.FileField(upload_to='opdracht_bijlagen/', null=True)
+    point_challenge = models.IntegerField(default=0)
+    context_challenge = models.TextField(null=True)
+    afgevinkt = models.BooleanField(default=False)
+
+    def check_completion(self):
+        all_tasks_completed = all(task.afgevinkt for task in self.module.activiteiten.all())
+        if all_tasks_completed:
+            self.afgevinkt = True
+            self.save()
+
+    def check_point_challenge(self):
+        total_points = sum(task.niveau for task in self.module.activiteiten.all())
+        if total_points >= self.point_challenge:
+            self.gebruiker.update_xp(self.point_challenge)
+            return True
+
+    def check_context_challenge(self):
+        if self.context_challenge:
+            return True
 
 class Challenge(models.Model):
     challenge_id = models.AutoField(primary_key=True)

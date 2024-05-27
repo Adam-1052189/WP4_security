@@ -3,11 +3,11 @@ from django.contrib.auth import get_user_model, authenticate
 from django.contrib.auth.hashers import make_password
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework import status, generics
+from rest_framework import status, generics, viewsets
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from .models import Domein, Cursus
-from .serializers import DomeinSerializer, GebruikerSerializer, CursusjaarSerializer, CursusSerializer
+from .models import Domein, Cursus, Activiteit, CoreAssignment
+from .serializers import DomeinSerializer, GebruikerSerializer, CursusjaarSerializer, CursusSerializer, ActiviteitSerializer, CoreAssignmentSerializer
 from django.views import View
 from django.core import serializers
 from .models import Gebruiker, Cursusjaar
@@ -96,3 +96,24 @@ class GetCursussen(APIView):
         cursussen = Cursus.objects.filter(cursusjaarcursus__cursusjaar__cursusjaar=cursusjaar)
         serializer = CursusSerializer(cursussen, many=True)
         return Response(serializer.data)
+
+
+class ActiviteitViewSet(viewsets.ModelViewSet):
+    queryset = Activiteit.objects.all()
+    serializer_class = ActiviteitSerializer
+
+    def perform_update(self, serializer):
+        instance = serializer.save()
+        if instance.afgevinkt:
+            instance.complete()
+
+class CoreAssignmentViewSet(viewsets.ModelViewSet):
+    queryset = CoreAssignment.objects.all()
+    serializer_class = CoreAssignmentSerializer
+
+    def perform_update(self, serializer):
+        instance = serializer.save()
+        if instance.afgevinkt:
+            instance.check_completion()
+            instance.check_point_challenge()
+            instance.check_context_challenge()
