@@ -41,8 +41,9 @@ function Header() {
                 console.log('Profielfoto data:', data); // Controleer of de response correct is
                 console.log('Profielfoto data:', users); // Controleer of de response correct is
                 if (users.length > 0 && users[0].fields.profielfoto) {
-                    console.log('Profielfoto URL:', users[0].fields.profielfoto);
-                    setProfilePic(users[0].fields.profielfoto);
+                    const profilePicUrl = `http://localhost:8000/${users[0].fields.profielfoto}`;
+                    console.log('Profielfoto URL:', profilePicUrl);
+                    setProfilePic(profilePicUrl);
                 }
             } catch (error) {
                 console.error('Error fetching profile picture:', error);
