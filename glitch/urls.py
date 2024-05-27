@@ -1,6 +1,11 @@
-from django.urls import path
-from . import views
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt.views import TokenRefreshView
+from . import views
+
+router = DefaultRouter()
+router.register(r'activiteiten', views.ActiviteitViewSet)
+router.register(r'coreassignments', views.CoreAssignmentViewSet)
 
 urlpatterns = [
     path('api/login/', views.LoginView.as_view(), name='login'),
@@ -11,4 +16,6 @@ urlpatterns = [
     path('gebruikers/<int:pk>/', views.GebruikerDetail.as_view(), name='gebruiker-detail'),
     path('cursusjaren/<int:domein_id>/', views.GetCursusjaren.as_view(), name='get_cursusjaren'),
     path('cursusjaren/<str:cursusjaar>/cursussen/', views.GetCursussen.as_view(), name='get_cursussen'),
+    path('register/', views.register, name='register'),
+    path('', include(router.urls)),
 ]

@@ -2,6 +2,7 @@ import json
 from django.contrib.auth import get_user_model, authenticate
 from django.contrib.auth.hashers import make_password
 from rest_framework.response import Response
+from rest_framework.decorators import action
 from rest_framework.views import APIView
 from rest_framework import status, generics, viewsets
 from django.http import JsonResponse
@@ -111,6 +112,12 @@ class ActiviteitViewSet(viewsets.ModelViewSet):
     queryset = Activiteit.objects.all()
     serializer_class = ActiviteitSerializer
 
+    @action(detail=True, methods=['post'])
+    def complete(self, request, pk=None):
+        activiteit = self.get_object()
+        activiteit.complete()
+        return Response({'status': 'success'}, status=status.HTTP_200_OK)
+
     def perform_update(self, serializer):
         instance = serializer.save()
         if instance.afgevinkt:
@@ -120,6 +127,13 @@ class CoreAssignmentViewSet(viewsets.ModelViewSet):
     queryset = CoreAssignment.objects.all()
     serializer_class = CoreAssignmentSerializer
 
+    @action(detail=True, methods=['get'])
+    def check_completion(self, request, pk=None):
+        core_assignment = self.get_object()
+        core_assignment.check_completion()
+        core_assignment.check_point_challenge()
+        core_assignment.check_context_challenge()
+        return Response({'status': 'Opdracht gecontroleerd'}, status=status.HTTP_200_OK)
     def perform_update(self, serializer):
         instance = serializer.save()
         if instance.afgevinkt:
