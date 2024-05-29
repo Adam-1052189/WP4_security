@@ -43,7 +43,7 @@ class Gebruiker(AbstractBaseUser, PermissionsMixin):
     cursussen = models.ManyToManyField('Cursus', through='Deelname')
     voortgang = models.ForeignKey('Voortgang', on_delete=models.CASCADE, null=True, related_name='gebruikers_voortgang')
     xp = models.IntegerField(default=0)
-    profielfoto = models.ImageField(null=True, upload_to='profielfotos/')
+    profielfoto = models.ImageField(null=True, upload_to='static/glitch/img/')
     bio = models.TextField(null=True)
 
     objects = CustomUserManager()
