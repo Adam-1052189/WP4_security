@@ -1,6 +1,7 @@
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 from django.db import models
 
+
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, user_type, password=None, voornaam=None, achternaam=None):
         if not email:
@@ -23,6 +24,7 @@ class CustomUserManager(BaseUserManager):
         user.is_staff = True
         user.save(using=self._db)
         return user
+
 
 class Gebruiker(AbstractBaseUser, PermissionsMixin):
     ADMIN = 'ADMIN'
@@ -58,11 +60,13 @@ class Gebruiker(AbstractBaseUser, PermissionsMixin):
         self.xp += xp_to_add
         self.save()
 
+
 class Notificatie(models.Model):
     notificatie_id = models.AutoField(primary_key=True)
     gebruiker = models.ForeignKey('Gebruiker', on_delete=models.CASCADE, null=True)
     score = models.IntegerField(null=True)
     beschrijving = models.TextField(null=True)
+
 
 class Voortgang(models.Model):
     voortgang_id = models.AutoField(primary_key=True)
@@ -70,10 +74,11 @@ class Voortgang(models.Model):
     gebruiker = models.ForeignKey('Gebruiker', on_delete=models.CASCADE, null=True, related_name='voortgang_gebruikers')
     totale_score = models.IntegerField(null=True)
 
+
 class Domein(models.Model):
     domein_id = models.AutoField(primary_key=True)
     domeinnaam = models.CharField(max_length=100)
-    bovenliggend_domein = models.ForeignKey('self', on_delete=models.CASCADE, null=True)
+
 
 class Activiteit(models.Model):
     NIVEAUS = [
@@ -90,7 +95,8 @@ class Activiteit(models.Model):
     module = models.ForeignKey('Module', related_name='activiteiten', on_delete=models.CASCADE)
     niveau = models.IntegerField(choices=NIVEAUS, default=1)
     afgevinkt = models.BooleanField(default=False)
-    core_assignment = models.ForeignKey('CoreAssignment', related_name='activiteiten', on_delete=models.CASCADE, null=True)
+    core_assignment = models.ForeignKey('CoreAssignment', related_name='activiteiten', on_delete=models.CASCADE,
+                                        null=True)
 
     def complete(self):
         self.afgevinkt = True
@@ -98,10 +104,11 @@ class Activiteit(models.Model):
         xp_to_add = self.niveau
         self.gebruiker.update_xp(xp_to_add)
 
+
 class Cursus(models.Model):
     vak_cursus_id = models.AutoField(primary_key=True)
-    domein = models.ForeignKey('Domein', on_delete=models.CASCADE, null=True)
     vaknaam = models.CharField(max_length=100)
+
 
 class Cursusjaar(models.Model):
     cursusjaar_id = models.AutoField(primary_key=True)
@@ -109,17 +116,19 @@ class Cursusjaar(models.Model):
     cursusjaar = models.CharField(max_length=100)
     cursussen = models.ManyToManyField('Cursus', through='CursusjaarCursus')
 
+
 class Module(models.Model):
     module_id = models.AutoField(primary_key=True)
     cursus = models.ForeignKey('Cursus', on_delete=models.CASCADE, null=True)
     voortgang = models.ForeignKey('Voortgang', on_delete=models.CASCADE)
     opdracht = models.ForeignKey('CoreAssignment', on_delete=models.CASCADE)
-    chalenge = models.ForeignKey('Challenge', on_delete=models.CASCADE)
+    challenge = models.ForeignKey('Challenge', on_delete=models.CASCADE)
     activiteit = models.ForeignKey('Activiteit', on_delete=models.CASCADE)
     gebruiker = models.ForeignKey('Gebruiker', on_delete=models.CASCADE, null=True)
     modulenaam = models.CharField(max_length=100)
     beschrijving = models.TextField()
     activiteit = models.ForeignKey(Activiteit, related_name='modules', on_delete=models.CASCADE)
+
 
 class CoreAssignment(models.Model):
     id = models.AutoField(primary_key=True)
@@ -148,12 +157,14 @@ class CoreAssignment(models.Model):
         if self.context_challenge:
             return True
 
+
 class Challenge(models.Model):
     challenge_id = models.AutoField(primary_key=True)
     activiteit = models.ForeignKey('Activiteit', on_delete=models.CASCADE, null=True)
     gebruiker = models.ForeignKey('Gebruiker', on_delete=models.CASCADE, null=True)
     point_concept_challenge = models.IntegerField()
     verzamelde_punten = models.IntegerField(null=True)
+
 
 class Deelname(models.Model):
     gebruiker = models.ForeignKey(Gebruiker, on_delete=models.CASCADE)
