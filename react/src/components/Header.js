@@ -68,7 +68,7 @@ function Header() {
                         <Text style={styles.text}>Uitloggen</Text>
                     </TouchableOpacity>
                     {profilePic && (
-                        <Image source={{uri: 'http://localhost:8000' + profilePic}} style={styles.profielfoto}/>
+                        <Image source={{uri: profilePic}} style={styles.profielfoto}/>
                     )}
                 </View>
             </nav>

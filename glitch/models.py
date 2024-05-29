@@ -39,7 +39,7 @@ class Gebruiker(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     voortgang = models.ForeignKey('Voortgang', on_delete=models.CASCADE, null=True, related_name='gebruikers_voortgang')
-    profielfoto = models.ImageField(null=True, upload_to='static/img/')
+    profielfoto = models.ImageField(null=True, upload_to='static/glitch/img/')
     bio = models.TextField(null=True)
 
     objects = CustomUserManager()

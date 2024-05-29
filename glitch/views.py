@@ -11,6 +11,9 @@ from .serializers import DomeinSerializer
 from django.views import View
 from django.core import serializers
 from .models import Gebruiker
+from django.http import FileResponse
+from django.views import View
+import os
 
 User = get_user_model()
 
@@ -70,3 +73,13 @@ class GebruikerList(View):
         gebruikers = Gebruiker.objects.all()
         data = serializers.serialize('json', gebruikers)
         return JsonResponse(data, safe=False)
+
+class ServeAdminImage(View):
+    def get(self, request):
+        image_path = os.path.join(settings.STATIC_ROOT, 'glitch/img/admin.png')
+        try:
+            with open(image_path, 'rb') as f:
+                image_data = f.read()
+            return FileResponse(image_data, content_type='image/png')
+        except FileNotFoundError:
+            return JsonResponse({'error': 'Image not found'}, status=404)

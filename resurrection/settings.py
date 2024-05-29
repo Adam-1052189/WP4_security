@@ -25,7 +25,12 @@ SECRET_KEY = 'django-insecure-d%r^2bz9qa+&94q-$7(-)%kn*x(oex+e91n0rsnw(^4v_wxxc(
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    "http://localhost:8087",
+    "http://localhost:8000",
+    "http://localhost",
+    "localhost",
+]
 
 # Application definition
 
@@ -61,6 +66,8 @@ CORS_ORIGIN_WHITELIST = [
     "http://localhost:8081",
     "http://127.0.0.1:8081",
     "http://localhost:8087",
+    'http://localhost:8000',
+    'http://127.0.0.1:8000',
 ]
 
 ROOT_URLCONF = 'resurrection.urls'

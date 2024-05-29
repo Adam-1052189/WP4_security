@@ -13,7 +13,7 @@ class Command(BaseCommand):
             user_type=Gebruiker.ADMIN,
             password='admin'
         )
-        admin_profile_pic = os.path.join("resurrection", "static", "img", "admin.png")
+        admin_profile_pic = os.path.join("glitch","migrations", "admin.png")
         self._save_profile_pic(admin, admin_profile_pic)
 
         # Create a docent user and save the profile picture
@@ -22,7 +22,7 @@ class Command(BaseCommand):
             user_type=Gebruiker.DOCENT,
             password='docent'
         )
-        docent_profile_pic = os.path.join("resurrection", "static", "img", "docent.png")
+        docent_profile_pic = os.path.join("glitch","migrations", "docent.png")
         self._save_profile_pic(docent, docent_profile_pic)
 
         # Create a student user and save the profile picture
@@ -31,7 +31,7 @@ class Command(BaseCommand):
             user_type=Gebruiker.STUDENT,
             password='student'
         )
-        student_profile_pic = os.path.join("resurrection", "static", "img", "student.png")
+        student_profile_pic = os.path.join("glitch","migrations", "student.png")
         self._save_profile_pic(student, student_profile_pic)
 
         # Output success message
