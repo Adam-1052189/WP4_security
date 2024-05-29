@@ -15,7 +15,7 @@ class Command(BaseCommand):
             voornaam='Admin',
             achternaam='Admin'
         )
-        admin_profile_pic = os.path.join("glitch", "management", "commands", "static", "img", "admin.png")
+        admin_profile_pic = os.path.join("glitch","migrations", "admin.png")
         self._save_profile_pic(admin, admin_profile_pic)
 
         # Create a docent user and save the profile picture
@@ -26,7 +26,7 @@ class Command(BaseCommand):
             voornaam='Docent',
             achternaam='Docent'
         )
-        docent_profile_pic = os.path.join("glitch", "management", "commands", "static", "img", "docent.png")
+        docent_profile_pic = os.path.join("glitch","migrations", "docent.png")
         self._save_profile_pic(docent, docent_profile_pic)
 
         # Create a student user and save the profile picture
@@ -37,7 +37,7 @@ class Command(BaseCommand):
             voornaam='Student',
             achternaam='Student'
         )
-        student_profile_pic = os.path.join("glitch", "management", "commands", "static", "img", "student.png")
+        student_profile_pic = os.path.join("glitch","migrations", "student.png")
         self._save_profile_pic(student, student_profile_pic)
 
         # Output success message
@@ -46,6 +46,5 @@ class Command(BaseCommand):
     def _save_profile_pic(self, user, profile_pic_path):
         # Check if the file exists
         if os.path.exists(profile_pic_path):
-            # Open the file and save it to the user's profile picture field
             with open(profile_pic_path, 'rb') as f:
                 user.profielfoto.save(os.path.basename(profile_pic_path), File(f))
