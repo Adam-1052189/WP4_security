@@ -1,17 +1,16 @@
 import json
 from django.contrib.auth import get_user_model, authenticate
 from django.contrib.auth.hashers import make_password
+from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework.views import APIView
 from rest_framework import status, generics, viewsets
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from .models import Domein, Cursus, Activiteit, CoreAssignment
+from .models import Domein, Cursus, Activiteit, CoreAssignment, Voortgang, Gebruiker, Cursusjaar
 from .serializers import DomeinSerializer, GebruikerSerializer, CursusjaarSerializer, CursusSerializer, ActiviteitSerializer, CoreAssignmentSerializer
-from django.views import View
 from django.core import serializers
-from .models import Gebruiker, Cursusjaar
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.http import FileResponse
 from django.views import View
@@ -19,6 +18,19 @@ import os
 
 
 User = get_user_model()
+
+
+def check_completion(request, gebruiker_id, core_assignment_id):
+    gebruiker = get_object_or_404(Gebruiker, pk=gebruiker_id)
+    core_assignment = get_object_or_404(CoreAssignment, pk=core_assignment_id)
+    voortgang = get_object_or_404(Voortgang, gebruiker=gebruiker, core_assignment=core_assignment)
+
+    all_tasks_completed = all(task.afgevinkt for task in voortgang.activiteiten.all())
+    if all_tasks_completed:
+        voortgang.afgevinkt = True
+        voortgang.save()
+    return JsonResponse({'status': 'Opdracht gecontroleerd'}, status=status.HTTP_200_OK)
+
 
 class LoginView(APIView):
     def post(self, request):
@@ -140,13 +152,6 @@ class CoreAssignmentViewSet(viewsets.ModelViewSet):
     queryset = CoreAssignment.objects.all()
     serializer_class = CoreAssignmentSerializer
 
-    @action(detail=True, methods=['get'])
-    def check_completion(self, request, pk=None):
-        core_assignment = self.get_object()
-        core_assignment.check_completion()
-        core_assignment.check_point_challenge()
-        core_assignment.check_context_challenge()
-        return Response({'status': 'Opdracht gecontroleerd'}, status=status.HTTP_200_OK)
     def perform_update(self, serializer):
         instance = serializer.save()
         if instance.afgevinkt:
