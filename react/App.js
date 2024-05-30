@@ -10,8 +10,9 @@ import Toast from 'react-native-toast-message';
 import DocentRegister from "./src/screens/AdminDashboard";
 import * as Font from 'expo-font';
 import AdminDashboard from "./src/screens/AdminDashboard";
+import ProfileScreen from "./src/screens/ProfileScreen";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Button } from 'react-native';
+import { Button, View} from 'react-native';
 
 
 
@@ -154,7 +155,7 @@ const App = () => {
                     })}
                 />
                 <Stack.Screen
-                    name={"AdminDashboard"}
+                    name="AdminDashboard"
                     component={AdminDashboard}
                     options={({navigation, route}) => ({
                         title: route.params ? `${route.params.achternaam}, ${route.params.voornaam}` : 'Admin Dashboard',
@@ -169,13 +170,37 @@ const App = () => {
                             fontFamily: 'Poppins-extra-bold',
                         },
                         headerRight: () => (
-                            <Button
-                                onPress={() => handleLogout(navigation)}
-                                title="Uitloggen"
-                                color="#d30f4c"
-                            />
+                            <View style={{flexDirection: 'row'}}>
+                                <Button
+                                    onPress={() => navigation.navigate('Profiel')}
+                                    title="Profiel"
+                                    color="#1a69da"
+                                />
+                                <Button
+                                    onPress={() => handleLogout(navigation)}
+                                    title="Uitloggen"
+                                    color="#d30f4c"
+                                />
+                            </View>
                         ),
                     })}
+                />
+                <Stack.Screen
+                    name="Profiel"
+                    component={ProfileScreen}
+                    options={{
+                        title: 'Profiel',
+                        headerStyle: {
+                            borderBottomColor: '#fff7ea',
+                            backgroundColor: '#fff7ea',
+                        },
+                        headerTintColor: '#001e48',
+                        headerTitleStyle: {
+                            fontSize: 24,
+                            fontWeight: 'bold',
+                            fontFamily: 'Poppins-extra-bold',
+                        },
+                    }}
                 />
             </Stack.Navigator>
             <Toast />

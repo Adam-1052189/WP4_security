@@ -22,4 +22,5 @@ urlpatterns = [
     path('cursusjaren/<int:domein_id>/', views.GetCursusjaren.as_view(), name='get_cursusjaren'),
     path('cursusjaren/<str:cursusjaar>/cursussen/', views.GetCursussen.as_view(), name='get_cursussen'),
     path('', include(router.urls)),
+    path('gebruiker/<int:pk>/', views.GebruikerUpdate.as_view(), name='gebruiker-update'),
 ]

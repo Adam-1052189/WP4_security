@@ -20,6 +20,7 @@ import os
 
 User = get_user_model()
 
+
 class LoginView(APIView):
     def post(self, request):
         email = request.data.get('email')
@@ -59,10 +60,10 @@ def register(request):
         return JsonResponse({'success': 'Gebruiker succesvol geregistreerd'}, status=201)
 
 
-
 class DomeinList(generics.ListAPIView):
     queryset = Domein.objects.all()
     serializer_class = DomeinSerializer
+
 
 @csrf_exempt
 def register_docent(request):
@@ -83,6 +84,7 @@ def register_docent(request):
 
         return JsonResponse({'success': 'Docent succesvol geregistreerd'}, status=201)
 
+
 class ServeAdminImage(View):
     def get(self, request):
         image_path = os.path.join(settings.STATIC_ROOT, 'glitch/img/admin.png')
@@ -92,6 +94,7 @@ class ServeAdminImage(View):
             return FileResponse(image_data, content_type='image/png')
         except FileNotFoundError:
             return JsonResponse({'error': 'Image not found'}, status=404)
+
 
 class GebruikerList(View):
     def get(self, request):
@@ -103,8 +106,6 @@ class GebruikerList(View):
 class GebruikerDetail(generics.RetrieveAPIView):
     queryset = Gebruiker.objects.all()
     serializer_class = GebruikerSerializer
-
-
 
 
 class GetCursusjaren(APIView):
@@ -136,6 +137,7 @@ class ActiviteitViewSet(viewsets.ModelViewSet):
         if instance.afgevinkt:
             instance.complete()
 
+
 class CoreAssignmentViewSet(viewsets.ModelViewSet):
     queryset = CoreAssignment.objects.all()
     serializer_class = CoreAssignmentSerializer
@@ -147,9 +149,16 @@ class CoreAssignmentViewSet(viewsets.ModelViewSet):
         core_assignment.check_point_challenge()
         core_assignment.check_context_challenge()
         return Response({'status': 'Opdracht gecontroleerd'}, status=status.HTTP_200_OK)
+
+
     def perform_update(self, serializer):
         instance = serializer.save()
         if instance.afgevinkt:
             instance.check_completion()
             instance.check_point_challenge()
             instance.check_context_challenge()
+
+
+class GebruikerUpdate(generics.RetrieveUpdateAPIView):
+    queryset = Gebruiker.objects.all()
+    serializer_class = GebruikerSerializer

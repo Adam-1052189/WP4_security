@@ -27,9 +27,10 @@ class DomeinSerializer(serializers.ModelSerializer):
 class GebruikerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Gebruiker
-        fields = ['voornaam', 'achternaam', 'xp']
+        fields = ['voornaam', 'achternaam', 'email', 'xp', 'profielfoto']
 
 class CursusSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cursus
         fields = '__all__'
+
