@@ -23,4 +23,5 @@ urlpatterns = [
     path('cursusjaren/<str:cursusjaar>/cursussen/', views.GetCursussen.as_view(), name='get_cursussen'),
 path('check_completion/<int:gebruiker_id>/<int:core_assignment_id>/', check_completion, name='check_completion'),
     path('', include(router.urls)),
+    path('gebruiker/<int:pk>/', views.GebruikerUpdate.as_view(), name='gebruiker-update'),
 ]
