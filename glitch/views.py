@@ -13,6 +13,9 @@ from django.views import View
 from django.core import serializers
 from .models import Gebruiker, Cursusjaar
 from rest_framework_simplejwt.tokens import RefreshToken
+from django.http import FileResponse
+from django.views import View
+import os
 
 
 User = get_user_model()
@@ -79,6 +82,16 @@ def register_docent(request):
         user = User.objects.create_docent(email=email, password=password, voornaam=voornaam, achternaam=achternaam)
 
         return JsonResponse({'success': 'Docent succesvol geregistreerd'}, status=201)
+
+class ServeAdminImage(View):
+    def get(self, request):
+        image_path = os.path.join(settings.STATIC_ROOT, 'glitch/img/admin.png')
+        try:
+            with open(image_path, 'rb') as f:
+                image_data = f.read()
+            return FileResponse(image_data, content_type='image/png')
+        except FileNotFoundError:
+            return JsonResponse({'error': 'Image not found'}, status=404)
 
 class GebruikerList(View):
     def get(self, request):
