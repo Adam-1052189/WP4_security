@@ -31,6 +31,7 @@ ALLOWED_HOSTS = [
     "http://localhost:8000",
     "http://localhost",
     "localhost",
+    "127.0.0.1",
 ]
 
 # Application definition
