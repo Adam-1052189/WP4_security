@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Domein, Gebruiker, Cursusjaar, Cursus, Activiteit, CoreAssignment
+from .models import Domein, Gebruiker, Cursusjaar, Cursus, Activiteit, CoreAssignment, Voortgang
 
 
 class ActiviteitSerializer(serializers.ModelSerializer):
@@ -34,3 +34,8 @@ class CursusSerializer(serializers.ModelSerializer):
         model = Cursus
         fields = '__all__'
 
+
+class VoortgangSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Voortgang
+        fields = '__all__'

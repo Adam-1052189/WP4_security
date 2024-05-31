@@ -3,13 +3,13 @@ from django.contrib.auth import get_user_model, authenticate
 from django.contrib.auth.hashers import make_password
 from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
-from rest_framework.decorators import action
+from rest_framework.decorators import action, api_view
 from rest_framework.views import APIView
 from rest_framework import status, generics, viewsets
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from .models import Domein, Cursus, Activiteit, CoreAssignment, Voortgang, Gebruiker, Cursusjaar
-from .serializers import DomeinSerializer, GebruikerSerializer, CursusjaarSerializer, CursusSerializer, ActiviteitSerializer, CoreAssignmentSerializer
+from .serializers import DomeinSerializer, GebruikerSerializer, CursusjaarSerializer, CursusSerializer, ActiviteitSerializer, CoreAssignmentSerializer, VoortgangSerializer
 from django.core import serializers
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.http import FileResponse
@@ -19,6 +19,19 @@ import os
 
 User = get_user_model()
 
+
+@api_view(['GET'])
+def docent_voortgang(request, docent_id):
+    core_assignments = CoreAssignment.objects.filter(gebruiker__id=docent_id)
+    voortgangen = Voortgang.objects.filter(gebruiker__id=docent_id)
+
+    core_assignments_serializer = CoreAssignmentSerializer(core_assignments, many=True)
+    voortgang_serializer = VoortgangSerializer(voortgangen, many=True)
+
+    return Response({
+        'core_assignments': core_assignments_serializer.data,
+        'voortgangen': voortgang_serializer.data
+    })
 
 def check_completion(request, gebruiker_id, core_assignment_id):
     gebruiker = get_object_or_404(Gebruiker, pk=gebruiker_id)
@@ -141,7 +154,7 @@ class ActiviteitViewSet(viewsets.ModelViewSet):
     def complete(self, request, pk=None):
         activiteit = self.get_object()
         activiteit.complete()
-        return Response({'status': 'success'}, status=status.HTTP_200_OK)
+        return Response({'status': 'Taak voltooid'}, status=status.HTTP_200_OK)
 
     def perform_update(self, serializer):
         instance = serializer.save()
