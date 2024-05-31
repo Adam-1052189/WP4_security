@@ -12,8 +12,9 @@ from .models import Domein, Cursus, Activiteit, CoreAssignment, Voortgang, Gebru
 from .serializers import DomeinSerializer, GebruikerSerializer, CursusjaarSerializer, CursusSerializer, ActiviteitSerializer, CoreAssignmentSerializer, VoortgangSerializer
 from django.core import serializers
 from rest_framework_simplejwt.tokens import RefreshToken
-from django.http import FileResponse
+from django.http import FileResponse, JsonResponse
 from django.views import View
+from django.conf import settings
 import os
 
 User = get_user_model()
