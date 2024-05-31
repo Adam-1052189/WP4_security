@@ -3,10 +3,12 @@ import {View, Text, StyleSheet} from 'react-native';
 import axios from "axios";
 import DomeinItem from "../components/DomeinItem";
 import CursusList from "../components/CursusList";
+import StudentProgress from "../components/StudentProgress";
 
 const DocentDashboard = () => {
     const [domeinen, setDomeinen] = useState([]);
     const [selectedCursusjaarId, setSelectedCursusjaarId] = useState(null);
+    const [docentId, setDocentId] = useState(null);
 
     useEffect(() => {
         // Haal de domeinen op wanneer het component wordt geladen
@@ -26,6 +28,14 @@ const DocentDashboard = () => {
         fetchDomeinen();
     }, []);
 
+    useEffect(() => {
+        // Replace with your actual API call to fetch gebruikerId
+        fetch('http://your-api-url/get-gebruiker-id/')
+            .then(response => response.json())
+            .then(json => setDocentId(json.gebruikerId))
+            .catch(error => console.error(error));
+    }, []);
+
     const handleSelect = (cursusjaarId) => {
         setSelectedCursusjaarId(cursusjaarId);
     };
@@ -43,6 +53,7 @@ const DocentDashboard = () => {
                 />
             ))}
             {selectedCursusjaarId && <CursusList cursusjaarId={selectedCursusjaarId} />}
+            <StudentProgress docentId={docentId}/>
         </View>
     );
 }

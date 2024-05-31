@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import DomeinList, GebruikerList, ServeAdminImage
+from .views import DomeinList, GebruikerList, ServeAdminImage, check_completion
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt.views import TokenRefreshView
@@ -21,6 +21,9 @@ urlpatterns = [
     path('gebruikers/<int:pk>/', views.GebruikerDetail.as_view(), name='gebruiker-detail'),
     path('cursusjaren/<int:domein_id>/', views.GetCursusjaren.as_view(), name='get_cursusjaren'),
     path('cursusjaren/<str:cursusjaar>/cursussen/', views.GetCursussen.as_view(), name='get_cursussen'),
+    path('check_completion/<int:gebruiker_id>/<int:core_assignment_id>/', check_completion, name='check_completion'),
     path('', include(router.urls)),
     path('gebruiker/<int:pk>/', views.GebruikerUpdate.as_view(), name='gebruiker-update'),
+    path('docent_voortgang/<int:docent_id>/',views.docent_voortgang, name='docent-voortgang'),
+
 ]

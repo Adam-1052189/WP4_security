@@ -1,7 +1,6 @@
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 from django.db import models
 
-
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, user_type, password=None, voornaam=None, achternaam=None):
         if not email:
@@ -43,7 +42,6 @@ class Gebruiker(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     cursussen = models.ManyToManyField('Cursus', through='Deelname')
-    voortgang = models.ForeignKey('Voortgang', on_delete=models.CASCADE, null=True, related_name='gebruikers_voortgang')
     xp = models.IntegerField(default=0)
     profielfoto = models.ImageField(null=True, upload_to='static/glitch/img/')
     bio = models.TextField(null=True)
@@ -71,8 +69,12 @@ class Notificatie(models.Model):
 class Voortgang(models.Model):
     voortgang_id = models.AutoField(primary_key=True)
     cursus = models.ForeignKey('Cursus', on_delete=models.CASCADE, null=True)
-    gebruiker = models.ForeignKey('Gebruiker', on_delete=models.CASCADE, null=True, related_name='voortgang_gebruikers')
-    totale_score = models.IntegerField(null=True)
+    gebruiker = models.ForeignKey('Gebruiker', on_delete=models.CASCADE, related_name='voortgangen')
+    core_assignment = models.ForeignKey('CoreAssignment', on_delete=models.CASCADE)
+    score = models.IntegerField(null=True)
+    bijlage = models.FileField(upload_to='opdracht_bijlagen/', null=True)
+    afgevinkt = models.BooleanField(default=False)
+    activiteiten = models.ManyToManyField('Activiteit')
 
 
 class Domein(models.Model):
@@ -88,12 +90,9 @@ class Activiteit(models.Model):
         (4, 'Niveau 4'),
     ]
     activiteit_id = models.AutoField(primary_key=True)
-    module = models.ForeignKey('Module', on_delete=models.SET_NULL, null=True)
     gebruiker = models.ForeignKey('Gebruiker', on_delete=models.CASCADE, null=True)
-    stap = models.IntegerField(null=True)
     taak = models.CharField(max_length=100, null=True)
-    module = models.ForeignKey('Module', related_name='activiteiten', on_delete=models.CASCADE)
-    niveau = models.IntegerField(choices=NIVEAUS, default=1)
+    niveau = models.IntegerField(choices=NIVEAUS, default=0)
     afgevinkt = models.BooleanField(default=False)
     core_assignment = models.ForeignKey('CoreAssignment', related_name='activiteiten', on_delete=models.CASCADE,
                                         null=True)
@@ -117,29 +116,13 @@ class Cursusjaar(models.Model):
     cursussen = models.ManyToManyField('Cursus', through='CursusjaarCursus')
 
 
-class Module(models.Model):
-    module_id = models.AutoField(primary_key=True)
-    cursus = models.ForeignKey('Cursus', on_delete=models.CASCADE, null=True)
-    voortgang = models.ForeignKey('Voortgang', on_delete=models.CASCADE)
-    opdracht = models.ForeignKey('CoreAssignment', on_delete=models.CASCADE)
-    challenge = models.ForeignKey('Challenge', on_delete=models.CASCADE)
-    activiteit = models.ForeignKey('Activiteit', on_delete=models.CASCADE)
-    gebruiker = models.ForeignKey('Gebruiker', on_delete=models.CASCADE, null=True)
-    modulenaam = models.CharField(max_length=100)
-    beschrijving = models.TextField()
-    activiteit = models.ForeignKey(Activiteit, related_name='modules', on_delete=models.CASCADE)
-
-
 class CoreAssignment(models.Model):
     id = models.AutoField(primary_key=True)
-    gebruiker = models.ForeignKey('Gebruiker', on_delete=models.CASCADE, null=True)
     opdrachtnaam = models.CharField(max_length=100)
     deadline = models.DateField(null=True)
-    score = models.IntegerField(null=True)
-    bijlage = models.FileField(upload_to='opdracht_bijlagen/', null=True)
+    gebruikers = models.ManyToManyField('Gebruiker', through='Voortgang')
     point_challenge = models.IntegerField(default=0)
     context_challenge = models.TextField(null=True)
-    afgevinkt = models.BooleanField(default=False)
 
     def check_completion(self):
         all_tasks_completed = all(task.afgevinkt for task in self.activiteiten.all())
@@ -147,14 +130,16 @@ class CoreAssignment(models.Model):
             self.afgevinkt = True
             self.save()
 
-    def check_point_challenge(self):
-        total_points = sum(task.niveau for task in self.activiteiten.all())
-        if total_points >= self.point_challenge:
-            self.gebruiker.update_xp(self.point_challenge)
+    def check_point_challenge(self, gebruiker):
+        voortgang = self.voortgang_set.get(gebruiker=gebruiker)
+        total_points = sum(task.niveau for task in voortgang.activiteiten.all())
+        if total_points >= voortgang.point_challenge:
+            gebruiker.update_xp(voortgang.point_challenge)
             return True
 
-    def check_context_challenge(self):
-        if self.context_challenge:
+    def check_context_challenge(self, gebruiker):
+        voortgang = self.voortgang_set.get(gebruiker=gebruiker)
+        if voortgang.context_challenge:
             return True
 
 
