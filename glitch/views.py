@@ -8,7 +8,8 @@ from rest_framework import status, generics, viewsets
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from .models import Domein, Cursus, Activiteit, CoreAssignment
-from .serializers import DomeinSerializer, GebruikerSerializer, CursusjaarSerializer, CursusSerializer, ActiviteitSerializer, CoreAssignmentSerializer
+from .serializers import DomeinSerializer, GebruikerSerializer, CursusjaarSerializer, CursusSerializer, \
+    ActiviteitSerializer, CoreAssignmentSerializer
 from django.views import View
 from django.core import serializers
 from .models import Gebruiker, Cursusjaar
@@ -16,7 +17,6 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from django.http import FileResponse
 from django.views import View
 import os
-
 
 User = get_user_model()
 
@@ -150,7 +150,6 @@ class CoreAssignmentViewSet(viewsets.ModelViewSet):
         core_assignment.check_context_challenge()
         return Response({'status': 'Opdracht gecontroleerd'}, status=status.HTTP_200_OK)
 
-
     def perform_update(self, serializer):
         instance = serializer.save()
         if instance.afgevinkt:
@@ -162,3 +161,13 @@ class CoreAssignmentViewSet(viewsets.ModelViewSet):
 class GebruikerUpdate(generics.RetrieveUpdateAPIView):
     queryset = Gebruiker.objects.all()
     serializer_class = GebruikerSerializer
+
+    def update(self, request, *args, **kwargs):
+        user = self.get_object()
+        serializer = self.get_serializer(user, data=request.data)
+        if serializer.is_valid():
+            if 'password' in serializer.validated_data:
+                serializer.validated_data['password'] = make_password(serializer.validated_data['password'])
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

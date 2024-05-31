@@ -4,6 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const ProfileScreen = () => {
     const [user, setUser] = useState(null);
+    const [password, setPassword] = useState('');
 
     useEffect(() => {
         fetchUserData();
@@ -23,7 +24,7 @@ const ProfileScreen = () => {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(user)
+            body: JSON.stringify({ ...user, password })
         });
 
         if (response.ok) {
@@ -59,6 +60,25 @@ const ProfileScreen = () => {
                     <TextInput
                         value={user.email}
                         onChangeText={(text) => setUser({ ...user, email: text })}
+                    />
+                </View>
+                <View style={styles.fieldContainer}>
+                    <Text>Wachtwoord:</Text>
+                    <TextInput
+                        value={password}
+                        onChangeText={setPassword}
+                        secureTextEntry
+                        style={{ height: 20, borderColor: 'gray', borderWidth: 1 }}
+                    />
+                </View>
+                <View style={styles.fieldContainer}>
+                    <Text style={{height: 100}} numberOfLines={4}>Bio: {user.bio} </Text>
+                    <TextInput
+                        value={user.bio}
+                        onChangeText={(text) => setUser({ ...user, bio: text })}
+                        style={{ height: 100 }}
+                        textAlignVertical={'top'}
+                        multiline={true}
                     />
                 </View>
             </View>

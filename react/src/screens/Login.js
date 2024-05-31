@@ -45,7 +45,7 @@ const Login = () => {
             await AsyncStorage.setItem('access_token', data.access);
             await AsyncStorage.setItem('refresh_token', data.refresh);
             await AsyncStorage.setItem('user_type', data.user_type);
-            await AsyncStorage.setItem('user_id', data.user_id);
+            await AsyncStorage.setItem('user_id', String(data.user_id));
 
             Toast.show({
                 type: 'success',

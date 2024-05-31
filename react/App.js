@@ -121,11 +121,18 @@ const App = () => {
                             fontFamily: 'Poppins-extra-bold',
                         },
                         headerRight: () => (
-                            <Button
-                                onPress={() => handleLogout(navigation)}
-                                title="Uitloggen"
-                                color="#d30f4c"
-                            />
+                            <View style={{flexDirection: 'row'}}>
+                                <Button
+                                    onPress={() => navigation.navigate('Profiel')}
+                                    title="Profiel"
+                                    color="#1a69da"
+                                />
+                                <Button
+                                    onPress={() => handleLogout(navigation)}
+                                    title="Uitloggen"
+                                    color="#d30f4c"
+                                />
+                            </View>
                         ),
                     })}
                 />
@@ -146,11 +153,18 @@ const App = () => {
                             fontFamily: 'Poppins-extra-bold',
                         },
                         headerRight: () => (
-                            <Button
-                                onPress={() => handleLogout(navigation)}
-                                title="Uitloggen"
-                                color="#d30f4c"
-                            />
+                            <View style={{flexDirection: 'row'}}>
+                                <Button
+                                    onPress={() => navigation.navigate('Profiel')}
+                                    title="Profiel"
+                                    color="#1a69da"
+                                />
+                                <Button
+                                    onPress={() => handleLogout(navigation)}
+                                    title="Uitloggen"
+                                    color="#d30f4c"
+                                />
+                            </View>
                         ),
                     })}
                 />
