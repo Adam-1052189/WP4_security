@@ -202,7 +202,7 @@ const App = () => {
                 <Stack.Screen
                     name="Profiel"
                     component={ProfileScreen}
-                    options={{
+                    options={({ navigation }) => ({
                         title: 'Profiel',
                         headerStyle: {
                             borderBottomColor: '#fff7ea',
@@ -214,7 +214,14 @@ const App = () => {
                             fontWeight: 'bold',
                             fontFamily: 'Poppins-extra-bold',
                         },
-                    }}
+                        headerRight: () => (
+                                <Button
+                                    onPress={() => handleLogout(navigation)}
+                                    title="Uitloggen"
+                                    color="#d30f4c"
+                                />
+                        ),
+                    })}
                 />
             </Stack.Navigator>
             <Toast />

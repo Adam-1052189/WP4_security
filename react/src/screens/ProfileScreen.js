@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Toast from "react-native-toast-message";
 
 const ProfileScreen = () => {
     const [user, setUser] = useState(null);
@@ -28,9 +29,19 @@ const ProfileScreen = () => {
         });
 
         if (response.ok) {
+            Toast.show({
+                type: 'success',
+                text1: 'succes',
+                text2: 'Gebruikersgegevens succesvol bijgewerkt',
+            });
             console.log('Gebruikersgegevens bijgewerkt');
         } else {
-            console.log('Er is een fout opgetreden bij het bijwerken van de gebruikersgegevens');
+            Toast.show({
+                type: 'error',
+                text1: 'Fout',
+                text2: 'Er is een fout opgetreden, vul alles in',
+            });
+            console.log('Er is een fout opgetreden, vul alles in');
         }
     };
 
