@@ -1,9 +1,31 @@
 import React, {useState, useEffect} from 'react';
 import {View, Text, FlatList, StyleSheet, Button, TextInput} from 'react-native';
+import { useIsFocused } from '@react-navigation/native';
 
-function GebruikerList({ gebruikers }) {
+function GebruikerList({ route, navigation }) {
+    const routeGebruikers = route.params.gebruikers;
     const [filter, setFilter] = useState('all');
     const [zoekTerm, setZoekTerm] = useState('');
+    const isFocused = useIsFocused();
+    const [gebruikers, setGebruikers] = useState([]);
+
+    const fetchUsers = async () => {
+        try {
+            const response = await fetch('http://localhost:8000/glitch/gebruikers');
+            let data = await response.json();
+            data = JSON.parse(data);
+            data = data.map(item => ({id: item.pk, ...item.fields}));
+            setGebruikers(data);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    useEffect(() => {
+        if (isFocused) {
+            fetchUsers();
+        }
+    }, [isFocused]);
 
     const filteredUsers = gebruikers.filter(user => {
         if (filter !== 'all' && user.user_type !== filter) return false;
@@ -21,6 +43,7 @@ function GebruikerList({ gebruikers }) {
             <Text>Type: {item.user_type}</Text>
             <Text>Is staff: {item.is_staff ? 'Ja' : 'Nee'}</Text>
             <Text>Is active: {item.is_active ? 'Ja' : 'Nee'}</Text>
+            <Button title="Bewerk" onPress={() => navigation.navigate('GebruikerEditScreen', {gebruiker: item})} />
         </View>
     );
 

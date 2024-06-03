@@ -1,15 +1,13 @@
 import React, {useState, useEffect} from 'react';
 import {View, TextInput, Button, StyleSheet, Text, TouchableOpacity} from 'react-native';
 import Toast from 'react-native-toast-message';
-import GebruikerList from '../components/GebruikerList';
 
-function AdminDashboard() {
+function AdminDashboard({ navigation }) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [voornaam, setVoornaam] = useState('');
     const [achternaam, setAchternaam] = useState('');
     const [users, setUsers] = useState([]);
-    const [showUserList, setShowUserList] = useState(false);
 
     useEffect(() => {
         fetchUsers();
@@ -112,11 +110,10 @@ function AdminDashboard() {
             </View>
             <TouchableOpacity
                 style={styles.buttonContainer}
-                onPress={() => setShowUserList(!showUserList)}
+                onPress={() => navigation.navigate('GebruikerList', {gebruikers: users})}
             >
                 <Text style={styles.buttonText}>Ga naar Gebruikerslijst</Text>
             </TouchableOpacity>
-            {showUserList && <GebruikerList gebruikers={users}/>}
         </View>
     );
 }

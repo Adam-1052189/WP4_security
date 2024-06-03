@@ -31,7 +31,8 @@ class GebruikerSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Gebruiker
-        fields = ['voornaam', 'achternaam', 'email', 'password', 'xp', 'bio']
+        fields = ['voornaam', 'achternaam', 'email', 'password', 'xp', 'bio', 'user_type', 'is_active', 'is_staff',
+                  'is_superuser',]
 
 
 class CursusSerializer(serializers.ModelSerializer):

@@ -65,22 +65,16 @@ const Login = () => {
 
 
             if (userResponse.status === 200) {
-                if (data.user_type === 'DOCENT') {
-                    navigation.navigate('DocentDashboard', {
-                        voornaam: userData.voornaam,
-                        achternaam: userData.achternaam,
-                    });
-                } else if (data.user_type === 'STUDENT') {
-                    navigation.navigate('StudentDashboard', {
-                        voornaam: userData.voornaam,
-                        achternaam: userData.achternaam,
-                    });
-                } else if (data.user_type === 'ADMIN') {
-                    navigation.navigate('AdminDashboard', {
-                        voornaam: userData.voornaam,
-                        achternaam: userData.achternaam,
-                    });
-                }
+                const user = {
+                    voornaam: userData.voornaam,
+                    achternaam: userData.achternaam,
+                };
+                await AsyncStorage.setItem('user', JSON.stringify(user));
+
+                navigation.reset({
+                    index: 0,
+                    routes: [{name: data.user_type === 'DOCENT' ? 'DocentDashboard' : data.user_type === 'STUDENT' ? 'StudentDashboard' : 'AdminDashboard', params: { user: user } }],
+                });
             } else {
                 Toast.show({
                     type: 'error',
