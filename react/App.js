@@ -1,26 +1,47 @@
 import React, {useEffect, useState} from 'react'
 import {NavigationContainer} from '@react-navigation/native'
 import {createStackNavigator} from '@react-navigation/stack'
+import {useIsFocused} from "@react-navigation/native";
 import DocentDashboard from "./src/screens/DocentDashboard"
 import WelcomeScreen from './src/screens/WelcomeScreen'
 import Login from "./src/screens/Login"
 import RegisterScreen from "./src/screens/RegisterScreen"
 import StudentDashboard from "./src/screens/StudentDashboard"
 import Toast from 'react-native-toast-message';
-import DocentRegister from "./src/screens/AdminDashboard";
 import * as Font from 'expo-font';
 import AdminDashboard from "./src/screens/AdminDashboard";
 import ProfileScreen from "./src/screens/ProfileScreen";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Button, View} from 'react-native';
-
+import {Button, View} from 'react-native';
+import GebruikerList from "./src/components/GebruikerList";
+import GebruikerEditScreen from "./src/screens/GebruikerEditScreen";
 
 
 const Stack = createStackNavigator();
 
+const FetchUserComponent = ({ setUser }) => {
+    const isFocused = useIsFocused();
+
+    useEffect(() => {
+        const fetchUser = async () => {
+            const storedUser = await AsyncStorage.getItem('user');
+            if (storedUser) {
+                setUser(JSON.parse(storedUser));
+            }
+        };
+
+        if (isFocused) {
+            fetchUser();
+        }
+    }, [isFocused]);
+
+    return null;
+};
+
 const App = () => {
     const [fontLoaded, setFontLoaded] = useState(false);
     const [initialRoute, setInitialRoute] = useState('Welkom');
+    const [user, setUser] = useState(null);
 
     useEffect(() => {
         async function loadFonts() {
@@ -55,6 +76,8 @@ const App = () => {
         await AsyncStorage.removeItem('refresh_token');
         await AsyncStorage.removeItem('user_type');
         await AsyncStorage.removeItem('user_id');
+        await AsyncStorage.removeItem('user');
+        setUser(null);
         Toast.show({
             type: 'success',
             text1: 'Uitgelogd',
@@ -70,6 +93,7 @@ const App = () => {
 
     return (
         <NavigationContainer>
+            <FetchUserComponent setUser={setUser} />
             <Stack.Navigator initialRouteName={initialRoute}>
                 <Stack.Screen
                     name="Welkom"
@@ -108,8 +132,8 @@ const App = () => {
                 <Stack.Screen
                     name="DocentDashboard"
                     component={DocentDashboard}
-                    options={({navigation, route}) => ({
-                        title: route.params ? `${route.params.achternaam}, ${route.params.voornaam}` : 'Docenten Dashboard',
+                    options={({navigation}) => ({
+                        title: user ? `${user.achternaam}, ${user.voornaam}` : 'Docenten Dashboard',
                         headerStyle: {
                             borderBottomColor: '#fff7ea',
                             backgroundColor: '#fff7ea',
@@ -121,11 +145,18 @@ const App = () => {
                             fontFamily: 'Poppins-extra-bold',
                         },
                         headerRight: () => (
-                            <Button
-                                onPress={() => handleLogout(navigation)}
-                                title="Uitloggen"
-                                color="#d30f4c"
-                            />
+                            <View style={{flexDirection: 'row'}}>
+                                <Button
+                                    onPress={() => navigation.navigate('Profiel')}
+                                    title="Profiel"
+                                    color="#1a69da"
+                                />
+                                <Button
+                                    onPress={() => handleLogout(navigation)}
+                                    title="Uitloggen"
+                                    color="#d30f4c"
+                                />
+                            </View>
                         ),
                     })}
                 />
@@ -133,8 +164,8 @@ const App = () => {
                 <Stack.Screen
                     name="StudentDashboard"
                     component={StudentDashboard}
-                    options={({navigation, route}) => ({
-                        title: route.params ? `${route.params.achternaam}, ${route.params.voornaam}` : 'Admin Dashboard',
+                    options={({navigation}) => ({
+                        title: user ? `${user.achternaam}, ${user.voornaam}` : 'Student Dashboard',
                         headerStyle: {
                             borderBottomColor: '#fff7ea',
                             backgroundColor: '#fff7ea',
@@ -146,19 +177,26 @@ const App = () => {
                             fontFamily: 'Poppins-extra-bold',
                         },
                         headerRight: () => (
-                            <Button
-                                onPress={() => handleLogout(navigation)}
-                                title="Uitloggen"
-                                color="#d30f4c"
-                            />
+                            <View style={{flexDirection: 'row'}}>
+                                <Button
+                                    onPress={() => navigation.navigate('Profiel')}
+                                    title="Profiel"
+                                    color="#1a69da"
+                                />
+                                <Button
+                                    onPress={() => handleLogout(navigation)}
+                                    title="Uitloggen"
+                                    color="#d30f4c"
+                                />
+                            </View>
                         ),
                     })}
                 />
                 <Stack.Screen
                     name="AdminDashboard"
                     component={AdminDashboard}
-                    options={({navigation, route}) => ({
-                        title: route.params ? `${route.params.achternaam}, ${route.params.voornaam}` : 'Admin Dashboard',
+                    options={({navigation}) => ({
+                        title: user ? `${user.achternaam}, ${user.voornaam}` : 'Admin Dashboard',
                         headerStyle: {
                             borderBottomColor: '#fff7ea',
                             backgroundColor: '#fff7ea',
@@ -188,7 +226,7 @@ const App = () => {
                 <Stack.Screen
                     name="Profiel"
                     component={ProfileScreen}
-                    options={{
+                    options={({navigation}) => ({
                         title: 'Profiel',
                         headerStyle: {
                             borderBottomColor: '#fff7ea',
@@ -200,10 +238,79 @@ const App = () => {
                             fontWeight: 'bold',
                             fontFamily: 'Poppins-extra-bold',
                         },
-                    }}
+                        headerRight: () => (
+                            <Button
+                                onPress={() => handleLogout(navigation)}
+                                title="Uitloggen"
+                                color="#d30f4c"
+                            />
+                        ),
+                    })}
+                />
+                <Stack.Screen
+                    name="GebruikerList"
+                    component={GebruikerList}
+                    options={({navigation}) => ({
+                        title: 'Gebruikerslijst',
+                        headerStyle: {
+                            borderBottomColor: '#fff7ea',
+                            backgroundColor: '#fff7ea',
+                        },
+                        headerTintColor: '#001e48',
+                        headerTitleStyle: {
+                            fontSize: 24,
+                            fontWeight: 'bold',
+                            fontFamily: 'Poppins-extra-bold',
+                        },
+                        headerRight: () => (
+                            <View style={{flexDirection: 'row'}}>
+                                <Button
+                                    onPress={() => navigation.navigate('Profiel')}
+                                    title="Profiel"
+                                    color="#1a69da"
+                                />
+                                <Button
+                                    onPress={() => handleLogout(navigation)}
+                                    title="Uitloggen"
+                                    color="#d30f4c"
+                                />
+                            </View>
+                        ),
+                    })}
+                />
+                <Stack.Screen
+                    name="GebruikerEditScreen"
+                    component={GebruikerEditScreen}
+                    options={({navigation}) => ({
+                        title: 'Gebruiker bewerken',
+                        headerStyle: {
+                            borderBottomColor: '#fff7ea',
+                            backgroundColor: '#fff7ea',
+                        },
+                        headerTintColor: '#001e48',
+                        headerTitleStyle: {
+                            fontSize: 24,
+                            fontWeight: 'bold',
+                            fontFamily: 'Poppins-extra-bold',
+                        },
+                        headerRight: () => (
+                            <View style={{flexDirection: 'row'}}>
+                                <Button
+                                    onPress={() => navigation.navigate('Profiel')}
+                                    title="Profiel"
+                                    color="#1a69da"
+                                />
+                                <Button
+                                    onPress={() => handleLogout(navigation)}
+                                    title="Uitloggen"
+                                    color="#d30f4c"
+                                />
+                            </View>
+                        ),
+                    })}
                 />
             </Stack.Navigator>
-            <Toast />
+            <Toast/>
         </NavigationContainer>
     );
 };

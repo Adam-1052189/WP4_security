@@ -7,6 +7,7 @@ class ActiviteitSerializer(serializers.ModelSerializer):
         model = Activiteit
         fields = '__all__'
 
+
 class CoreAssignmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = CoreAssignment
@@ -24,10 +25,15 @@ class DomeinSerializer(serializers.ModelSerializer):
         model = Domein
         fields = ['domein_id', 'domeinnaam']
 
+
 class GebruikerSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True)
+
     class Meta:
         model = Gebruiker
-        fields = ['voornaam', 'achternaam', 'email', 'xp', 'profielfoto']
+        fields = ['voornaam', 'achternaam', 'email', 'password', 'xp', 'bio', 'user_type', 'is_active', 'is_staff',
+                  'is_superuser',]
+
 
 class CursusSerializer(serializers.ModelSerializer):
     class Meta:

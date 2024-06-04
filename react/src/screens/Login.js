@@ -45,7 +45,7 @@ const Login = () => {
             await AsyncStorage.setItem('access_token', data.access);
             await AsyncStorage.setItem('refresh_token', data.refresh);
             await AsyncStorage.setItem('user_type', data.user_type);
-            await AsyncStorage.setItem('user_id', data.user_id);
+            await AsyncStorage.setItem('user_id', String(data.user_id));
 
             Toast.show({
                 type: 'success',
@@ -65,22 +65,16 @@ const Login = () => {
 
 
             if (userResponse.status === 200) {
-                if (data.user_type === 'DOCENT') {
-                    navigation.navigate('DocentDashboard', {
-                        voornaam: userData.voornaam,
-                        achternaam: userData.achternaam,
-                    });
-                } else if (data.user_type === 'STUDENT') {
-                    navigation.navigate('StudentDashboard', {
-                        voornaam: userData.voornaam,
-                        achternaam: userData.achternaam,
-                    });
-                } else if (data.user_type === 'ADMIN') {
-                    navigation.navigate('AdminDashboard', {
-                        voornaam: userData.voornaam,
-                        achternaam: userData.achternaam,
-                    });
-                }
+                const user = {
+                    voornaam: userData.voornaam,
+                    achternaam: userData.achternaam,
+                };
+                await AsyncStorage.setItem('user', JSON.stringify(user));
+
+                navigation.reset({
+                    index: 0,
+                    routes: [{name: data.user_type === 'DOCENT' ? 'DocentDashboard' : data.user_type === 'STUDENT' ? 'StudentDashboard' : 'AdminDashboard', params: { user: user } }],
+                });
             } else {
                 Toast.show({
                     type: 'error',

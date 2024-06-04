@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Toast from "react-native-toast-message";
 
 const ProfileScreen = () => {
     const [user, setUser] = useState(null);
+    const [password, setPassword] = useState('');
 
     useEffect(() => {
         fetchUserData();
@@ -23,13 +25,23 @@ const ProfileScreen = () => {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(user)
+            body: JSON.stringify({ ...user, password })
         });
 
         if (response.ok) {
+            Toast.show({
+                type: 'success',
+                text1: 'succes',
+                text2: 'Gebruikersgegevens succesvol bijgewerkt',
+            });
             console.log('Gebruikersgegevens bijgewerkt');
         } else {
-            console.log('Er is een fout opgetreden bij het bijwerken van de gebruikersgegevens');
+            Toast.show({
+                type: 'error',
+                text1: 'Fout',
+                text2: 'Er is een fout opgetreden, vul alles in',
+            });
+            console.log('Er is een fout opgetreden, vul alles in');
         }
     };
 
@@ -59,6 +71,25 @@ const ProfileScreen = () => {
                     <TextInput
                         value={user.email}
                         onChangeText={(text) => setUser({ ...user, email: text })}
+                    />
+                </View>
+                <View style={styles.fieldContainer}>
+                    <Text>Wachtwoord:</Text>
+                    <TextInput
+                        value={password}
+                        onChangeText={setPassword}
+                        secureTextEntry
+                        style={{ height: 20, borderColor: 'gray', borderWidth: 1 }}
+                    />
+                </View>
+                <View style={styles.fieldContainer}>
+                    <Text style={{height: 100}} numberOfLines={4}>Bio: {user.bio} </Text>
+                    <TextInput
+                        value={user.bio}
+                        onChangeText={(text) => setUser({ ...user, bio: text })}
+                        style={{ height: 100 }}
+                        textAlignVertical={'top'}
+                        multiline={true}
                     />
                 </View>
             </View>
