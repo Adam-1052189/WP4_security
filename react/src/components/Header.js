@@ -57,8 +57,7 @@ function Header() {
     };
 
     return (
-        <header style={styles.container}>
-            <nav>
+        <Header style={styles.container}>
                 <View style={styles.listItem}>
                     <Image source={logoImg} style={styles.logo}/>
                     <Text style={styles.text}>Meldingen</Text>
@@ -71,8 +70,7 @@ function Header() {
                         <Image source={{uri: profilePic}} style={styles.profielfoto}/>
                     )}
                 </View>
-            </nav>
-        </header>
+        </Header>
     );
 }
 

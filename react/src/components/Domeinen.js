@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
+import { Text, View } from 'react-native';
 import DomeinItem from "./DomeinItem";
-
 
 function Domeinen() {
     const [domeinen, setDomeinen] = useState([]);
@@ -23,18 +23,16 @@ function Domeinen() {
     }, []);
 
     return (
-        <div>
-            <h2>Domeinen</h2>
-            <ul>
-                {domeinen.map((item) => (
-                    <DomeinItem
-                        key={item.domein_id}
-                        domeinnaam={item.domeinnaam}
-                        domein_id={item.domein_id}
-                    />
-                ))}
-            </ul>
-        </div>
+        <View>
+            <Text>Domeinen</Text>
+            {domeinen.map((item) => (
+                <DomeinItem
+                    key={item.domein_id}
+                    domeinnaam={item.domeinnaam}
+                    domein_id={item.domein_id}
+                />
+            ))}
+        </View>
     );
 }
 

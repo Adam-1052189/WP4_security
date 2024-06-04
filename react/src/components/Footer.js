@@ -26,12 +26,12 @@ const styles = StyleSheet.create({
 
 function Footer() {
     return (
-        <footer style={styles.container}>
+        <Footer style={styles.container}>
             <View style={styles.contentContainer}>
                 <Text style={styles.text}>U bent aan het einde van de pagina gekomen</Text>
                 <Image source={logoImg} style={styles.logo}/>
             </View>
-        </footer>
+        </Footer>
     );
 }
 
