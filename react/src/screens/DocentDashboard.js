@@ -29,8 +29,7 @@ const DocentDashboard = () => {
     }, []);
 
     useEffect(() => {
-        // Replace with your actual API call to fetch gebruikerId
-        fetch('http://your-api-url/get-gebruiker-id/')
+        fetch('http://localhost:8000/glitch/gebruikers/')
             .then(response => response.json())
             .then(json => setDocentId(json.gebruikerId))
             .catch(error => console.error(error));
