@@ -1,22 +1,22 @@
- import React from "react"
+import React from "react";
+import { Text, View } from "react-native";
 
-import Header from "../components/Header"
-import Footer from "../components/Footer"
-import Domeinen from "../components/Domeinen"
+import Header from "../components/Header";
+import Footer from "../components/Footer";
+import Domeinen from "../components/Domeinen";
 
 function StudentDashboard() {
     return (
-        <div>
+        <View>
             <Header />
-                <div>
-                    <p>hier komt te staan welkom naam gebruiker</p>
-                    <p>hier staan de vakken</p>
+                <View>
+                    <Text>hier komt te staan welkom naam gebruiker</Text>
+                    <Text>hier staan de vakken</Text>
                     <Domeinen />
-                </div>
-
+                </View>
             <Footer />
-        </div>
+        </View>
     )
 }
 
-export default StudentDashboard
+export default StudentDashboard;

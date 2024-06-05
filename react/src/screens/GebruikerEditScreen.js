@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
-import {View, TextInput, Button, StyleSheet, Text, CheckBox} from 'react-native';
+import {View, TextInput, Button, StyleSheet, Text} from 'react-native';
+import {CheckBox} from 'react-native-elements';
 import {Picker} from '@react-native-picker/picker';
 import Toast from "react-native-toast-message";
 
