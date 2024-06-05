@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {Text, View} from 'react-native';
+import {Text, View, StyleSheet} from 'react-native'; // Voeg StyleSheet toe
 import axios from 'axios';
 import PropTypes from 'prop-types';
 import CursusList from './CursusList';
@@ -25,10 +25,9 @@ function DomeinItem({domeinnaam, domein_id}) {
         setSelectedCursusjaar(cursusjaarId);
     };
 
-
     return (
         <View>
-            <Text onPress={handleClick}>{domeinnaam}</Text>
+            <Text onPress={handleClick} style={styles.linkText}>{domeinnaam}</Text> {/* Pas hier de stijl toe */}
             {showDetails && (
                 <View>
                     <Text>Cursusjaren:</Text>
@@ -49,9 +48,15 @@ function DomeinItem({domeinnaam, domein_id}) {
     );
 }
 
-    DomeinItem.propTypes = {
-        domeinnaam: PropTypes.string.isRequired,
-        domein_id: PropTypes.string.isRequired,
-    };
+DomeinItem.propTypes = {
+    domeinnaam: PropTypes.string.isRequired,
+    domein_id: PropTypes.string.isRequired,
+};
 
-    export default DomeinItem;
+const styles = StyleSheet.create({ // Voeg deze stijl toe
+    linkText: {
+        textDecorationLine: 'underline',
+    },
+});
+
+export default DomeinItem;
