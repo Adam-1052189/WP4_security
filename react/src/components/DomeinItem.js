@@ -3,6 +3,7 @@ import {Text, View, StyleSheet} from 'react-native'; // Voeg StyleSheet toe
 import axios from 'axios';
 import PropTypes from 'prop-types';
 import CursusList from './CursusList';
+import Card from './Card';
 
 function DomeinItem({domeinnaam, domein_id}) {
     const [showDetails, setShowDetails] = useState(false);
@@ -27,14 +28,17 @@ function DomeinItem({domeinnaam, domein_id}) {
 
     return (
         <View>
-            <Text onPress={handleClick} style={styles.linkText}>{domeinnaam}</Text> {/* Pas hier de stijl toe */}
+            <Card title={domeinnaam} onPress={handleClick} />
             {showDetails && (
                 <View>
                     <Text>Cursusjaren:</Text>
                     {cursusjaren.length > 0 ? (
                         cursusjaren.map((cursusjaar) => (
-                            <Text key={cursusjaar.cursusjaar}
-                                  onPress={() => handleCursusjaarClick(cursusjaar.cursusjaar)}>{cursusjaar.cursusjaar}</Text>
+                            <Card
+                                key={cursusjaar.cursusjaar}
+                                title={`Cursusjaar: ${cursusjaar.cursusjaar}`}
+                                onPress={() => handleCursusjaarClick(cursusjaar.cursusjaar)}
+                            />
                         ))
                     ) : (
                         <Text>Geen cursusjaren gevonden.</Text>
@@ -47,6 +51,8 @@ function DomeinItem({domeinnaam, domein_id}) {
         </View>
     );
 }
+
+
 
 DomeinItem.propTypes = {
     domeinnaam: PropTypes.string.isRequired,
