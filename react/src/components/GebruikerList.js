@@ -1,8 +1,8 @@
 import React, {useState, useEffect} from 'react';
-import {View, Text, FlatList, StyleSheet, Button, TextInput} from 'react-native';
-import { useIsFocused } from '@react-navigation/native';
+import {View, Text, FlatList, StyleSheet, Button, TextInput, SafeAreaView, ScrollView, StatusBar} from 'react-native';
+import {useIsFocused} from '@react-navigation/native';
 
-function GebruikerList({ route, navigation }) {
+function GebruikerList({route, navigation}) {
     const routeGebruikers = route.params.gebruikers;
     const [filter, setFilter] = useState('all');
     const [zoekTerm, setZoekTerm] = useState('');
@@ -43,17 +43,26 @@ function GebruikerList({ route, navigation }) {
             <Text>Type: {item.user_type}</Text>
             <Text>Is staff: {item.is_staff ? 'Ja' : 'Nee'}</Text>
             <Text>Is active: {item.is_active ? 'Ja' : 'Nee'}</Text>
-            <Button title="Bewerk" onPress={() => navigation.navigate('GebruikerEditScreen', {gebruiker: item})} />
+            <Button title="Bewerk" onPress={() => navigation.navigate('GebruikerEditScreen', {gebruiker: item})}/>
         </View>
     );
 
     return (
+
         <View style={styles.container}>
             <View style={styles.filterContainer}>
-                <Button title="All" onPress={() => setFilter('all')} />
-                <Button title="Admin" onPress={() => setFilter('ADMIN')} />
-                <Button title="Docent" onPress={() => setFilter('DOCENT')} />
-                <Button title="Student" onPress={() => setFilter('STUDENT')} />
+                <View style={styles.buttonContainer}>
+                    <Button title="All" onPress={() => setFilter('all')}/>
+                </View>
+                <View style={styles.buttonContainer}>
+                    <Button title="Admin" onPress={() => setFilter('ADMIN')}/>
+                </View>
+                <View style={styles.buttonContainer}>
+                    <Button title="Docent" onPress={() => setFilter('DOCENT')}/>
+                </View>
+                <View style={styles.buttonContainer}>
+                    <Button title="Student" onPress={() => setFilter('STUDENT')}/>
+                </View>
             </View>
             <TextInput
                 style={styles.zoekInput}
@@ -72,13 +81,11 @@ function GebruikerList({ route, navigation }) {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        justifyContent: 'flex-start',
-        alignItems: 'flex-start',
         padding: 10,
         backgroundColor: '#fff7ea',
     },
     gebruikerContainer: {
+        width: '100%',
         borderWidth: 1,
         borderRadius: 5,
         padding: 10,
@@ -86,15 +93,20 @@ const styles = StyleSheet.create({
     },
     filterContainer: {
         flexDirection: 'row',
-        justifyContent: 'space-between',
+        flexWrap: 'wrap',
+        justifyContent: 'center',
         marginBottom: 20,
+    },
+    buttonContainer: {
+        margin: 5,
     },
     zoekInput: {
         height: 40,
         borderColor: 'gray',
         borderWidth: 1,
-        paddingLeft: 10,
+        paddingLeft: 20,
         marginBottom: 20,
+        width: '75%',
     },
 });
 
