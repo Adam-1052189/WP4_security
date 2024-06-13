@@ -195,3 +195,10 @@ class GebruikerUpdate(generics.RetrieveUpdateAPIView):
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class ActiviteitenView(View):
+    def get(self, request, cursusnaam):
+        activiteiten = Activiteit.objects.filter(cursus__vaknaam=cursusnaam)
+        data = {"activiteiten": list(activiteiten.values())}
+        return JsonResponse(data)
