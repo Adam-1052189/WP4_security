@@ -1,17 +1,30 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import React, {useState} from 'react';
+import {Text, TouchableOpacity, StyleSheet, View} from 'react-native';
+import ActiviteitenList from './ActiviteitenList';
 
-function CursusItem({ cursusnaam, onPress }) {
+function CursusItem({cursusnaam}) {
+    const [showDetails, setShowDetails] = useState(false);
+
+    const handleClick = () => {
+        setShowDetails(!showDetails);
+    };
+
+    console.log('Cursusnaam:', cursusnaam);
+
     return (
-        <TouchableOpacity onPress={onPress} style={styles.card}>
-            <View style={styles.cardContent}>
+        <View style={styles.container}>
+            <TouchableOpacity onPress={handleClick} style={styles.card}>
                 <Text style={styles.cardText}>{cursusnaam}</Text>
-            </View>
-        </TouchableOpacity>
+            </TouchableOpacity>
+            {showDetails && <ActiviteitenList cursusnaam={cursusnaam} />}
+        </View>
     );
 }
 
 const styles = StyleSheet.create({
+    container: {
+        flexDirection: 'row',
+    },
     card: {
         width: 300,
         height: 100,

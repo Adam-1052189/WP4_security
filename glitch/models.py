@@ -96,6 +96,7 @@ class Activiteit(models.Model):
     afgevinkt = models.BooleanField(default=False)
     core_assignment = models.ForeignKey('CoreAssignment', related_name='activiteiten', on_delete=models.CASCADE,
                                         null=True)
+    cursus = models.ForeignKey('Cursus', on_delete=models.CASCADE, null=True)
 
     def complete(self):
         self.afgevinkt = True
@@ -122,7 +123,7 @@ class CoreAssignment(models.Model):
     deadline = models.DateField(null=True)
     gebruikers = models.ManyToManyField('Gebruiker', through='Voortgang')
     point_challenge = models.IntegerField(default=0)
-    context_challenge = models.TextField(null=True)
+    concept_challenge = models.TextField(null=True)
 
     def check_completion(self):
         all_tasks_completed = all(task.afgevinkt for task in self.activiteiten.all())
@@ -137,9 +138,9 @@ class CoreAssignment(models.Model):
             gebruiker.update_xp(voortgang.point_challenge)
             return True
 
-    def check_context_challenge(self, gebruiker):
+    def check_concept_challenge(self, gebruiker):
         voortgang = self.voortgang_set.get(gebruiker=gebruiker)
-        if voortgang.context_challenge:
+        if voortgang.concept_challenge:
             return True
 
 
