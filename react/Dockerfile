@@ -16,4 +16,4 @@ RUN npm install
 COPY . .
 
 # Stel de standaardcommando in voor de container
-CMD ["npm", "start"]
+CMD ["npx", "expo", "start", "--port", "8087"]
