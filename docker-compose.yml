@@ -1,0 +1,14 @@
+version: '3'
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+  frontend:
+    build:
+      context: ./react
+      dockerfile: Dockerfile
+    ports:
+      - "8087:8087"
