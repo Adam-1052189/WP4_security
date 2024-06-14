@@ -3,7 +3,9 @@
 Het GLITCH-platform (Gamified Learning Interface Through Challenges and Heuristics) is een innovatief, thema-onafhankelijk leerplatform ontworpen om onderwijs op een dynamische en interactieve manier te benaderen. Het platform gebruikt een modulaire structuur om een breed scala aan vakken en cursussen te huisvesten, elk georganiseerd binnen specifieke domeinen om de navigatie en specialisatie voor gebruikers te vergemakkelijken.
 
 
-## Clone de repository: ```git clone https://github.com/Rac-Software-Development/wp4-2024-react-1d4-resurrection.git```.
+## Clone de repository: ```bash
+git clone https://github.com/Rac-Software-Development/wp4-2024-react-1d4-resurrection.git
+```
 
 ### Vereisten
 - Python 3.11 of nieuwer
