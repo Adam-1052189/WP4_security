@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import {View, StyleSheet, FlatList} from 'react-native';
+import { View, StyleSheet, FlatList, Modal } from 'react-native';
 import { useNavigation } from "@react-navigation/native";
-import Card from '../components/Card'; // Import the Card component
+import Card from '../components/Card';
+import ActiviteitBewerkenScreen from './ActiviteitBewerkenScreen'; // Import the ActiviteitBewerkenScreen component
 
 const ActiviteitDetailScreen = ({ route }) => {
     const [activiteiten, setActiviteiten] = useState([]);
+    const [modalVisible, setModalVisible] = useState(false);
+    const [selectedActiviteit, setSelectedActiviteit] = useState(null);
     const navigation = useNavigation();
 
     const fetchAllActiviteiten = async () => {
@@ -27,7 +30,10 @@ const ActiviteitDetailScreen = ({ route }) => {
     const renderItem = ({ item }) => (
         <Card
             title={item.taak}
-            onPress={() => navigation.navigate('ActiviteitBewerkenScreen', {activiteit: item})}
+            onPress={() => {
+                setSelectedActiviteit(item);
+                setModalVisible(true);
+            }}
         />
     );
 
@@ -38,6 +44,16 @@ const ActiviteitDetailScreen = ({ route }) => {
                 renderItem={renderItem}
                 keyExtractor={item => item.activiteit_id.toString()}
             />
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={() => {
+                    setModalVisible(!modalVisible);
+                }}
+            >
+                <ActiviteitBewerkenScreen activiteit={selectedActiviteit} onClose={() => setModalVisible(false)} />
+            </Modal>
         </View>
     );
 }

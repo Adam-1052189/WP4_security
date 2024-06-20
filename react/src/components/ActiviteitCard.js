@@ -9,7 +9,6 @@ const ActiviteitCard = ({ activiteit }) => {
         <TouchableOpacity onPress={() => navigation.navigate('ActiviteitDetailScreen', {activiteit: activiteit})}>
             <View style={styles.card}>
                 <Text style={styles.title}>Activiteiten</Text>
-                {/* Add more details about the activity here */}
             </View>
         </TouchableOpacity>
     );
