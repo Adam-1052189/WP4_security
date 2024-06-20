@@ -89,6 +89,17 @@ class Activiteit(models.Model):
         (3, 'Niveau 3'),
         (4, 'Niveau 4'),
     ]
+
+    STATUS_CHOICES = [
+        ('INGEDIEND', 'Ingediend'),
+        ('AFGEKEURD', 'Afgekeurd'),
+        ('GOEDGEKEURD', 'Goedgekeurd'),
+    ]
+    status = models.CharField(
+        max_length=12,
+        choices=STATUS_CHOICES,
+        default='INGEDIEND',
+    )
     activiteit_id = models.AutoField(primary_key=True)
     gebruiker = models.ForeignKey('Gebruiker', on_delete=models.CASCADE, null=True)
     taak = models.CharField(max_length=100, null=True)

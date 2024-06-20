@@ -15,11 +15,13 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Button, View} from 'react-native';
 import GebruikerList from "./src/components/GebruikerList";
 import GebruikerEditScreen from "./src/screens/GebruikerEditScreen";
+import ActiviteitBewerkenScreen from "./src/screens/ActiviteitBewerkenScreen";
+import ActiviteitDetailScreen from "./src/screens/ActiviteitDetailScreen";
 
 
 const Stack = createStackNavigator();
 
-const FetchUserComponent = ({ setUser }) => {
+const FetchUserComponent = ({setUser}) => {
     const isFocused = useIsFocused();
 
     useEffect(() => {
@@ -50,6 +52,7 @@ const App = () => {
             });
             setFontLoaded(true);
         }
+
         loadFonts();
     }, []);
 
@@ -93,7 +96,7 @@ const App = () => {
 
     return (
         <NavigationContainer>
-            <FetchUserComponent setUser={setUser} />
+            <FetchUserComponent setUser={setUser}/>
             <Stack.Navigator initialRouteName={initialRoute}>
                 <Stack.Screen
                     name="Welkom"
@@ -305,9 +308,23 @@ const App = () => {
                                     title="Uitloggen"
                                     color="#d30f4c"
                                 />
+                                <Stack.Screen
+                                    name="ActiviteitBewerkenScreen"
+                                    component={ActiviteitBewerkenScreen}
+                                />
                             </View>
                         ),
                     })}
+                />
+                <Stack.Screen
+                    name="ActiviteitBewerkenScreen"
+                    component={ActiviteitBewerkenScreen}
+                    options={{title: 'Activiteiten Bewerken'}}
+                />
+                <Stack.Screen
+                    name="ActiviteitDetailScreen"
+                    component={ActiviteitDetailScreen}
+                    options={{title: 'Activiteit Details'}}
                 />
             </Stack.Navigator>
             <Toast/>
