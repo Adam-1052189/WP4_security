@@ -30,7 +30,12 @@ function ActiviteitenList({ cursusnaam }) {
         <View>
             {activiteiten && activiteiten.map((activiteit, index) => (
                 <View key={index}>
-                    <Card title={activiteit.taak} onPress={() => {}} />
+                    <Card
+                        title={activiteit.taak}
+                        onPress={() => {}}
+                        niveau={activiteit.niveau}
+                        afgevinkt={activiteit.afgevinkt}
+                    />
                     {index === activiteiten.length - 1 && <CoreAssignment cursusnaam={cursusnaam} />}
                 </View>
             ))}

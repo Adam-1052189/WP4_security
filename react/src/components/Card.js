@@ -1,11 +1,15 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, } from 'react-native';
+import * as Progress from 'react-native-progress';
 
-function Card({ title, onPress }) {
+function Card({ title, onPress, niveau, afgevinkt }) {
+    const backgroundColor = afgevinkt ? '#a7ef93' : '#fff';
+
     return (
-        <TouchableOpacity onPress={onPress} style={styles.card}>
+        <TouchableOpacity onPress={onPress} style={[styles.card, {backgroundColor}]}>
             <View style={styles.cardContent}>
-                <Text style={styles.cardText}>{title}</Text>
+                <Text style={[styles.cardText, {marginBottom: 10}]}>{title}</Text>
+                {niveau !== undefined && <Progress.Bar progress={niveau / 4} width={200} />}
             </View>
         </TouchableOpacity>
     );
