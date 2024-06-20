@@ -26,10 +26,12 @@ urlpatterns = [
     path('check_completion/<int:gebruiker_id>/<int:core_assignment_id>/', check_completion, name='check_completion'),
     path('', include(router.urls)),
     path('gebruiker/<int:pk>/', views.GebruikerUpdate.as_view(), name='gebruiker-update'),
+    path('activiteiten/<int:pk>/status/', views.UpdateActiviteitStatusView.as_view()),
     path('docent_voortgang/<int:docent_id>/',views.docent_voortgang, name='docent-voortgang'),
     path('cursussen/<str:cursusnaam>/activiteiten/', views.ActiviteitenView.as_view()),
     path('cursussen/<str:cursusnaam>/coreassignment/', views.GetCoreAssignment.as_view()),
-] 
+    path('activiteiten/', views.GetAllActiviteiten.as_view(), name='get_all_activiteiten'),
+]
 
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

@@ -5,7 +5,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.decorators import action, api_view
 from rest_framework.views import APIView
-from rest_framework import status, generics, viewsets
+from rest_framework import status, generics, viewsets, permissions
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from .models import Domein, Cursus, Activiteit, CoreAssignment, Voortgang, Gebruiker, Cursusjaar
@@ -212,3 +212,24 @@ class GetCoreAssignment(APIView):
             return Response(serializer.data)
         else:
             return Response({'error': 'No core assignment found for this cursusnaam'}, status=status.HTTP_404_NOT_FOUND)
+
+
+class UpdateActiviteitStatusView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, pk, format=None):
+        activiteit = self.get_object(pk)
+        status  = request.data.get('status')
+        if status == ['INGEDIEND', 'GOEDGEKEURD', 'AFGEKEURD']:
+            activiteit.status = status
+            activiteit.save()
+            return Response({'status': 'Status geüpdatet'}, status=status.HTTP_200_OK)
+        else:
+            return Response({'status': 'Ongeldige status'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class GetAllActiviteiten(APIView):
+    def get(self, request, format=None):
+        activiteiten = Activiteit.objects.all()
+        serializer = ActiviteitSerializer(activiteiten, many=True)
+        return Response(serializer.data)
