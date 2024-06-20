@@ -143,6 +143,10 @@ class CoreAssignment(models.Model):
         if voortgang.concept_challenge:
             return True
 
+    @classmethod
+    def get_by_cursusnaam(cls, cursusnaam):
+        return cls.objects.filter(activiteiten__cursus__vaknaam=cursusnaam).first()
+
 
 class Challenge(models.Model):
     challenge_id = models.AutoField(primary_key=True)

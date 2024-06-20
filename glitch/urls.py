@@ -28,6 +28,7 @@ urlpatterns = [
     path('gebruiker/<int:pk>/', views.GebruikerUpdate.as_view(), name='gebruiker-update'),
     path('docent_voortgang/<int:docent_id>/',views.docent_voortgang, name='docent-voortgang'),
     path('cursussen/<str:cursusnaam>/activiteiten/', views.ActiviteitenView.as_view()),
+    path('cursussen/<str:cursusnaam>/coreassignment/', views.GetCoreAssignment.as_view()),
 ] 
 
 if settings.DEBUG:

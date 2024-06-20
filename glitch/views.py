@@ -202,3 +202,13 @@ class ActiviteitenView(View):
         activiteiten = Activiteit.objects.filter(cursus__vaknaam=cursusnaam)
         data = {"activiteiten": list(activiteiten.values())}
         return JsonResponse(data)
+
+
+class GetCoreAssignment(APIView):
+    def get(self, request, cursusnaam, format=None):
+        core_assignment = CoreAssignment.get_by_cursusnaam(cursusnaam)
+        if core_assignment is not None:
+            serializer = CoreAssignmentSerializer(core_assignment)
+            return Response(serializer.data)
+        else:
+            return Response({'error': 'No core assignment found for this cursusnaam'}, status=status.HTTP_404_NOT_FOUND)

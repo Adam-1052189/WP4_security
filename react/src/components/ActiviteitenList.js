@@ -2,9 +2,9 @@ import React, {useEffect, useState} from 'react';
 import {View, Text} from 'react-native';
 import axios from 'axios';
 import Card from './Card';
+import CoreAssignment from './CoreAssignment';
 
-
-function ActiviteitenList({cursusnaam}) {
+function ActiviteitenList({ cursusnaam }) {
     const [activiteiten, setActiviteiten] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
 
@@ -27,12 +27,15 @@ function ActiviteitenList({cursusnaam}) {
     }, [cursusnaam]);
 
     return (
-    <View>
-        {activiteiten && activiteiten.map((activiteit, index) => (
-            <Card key={index} title={activiteit.taak} onPress={() => {}} />
-        ))}
-    </View>
-);
+        <View>
+            {activiteiten && activiteiten.map((activiteit, index) => (
+                <View key={index}>
+                    <Card title={activiteit.taak} onPress={() => {}} />
+                    {index === activiteiten.length - 1 && <CoreAssignment cursusnaam={cursusnaam} />}
+                </View>
+            ))}
+        </View>
+    );
 }
 
 export default ActiviteitenList;
