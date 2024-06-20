@@ -1,12 +1,12 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {Text, TouchableOpacity, StyleSheet, View} from 'react-native';
-import ActiviteitenList from './ActiviteitenList';
+import { useNavigation } from '@react-navigation/native';
 
 function CursusItem({cursusnaam}) {
-    const [showDetails, setShowDetails] = useState(false);
+    const navigation = useNavigation();
 
     const handleClick = () => {
-        setShowDetails(!showDetails);
+        navigation.navigate('ActiviteitenList', { cursusnaam: cursusnaam });
     };
 
     console.log('Cursusnaam:', cursusnaam);
@@ -16,7 +16,6 @@ function CursusItem({cursusnaam}) {
             <TouchableOpacity onPress={handleClick} style={styles.card}>
                 <Text style={styles.cardText}>{cursusnaam}</Text>
             </TouchableOpacity>
-            {showDetails && <ActiviteitenList cursusnaam={cursusnaam} />}
         </View>
     );
 }

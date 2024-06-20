@@ -13,13 +13,14 @@ import AdminDashboard from "./src/screens/AdminDashboard";
 import ProfileScreen from "./src/screens/ProfileScreen";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Button, View} from 'react-native';
-import GebruikerList from "./src/components/GebruikerList";
+import GebruikerList from "./src/screens/GebruikerList";
 import GebruikerEditScreen from "./src/screens/GebruikerEditScreen";
+import ActiviteitenList from "./src/screens/ActiviteitenList";
 
 
 const Stack = createStackNavigator();
 
-const FetchUserComponent = ({ setUser }) => {
+const FetchUserComponent = ({setUser}) => {
     const isFocused = useIsFocused();
 
     useEffect(() => {
@@ -50,6 +51,7 @@ const App = () => {
             });
             setFontLoaded(true);
         }
+
         loadFonts();
     }, []);
 
@@ -93,7 +95,7 @@ const App = () => {
 
     return (
         <NavigationContainer>
-            <FetchUserComponent setUser={setUser} />
+            <FetchUserComponent setUser={setUser}/>
             <Stack.Navigator initialRouteName={initialRoute}>
                 <Stack.Screen
                     name="Welkom"
@@ -283,6 +285,37 @@ const App = () => {
                     component={GebruikerEditScreen}
                     options={({navigation}) => ({
                         title: 'Gebruiker bewerken',
+                        headerStyle: {
+                            borderBottomColor: '#fff7ea',
+                            backgroundColor: '#fff7ea',
+                        },
+                        headerTintColor: '#001e48',
+                        headerTitleStyle: {
+                            fontSize: 24,
+                            fontWeight: 'bold',
+                            fontFamily: 'Poppins-extra-bold',
+                        },
+                        headerRight: () => (
+                            <View style={{flexDirection: 'row'}}>
+                                <Button
+                                    onPress={() => navigation.navigate('Profiel')}
+                                    title="Profiel"
+                                    color="#1a69da"
+                                />
+                                <Button
+                                    onPress={() => handleLogout(navigation)}
+                                    title="Uitloggen"
+                                    color="#d30f4c"
+                                />
+                            </View>
+                        ),
+                    })}
+                />
+                <Stack.Screen
+                    name="ActiviteitenList"
+                    component={ActiviteitenList}
+                    options={({route, navigation}) => ({
+                        title: route.params.cursusnaam,
                         headerStyle: {
                             borderBottomColor: '#fff7ea',
                             backgroundColor: '#fff7ea',

@@ -1,10 +1,11 @@
 import React, {useEffect, useState} from 'react';
 import {View, Text} from 'react-native';
 import axios from 'axios';
-import Card from './Card';
-import CoreAssignment from './CoreAssignment';
+import Card from '../components/Card';
+import CoreAssignment from '../components/CoreAssignment';
 
-function ActiviteitenList({ cursusnaam }) {
+function ActiviteitenList({ route }) {
+    const { cursusnaam } = route.params;
     const [activiteiten, setActiviteiten] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
 
