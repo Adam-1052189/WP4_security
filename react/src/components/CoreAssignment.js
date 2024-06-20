@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Card from "./Card";
 import axios from 'axios';
 
-function CoreAssignment({ cursusnaam }) {
+function CoreAssignment({ cursusnaam, activiteiten }) {
     const [coreAssignment, setCoreAssignment] = useState(null);
 
     useEffect(() => {
@@ -18,9 +18,10 @@ function CoreAssignment({ cursusnaam }) {
         fetchCoreAssignment();
     }, [cursusnaam]);
 
+    const allActivitiesCompleted = activiteiten.every(activiteit => activiteit.afgevinkt);
+
     return (
-        <Card title={coreAssignment ? coreAssignment.opdrachtnaam : 'Loading...'} onPress={() => {}} />
-    );
+        <Card title={coreAssignment ? coreAssignment.opdrachtnaam : 'Loading...'} onPress={() => {}} isLocked={!allActivitiesCompleted} />    );
 }
 
 export default CoreAssignment;

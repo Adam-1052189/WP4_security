@@ -2,15 +2,16 @@ import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, } from 'react-native';
 import * as Progress from 'react-native-progress';
 
-function Card({ title, onPress, niveau, afgevinkt }) {
+function Card({ title, onPress, niveau, afgevinkt, isLocked }) {
     const backgroundColor = afgevinkt ? '#a7ef93' : '#fff';
 
     return (
         <TouchableOpacity onPress={onPress} style={[styles.card, {backgroundColor}]}>
-            <View style={styles.cardContent}>
+            <View style={[styles.cardContent, {opacity: isLocked ? 0.2 : 1}]}>
                 <Text style={[styles.cardText, {marginBottom: 10}]}>{title}</Text>
                 {niveau !== undefined && <Progress.Bar progress={niveau / 4} width={200} />}
             </View>
+            {isLocked && <Text style={styles.lockedText}>Voltooi eerst alle activiteiten om de kernopdracht te ontgrendelen.</Text>}
         </TouchableOpacity>
     );
 }
@@ -38,6 +39,13 @@ const styles = StyleSheet.create({
     cardText: {
         fontSize: 18,
         textAlign: 'center',
+    },
+    lockedText: {
+        fontSize: 16,
+        color: 'red',
+        position: 'absolute',
+        textAlign: 'center',
+        width: '100%',
     },
 });
 

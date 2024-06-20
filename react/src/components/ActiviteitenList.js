@@ -36,7 +36,7 @@ function ActiviteitenList({ cursusnaam }) {
                         niveau={activiteit.niveau}
                         afgevinkt={activiteit.afgevinkt}
                     />
-                    {index === activiteiten.length - 1 && <CoreAssignment cursusnaam={cursusnaam} />}
+                    {index === activiteiten.length - 1 && <CoreAssignment cursusnaam={cursusnaam} activiteiten={activiteiten} />}
                 </View>
             ))}
         </View>
