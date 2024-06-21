@@ -26,13 +26,13 @@ const styles = StyleSheet.create({
 
 function Footer() {
     return (
-        <Footer style={styles.container}>
+        <View style={styles.container}>
             <View style={styles.contentContainer}>
                 <Text style={styles.text}>U bent aan het einde van de pagina gekomen</Text>
-                <Image source={logoImg} style={styles.logo}/>
+                <Image source={logoImg} style={styles.logo} />
             </View>
-        </Footer>
+        </View>
     );
 }
 
-export default Footer
+export default Footer;

@@ -2,6 +2,7 @@ import React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import CursusvoortgangCard from '../components/CursusvoortgangCard';
 import ActiviteitenCard from '../components/ActiviteitCard';
+import Footer from "../components/Footer";
 
 const DocentDashboard = () => {
     return (
@@ -10,6 +11,7 @@ const DocentDashboard = () => {
             <CursusvoortgangCard />
             <ActiviteitenCard />
             <Text>Welkom op het dashboard. Hier vind je alle relevante informatie.</Text>
+            <Footer />
         </View>
     );
 }

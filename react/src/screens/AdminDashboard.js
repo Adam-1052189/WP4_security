@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import {View, TextInput, Button, StyleSheet, Text, TouchableOpacity} from 'react-native';
 import Toast from 'react-native-toast-message';
+import Footer from "../components/Footer";
 
 function AdminDashboard({ navigation }) {
     const [email, setEmail] = useState('');
@@ -114,6 +115,7 @@ function AdminDashboard({ navigation }) {
             >
                 <Text style={styles.buttonText}>Ga naar Gebruikerslijst</Text>
             </TouchableOpacity>
+            <Footer />
         </View>
     );
 }
