@@ -38,8 +38,8 @@ function Header() {
                 const response = await fetch('http://localhost:8000/glitch/gebruikers/');
                 const data = await response.json();
                 const users = JSON.parse(data)
-                console.log('Profielfoto data:', data); // Controleer of de response correct is
-                console.log('Profielfoto data:', users); // Controleer of de response correct is
+                console.log('Profielfoto data:', data); 
+                console.log('Profielfoto data:', users); 
                 if (users.length > 0 && users[0].fields.profielfoto) {
                     const profilePicUrl = `http://localhost:8000/${users[0].fields.profielfoto}`;
                     console.log('Profielfoto URL:', profilePicUrl);

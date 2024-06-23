@@ -108,6 +108,7 @@ class Activiteit(models.Model):
     core_assignment = models.ForeignKey('CoreAssignment', related_name='activiteiten', on_delete=models.CASCADE,
                                         null=True)
     cursus = models.ForeignKey('Cursus', on_delete=models.CASCADE, null=True)
+    deadline = models.DateField(null=True)
 
     def complete(self):
         self.afgevinkt = True
