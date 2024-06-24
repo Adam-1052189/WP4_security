@@ -6,7 +6,6 @@ from rest_framework_simplejwt.views import TokenRefreshView
 from . import views
 from django.conf import settings
 from django.conf.urls.static import static
-from .views import CheckDeadlinesView
 
 router = DefaultRouter()
 router.register(r'activiteiten', views.ActiviteitViewSet)
@@ -32,7 +31,6 @@ urlpatterns = [
     path('cursussen/<str:cursusnaam>/activiteiten/', views.ActiviteitenView.as_view()),
     path('cursussen/<str:cursusnaam>/coreassignment/', views.GetCoreAssignment.as_view()),
     path('activiteiten/', views.GetAllActiviteiten.as_view(), name='get_all_activiteiten'),
-    path('check-deadlines/', CheckDeadlinesView.as_view(), name='check-deadlines'),
 ]
 
 if settings.DEBUG:
