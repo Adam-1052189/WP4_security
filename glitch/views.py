@@ -8,14 +8,17 @@ from rest_framework.views import APIView
 from rest_framework import status, generics, viewsets, permissions
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from .models import Domein, Cursus, Activiteit, CoreAssignment, Voortgang, Gebruiker, Cursusjaar
-from .serializers import DomeinSerializer, GebruikerSerializer, CursusjaarSerializer, CursusSerializer, ActiviteitSerializer, CoreAssignmentSerializer, VoortgangSerializer
+from .models import Domein, Cursus, Activiteit, CoreAssignment, Voortgang, Gebruiker, Cursusjaar, Notificatie
+from .serializers import DomeinSerializer, GebruikerSerializer, CursusjaarSerializer, CursusSerializer, ActiviteitSerializer, CoreAssignmentSerializer, VoortgangSerializer, NotificatieSerializer
 from django.core import serializers
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.http import FileResponse, JsonResponse
 from django.views import View
 from django.conf import settings
 import os
+from django.utils import timezone
+from datetime import timedelta
+from rest_framework.permissions import IsAuthenticated
 
 User = get_user_model()
 
@@ -232,4 +235,23 @@ class GetAllActiviteiten(APIView):
     def get(self, request, format=None):
         activiteiten = Activiteit.objects.all()
         serializer = ActiviteitSerializer(activiteiten, many=True)
+        return Response(serializer.data)
+    
+class CheckDeadlinesView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, format=None):
+        now = timezone.now()
+        two_hours_later = now + timedelta(hours=2)
+        activiteiten = Activiteit.objects.filter(deadline__range=(now, two_hours_later))
+
+        notifications = []
+        for activiteit in activiteiten:
+            notificatie = Notificatie.objects.create(
+                gebruiker=activiteit.gebruiker,
+                beschrijving=f'Deadline voor {activiteit.taak} is binnen 2 uur!'
+            )
+            notifications.append(notificatie)
+
+        serializer = NotificatieSerializer(notifications, many=True)
         return Response(serializer.data)
