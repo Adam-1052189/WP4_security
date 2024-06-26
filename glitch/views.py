@@ -232,10 +232,6 @@ class ActiviteitenView(APIView):
     def get(self, request, cursusnaam):
         try:
             gebruiker = request.user
-            # Debugging logs
-            print(f"Gebruiker: {gebruiker.email}")
-            print(f"Cursusnaam: {cursusnaam}")
-
             gebruiker_activiteiten = GebruikerActiviteit.objects.filter(
                 gebruiker=gebruiker,
                 activiteit__cursus__vaknaam=cursusnaam
@@ -247,6 +243,7 @@ class ActiviteitenView(APIView):
                 'taak': ga.activiteit.taak,
                 'status': ga.status,
                 'niveau': ga.niveau,
+                'submission_text': ga.submission_text
             } for ga in gebruiker_activiteiten]
 
             data = {"activiteiten": activiteiten_data}

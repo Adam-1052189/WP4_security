@@ -35,6 +35,12 @@ function ActiviteitenList({route}) {
         fetchActiviteiten();
     }, [cursusnaam]);
 
+    const openModal = (activiteit) => {
+        setSelectedActiviteit(activiteit);
+        setSubmissionText(activiteit.submission_text || '');
+        setModalVisible(true);
+    };
+
     const handleSubmit = async () => {
         try {
             const token = await AsyncStorage.getItem('access_token');
@@ -66,10 +72,7 @@ function ActiviteitenList({route}) {
                 <View key={index}>
                     <Card
                         title={activiteit.taak}
-                        onPress={() => {
-                            setSelectedActiviteit(activiteit);
-                            setModalVisible(true);
-                        }}
+                        onPress={() => openModal(activiteit)}
                         niveau={activiteit.niveau}
                         status={activiteit.status}
                     />
