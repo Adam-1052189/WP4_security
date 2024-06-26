@@ -31,7 +31,7 @@ urlpatterns = [
     path('cursussen/<str:cursusnaam>/activiteiten/', views.ActiviteitenView.as_view(), name='activiteiten'),
     path('cursussen/<str:cursusnaam>/coreassignment/', views.GetCoreAssignment.as_view(), name='core_assignment'),
     path('activiteiten/', views.GetAllActiviteiten.as_view(), name='get_all_activiteiten'),
-    path('activiteiten/<int:pk>/submit/', views.SubmitActiviteitView.as_view()),
+    path('activiteiten/<int:pk>/submit/', views.SubmitActiviteitView.as_view(), name='submit-activiteit'),
 ]
 
 if settings.DEBUG:

@@ -242,7 +242,8 @@ class ActiviteitenView(APIView):
             ).select_related('activiteit')
 
             activiteiten_data = [{
-                'id': ga.activiteit.activiteit_id,
+                'pk': ga.pk,
+                'activiteit_id': ga.activiteit.activiteit_id,
                 'taak': ga.activiteit.taak,
                 'status': ga.status,
                 'niveau': ga.niveau,
@@ -308,12 +309,15 @@ class GetAllActiviteiten(APIView):
 
 class SubmitActiviteitView(APIView):
     def post(self, request, pk, format=None):
-        voortgang = Voortgang.objects.get(pk=pk)
-        submission_text = request.data.get('submission_text')
-        if submission_text:
-            voortgang.submission_text = submission_text
-            voortgang.status = 'AFWACHTING'
-            voortgang.save()
-            return Response({'status': 'Submission received'}, status=status.HTTP_200_OK)
-        else:
-            return Response({'status': 'Invalid submission'}, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            gebruiker_activiteit = GebruikerActiviteit.objects.get(pk=pk)
+            submission_text = request.data.get('submission_text')
+            if submission_text:
+                gebruiker_activiteit.submission_text = submission_text
+                gebruiker_activiteit.status = 'AFWACHTING'
+                gebruiker_activiteit.save()
+                return Response({'status': 'Submission received'}, status=status.HTTP_200_OK)
+            else:
+                return Response({'status': 'Invalid submission'}, status=status.HTTP_400_BAD_REQUEST)
+        except GebruikerActiviteit.DoesNotExist:
+            return Response({'status': 'Not found'}, status=status.HTTP_404_NOT_FOUND)
