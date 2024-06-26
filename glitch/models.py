@@ -88,22 +88,11 @@ class Domein(models.Model):
     domein_id = models.AutoField(primary_key=True)
     domeinnaam = models.CharField(max_length=100)
 
-
 class Activiteit(models.Model):
-    NIVEAUS = [
-        (1, 'Niveau 1'),
-        (2, 'Niveau 2'),
-        (3, 'Niveau 3'),
-        (4, 'Niveau 4'),
-    ]
-
     activiteit_id = models.AutoField(primary_key=True)
-    gebruiker = models.ForeignKey('Gebruiker', on_delete=models.CASCADE, null=True)
     taak = models.CharField(max_length=100, null=True)
-    niveau = models.IntegerField(choices=NIVEAUS, default=0)
-    afgevinkt = models.BooleanField(default=False)
     core_assignment = models.ForeignKey('CoreAssignment', related_name='activiteiten', on_delete=models.CASCADE,
-                                        null=True)
+                                            null=True)
     cursus = models.ForeignKey('Cursus', on_delete=models.CASCADE, null=True)
     deadline = models.DateField(null=True)
 
@@ -125,12 +114,10 @@ class Cursusjaar(models.Model):
     cursusjaar = models.CharField(max_length=100)
     cursussen = models.ManyToManyField('Cursus', through='CursusjaarCursus')
 
-
 class CoreAssignment(models.Model):
     id = models.AutoField(primary_key=True)
     opdrachtnaam = models.CharField(max_length=100)
     deadline = models.DateField(null=True)
-    gebruikers = models.ManyToManyField('Gebruiker', through='Voortgang')
     point_challenge = models.IntegerField(default=0)
     concept_challenge = models.TextField(null=True)
 
@@ -173,3 +160,35 @@ class Deelname(models.Model):
 class CursusjaarCursus(models.Model):
     cursusjaar = models.ForeignKey(Cursusjaar, on_delete=models.CASCADE)
     cursus = models.ForeignKey(Cursus, on_delete=models.CASCADE)
+
+class GebruikerActiviteit(models.Model):
+    STATUS_CHOICES = [
+        ('OPEN', 'Open'),
+        ('AFWACHTING', 'Afwachting'),
+        ('GOEDGEKEURD', 'Goedgekeurd'),
+        ('AFGEKEURD', 'Afgekeurd'),
+    ]
+
+    NIVEAUS = [
+        (1, 'Niveau 1'),
+        (2, 'Niveau 2'),
+        (3, 'Niveau 3'),
+        (4, 'Niveau 4'),
+    ]
+
+    gebruiker = models.ForeignKey('Gebruiker', on_delete=models.CASCADE)
+    activiteit = models.ForeignKey('Activiteit', on_delete=models.CASCADE)
+    niveau = models.IntegerField(choices=NIVEAUS, default=0)
+    status = models.CharField(max_length=11, choices=STATUS_CHOICES, default='OPEN')
+
+class GebruikerCoreAssignment(models.Model):
+    STATUS_CHOICES = [
+        ('OPEN', 'Open'),
+        ('AFWACHTING', 'Afwachting'),
+        ('GOEDGEKEURD', 'Goedgekeurd'),
+        ('AFGEKEURD', 'Afgekeurd'),
+    ]
+
+    gebruiker = models.ForeignKey('Gebruiker', on_delete=models.CASCADE)
+    core_assignment = models.ForeignKey('CoreAssignment', on_delete=models.CASCADE)
+    status = models.CharField(max_length=11, choices=STATUS_CHOICES, default='OPEN')
