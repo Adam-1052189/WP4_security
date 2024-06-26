@@ -102,8 +102,13 @@ function ActiviteitenList({route}) {
                             onChangeText={setSubmissionText}
                             style={{height: 100, borderColor: 'gray', borderWidth: 1, marginBottom: 10}}
                             multiline
+                            editable={selectedActiviteit?.status !== 'GOEDGEKEURD'}
                         />
-                        <Button title="Inleveren" onPress={handleSubmit}/>
+                        {selectedActiviteit?.status !== 'GOEDGEKEURD' ? (
+                            <Button title="Inleveren" onPress={handleSubmit} />
+                        ) : (
+                            <Text style={{ color: 'green' }}>Deze activiteit is al goedgekeurd en kan niet opnieuw worden ingeleverd.</Text>
+                        )}
                         <TouchableOpacity onPress={() => setModalVisible(false)} style={{marginTop: 10}}>
                             <Text style={{color: 'red'}}>Annuleren</Text>
                         </TouchableOpacity>
