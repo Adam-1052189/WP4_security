@@ -18,6 +18,8 @@ import GebruikerEditScreen from "./src/screens/GebruikerEditScreen";
 import ActiviteitenList from "./src/screens/ActiviteitenList";
 import ActiviteitBewerkenScreen from "./src/screens/ActiviteitBewerkenScreen";
 import ActiviteitDetailScreen from "./src/screens/ActiviteitDetailScreen";
+import StudentList from "./src/components/StudentList";
+import StudentCard from "./src/screens/StudentCard";
 
 
 const Stack = createStackNavigator();
@@ -356,6 +358,15 @@ const App = () => {
                     name="ActiviteitDetailScreen"
                     component={ActiviteitDetailScreen}
                     options={{title: 'Activiteit Details'}}
+                />
+                <Stack.Screen
+                    name="StudentList"
+                    component={StudentList}
+                    options={{title: 'Voortgang'}}
+                />
+                <Stack.Screen
+                    name="StudentCard"
+                    component={StudentCard}
                 />
             </Stack.Navigator>
             <Toast/>

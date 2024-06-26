@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
-import CursusvoortgangCard from '../components/CursusvoortgangCard';
+import CursusvoortgangCard from '../components/VoortgangCard';
 import ActiviteitenCard from '../components/ActiviteitCard';
 import Footer from "../components/Footer";
 

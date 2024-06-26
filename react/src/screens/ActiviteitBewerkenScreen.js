@@ -1,31 +1,36 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, FlatList , Button, TextInput } from 'react-native';
-import ActiviteitCard from '../components/ActiviteitCard';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, Button, TextInput, Alert } from 'react-native';
 
-const ActiviteitBewerkenScreen = ({ activiteit, onClose }) => {
-    const [activiteiten, setActiviteiten] = useState([]);
+const ActiviteitBewerkenScreen = ({ activiteit, onClose, onUpdated }) => {
     const [taak, setTaak] = useState(activiteit.taak);
     const [niveau, setNiveau] = useState(activiteit.niveau);
 
-    const fetchActiviteiten = async () => {
+    const submitChanges = async () => {
         try {
-            const response = await fetch('http://localhost:8000/glitch/activiteiten');
-            let data = await response.json();
-            data = JSON.parse(data);
-            data = data.map(item => ({id: item.pk, ...item.fields}));
-            setActiviteiten(data);
+            const response = await fetch(`http://localhost:8000/glitch/activiteiten/${activiteit.activiteit_id}/`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    taak: taak,
+                    niveau: niveau,
+                }),
+            });
+
+            if (response.ok) {
+            Alert.alert('Success', 'Changes have been saved.');
+            onUpdated();
+            onClose();
+        }
+
+            Alert.alert('Success', 'Changes have been saved.');
+            onClose();
         } catch (error) {
+            Alert.alert('Error', 'Failed to save changes.');
             console.error(error);
         }
     };
-
-    useEffect(() => {
-        fetchActiviteiten();
-    }, []);
-
-    const renderItem = ({item}) => {
-        return <ActiviteitCard activiteit={item} />;
-    }
 
     return (
         <View style={styles.container}>
@@ -42,11 +47,7 @@ const ActiviteitBewerkenScreen = ({ activiteit, onClose }) => {
                 value={niveau}
                 onChangeText={setNiveau}
             />
-            <FlatList
-                data={activiteiten}
-                renderItem={renderItem}
-                keyExtractor={item => item.id.toString()}
-            />
+            <Button title="Submit" onPress={submitChanges} />
             <Button title="Close" onPress={onClose} />
         </View>
     );

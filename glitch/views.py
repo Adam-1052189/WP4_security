@@ -185,12 +185,6 @@ class ActiviteitViewSet(viewsets.ModelViewSet):
         activiteit.complete()
         return Response({'status': 'Taak voltooid'}, status=status.HTTP_200_OK)
 
-    def perform_update(self, serializer):
-        instance = serializer.save()
-        if instance.afgevinkt:
-            instance.complete()
-
-
 class CoreAssignmentViewSet(viewsets.ModelViewSet):
     queryset = CoreAssignment.objects.all()
     serializer_class = CoreAssignmentSerializer
@@ -335,3 +329,23 @@ class SubmitCoreAssignmentView(APIView):
                 return Response({'status': 'Invalid submission'}, status=status.HTTP_400_BAD_REQUEST)
         except GebruikerCoreAssignment.DoesNotExist:
             return Response({'status': 'Not found'}, status=status.HTTP_404_NOT_FOUND)
+
+
+class ActiviteitUpdate(generics.UpdateAPIView):
+    queryset = Activiteit.objects.all()
+    serializer_class = ActiviteitSerializer
+
+class StudentActivities(APIView):
+    def get(self, request, gebruiker_id, format=None):
+        gebruiker_activiteiten = GebruikerActiviteit.objects.filter(gebruiker__id=gebruiker_id).select_related('activiteit')
+        activities = [ga.activiteit for ga in gebruiker_activiteiten]
+        activity_serializer = ActiviteitSerializer(activities, many=True)
+
+        gebruiker_core_assignments = GebruikerCoreAssignment.objects.filter(gebruiker__id=gebruiker_id).select_related('core_assignment')
+        core_assignments = [gca.core_assignment for gca in gebruiker_core_assignments]
+        core_assignment_serializer = CoreAssignmentSerializer(core_assignments, many=True)
+
+        return Response({
+            'activiteiten': activity_serializer.data,
+            'core_assignments': core_assignment_serializer.data
+        })
