@@ -83,8 +83,32 @@ def register(request):
         if User.objects.filter(email=email).exists():
             return JsonResponse({'error': 'Email bestaat al'}, status=400)
 
-        user = User(email=email, password=make_password(password), voornaam=voornaam, achternaam=achternaam)
-        user.save()
+        user = Gebruiker.objects.create_user(
+            email=email,
+            password=password,
+            voornaam=voornaam,
+            achternaam=achternaam,
+            user_type=Gebruiker.STUDENT
+        )
+
+        # Koppel de gebruiker aan alle bestaande activiteiten
+        activiteiten = Activiteit.objects.all()
+        for activiteit in activiteiten:
+            GebruikerActiviteit.objects.create(
+                gebruiker=user,
+                activiteit=activiteit,
+                niveau=0,
+                status='OPEN'
+            )
+
+        # Koppel de gebruiker aan alle bestaande core assignments
+        core_assignments = CoreAssignment.objects.all()
+        for core_assignment in core_assignments:
+            GebruikerCoreAssignment.objects.create(
+                gebruiker=user,
+                core_assignment=core_assignment,
+                status='OPEN'
+            )
 
         return JsonResponse({'success': 'Gebruiker succesvol geregistreerd'}, status=201)
 

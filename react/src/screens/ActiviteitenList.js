@@ -68,7 +68,7 @@ function ActiviteitenList({ route }) {
             {activiteiten.length === 0 && (
                 <Text>No activities found.</Text>
             )}
-            <CoreAssignment cursusnaam={cursusnaam} />
+            <CoreAssignment cursusnaam={cursusnaam} activiteiten={activiteiten} />
         </View>
     );
 }

@@ -3,7 +3,7 @@ import Card from "./Card";
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-function CoreAssignment({ cursusnaam }) {
+function CoreAssignment({ cursusnaam, activiteiten }) {
     const [coreAssignment, setCoreAssignment] = useState(null);
 
     useEffect(() => {
@@ -26,11 +26,13 @@ function CoreAssignment({ cursusnaam }) {
         fetchCoreAssignment();
     }, [cursusnaam]);
 
+    const allActivitiesApproved = activiteiten && activiteiten.every(activiteit => activiteit.status === 'GOEDGEKEURD');
+
     return (
         <Card
             title={coreAssignment ? coreAssignment.opdrachtnaam : 'Loading...'}
             onPress={() => {}}
-            isLocked={coreAssignment ? coreAssignment.status !== 'GOEDGEKEURD' : true}
+            isLocked={coreAssignment ? !allActivitiesApproved : true}
         />
     );
 }
