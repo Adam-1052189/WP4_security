@@ -2,8 +2,24 @@ import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, } from 'react-native';
 import * as Progress from 'react-native-progress';
 
-function Card({ title, onPress, niveau, afgevinkt, isLocked }) {
-    const backgroundColor = afgevinkt ? '#a7ef93' : '#fff';
+function Card({ title, onPress, niveau, status, isLocked }) {
+     let backgroundColor;
+
+    switch (status) {
+        case 'GOEDGEKEURD':
+            backgroundColor = '#a7ef93'; // Groen
+            break;
+        case 'AFGEKEURD':
+            backgroundColor = '#ff6a6a'; // Rood
+            break;
+        case 'AFWACHTING':
+            backgroundColor = '#e4a460'; // oranje
+            break;
+        case 'OPEN':
+        default:
+            backgroundColor = '#fff'; // Wit
+            break;
+    }
 
     return (
         <TouchableOpacity onPress={onPress} style={[styles.card, {backgroundColor}]}>

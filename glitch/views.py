@@ -8,14 +8,19 @@ from rest_framework.views import APIView
 from rest_framework import status, generics, viewsets, permissions
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from .models import Domein, Cursus, Activiteit, CoreAssignment, Voortgang, Gebruiker, Cursusjaar
-from .serializers import DomeinSerializer, GebruikerSerializer, CursusjaarSerializer, CursusSerializer, ActiviteitSerializer, CoreAssignmentSerializer, VoortgangSerializer
+from .models import (Domein, Cursus, Activiteit, CoreAssignment, Voortgang, Gebruiker, Cursusjaar,
+                     GebruikerCoreAssignment, GebruikerActiviteit)
+from .serializers import (DomeinSerializer, GebruikerSerializer, CursusjaarSerializer, CursusSerializer,
+                          ActiviteitSerializer, CoreAssignmentSerializer, VoortgangSerializer)
 from django.core import serializers
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.http import FileResponse, JsonResponse
 from django.views import View
 from django.conf import settings
 import os
+from rest_framework.permissions import IsAuthenticated
+from django.contrib.auth.mixins import LoginRequiredMixin
+
 
 User = get_user_model()
 
@@ -197,21 +202,63 @@ class GebruikerUpdate(generics.RetrieveUpdateAPIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class ActiviteitenView(View):
+class ActiviteitenView(APIView):
+    permission_classes = [IsAuthenticated]
+
     def get(self, request, cursusnaam):
-        activiteiten = Activiteit.objects.filter(cursus__vaknaam=cursusnaam)
-        data = {"activiteiten": list(activiteiten.values())}
-        return JsonResponse(data)
+        try:
+            gebruiker = request.user
+            # Debugging logs
+            print(f"Gebruiker: {gebruiker.email}")
+            print(f"Cursusnaam: {cursusnaam}")
+
+            gebruiker_activiteiten = GebruikerActiviteit.objects.filter(
+                gebruiker=gebruiker,
+                activiteit__cursus__vaknaam=cursusnaam
+            ).select_related('activiteit')
+
+            activiteiten_data = [{
+                'id': ga.activiteit.activiteit_id,
+                'taak': ga.activiteit.taak,
+                'status': ga.status,
+                'niveau': ga.niveau,
+            } for ga in gebruiker_activiteiten]
+
+            data = {"activiteiten": activiteiten_data}
+            print(f"Data: {data}")
+            return JsonResponse(data)
+        except Exception as e:
+            # Log de fout
+            print(f"Error: {str(e)}")
+            return JsonResponse({'error': str(e)}, status=500)
 
 
 class GetCoreAssignment(APIView):
+    permission_classes = [IsAuthenticated]
+
     def get(self, request, cursusnaam, format=None):
-        core_assignment = CoreAssignment.get_by_cursusnaam(cursusnaam)
-        if core_assignment is not None:
-            serializer = CoreAssignmentSerializer(core_assignment)
-            return Response(serializer.data)
-        else:
-            return Response({'error': 'No core assignment found for this cursusnaam'}, status=status.HTTP_404_NOT_FOUND)
+        try:
+            gebruiker = request.user
+            core_assignment = CoreAssignment.get_by_cursusnaam(cursusnaam)
+            if core_assignment is not None:
+                gebruiker_core_assignment = GebruikerCoreAssignment.objects.filter(
+                    gebruiker=gebruiker,
+                    core_assignment=core_assignment
+                ).first()
+
+                if gebruiker_core_assignment:
+                    data = {
+                        'id': gebruiker_core_assignment.core_assignment.id,
+                        'opdrachtnaam': gebruiker_core_assignment.core_assignment.opdrachtnaam,
+                        'status': gebruiker_core_assignment.status
+                    }
+                    return Response(data)
+                else:
+                    return Response({'error': 'No core assignment found for this user'}, status=status.HTTP_404_NOT_FOUND)
+            else:
+                return Response({'error': 'No core assignment found for this cursusnaam'}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 class UpdateActiviteitStatusView(APIView):

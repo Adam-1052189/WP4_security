@@ -28,8 +28,8 @@ urlpatterns = [
     path('gebruiker/<int:pk>/', views.GebruikerUpdate.as_view(), name='gebruiker-update'),
     path('activiteiten/<int:pk>/status/', views.UpdateActiviteitStatusView.as_view()),
     path('docent_voortgang/<int:docent_id>/',views.docent_voortgang, name='docent-voortgang'),
-    path('cursussen/<str:cursusnaam>/activiteiten/', views.ActiviteitenView.as_view()),
-    path('cursussen/<str:cursusnaam>/coreassignment/', views.GetCoreAssignment.as_view()),
+    path('cursussen/<str:cursusnaam>/activiteiten/', views.ActiviteitenView.as_view(), name='activiteiten'),
+    path('cursussen/<str:cursusnaam>/coreassignment/', views.GetCoreAssignment.as_view(), name='core_assignment'),
     path('activiteiten/', views.GetAllActiviteiten.as_view(), name='get_all_activiteiten'),
     path('activiteiten/<int:pk>/submit/', views.SubmitActiviteitView.as_view()),
 ]

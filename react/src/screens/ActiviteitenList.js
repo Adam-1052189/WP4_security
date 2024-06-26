@@ -1,6 +1,7 @@
-import React, {useEffect, useState} from 'react';
-import {View, Text, Modal, Button, TextInput} from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text } from 'react-native';
 import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Card from '../components/Card';
 import CoreAssignment from '../components/CoreAssignment';
 
@@ -15,15 +16,20 @@ function ActiviteitenList({ route }) {
     useEffect(() => {
         const fetchActiviteiten = async () => {
             try {
-                if (cursusnaam) {
-                    const response = await axios.get(`http://localhost:8000/glitch/cursussen/${cursusnaam}/activiteiten/`);
-                    console.log(response.data);
+                const token = await AsyncStorage.getItem('access_token');
+                if (cursusnaam && token) {
+                    const response = await axios.get(`http://localhost:8000/glitch/cursussen/${cursusnaam}/activiteiten/`, {
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    });
+                    console.log('Activiteiten response:', response.data);
                     if (response.data.activiteiten) {
                         setActiviteiten(response.data.activiteiten);
                     }
                 }
             } catch (error) {
-                console.error(error);
+                console.error('Error fetching activities:', error);
             }
         };
 
@@ -32,8 +38,13 @@ function ActiviteitenList({ route }) {
 
     const handleSubmit = async () => {
         try {
-            const response = await axios.post(`http://localhost:8000/glitch/activiteiten/${selectedActiviteit.pk}/submit/`, {
+            const token = await AsyncStorage.getItem('access_token');
+            const response = await axios.post(`http://localhost:8000/glitch/activiteiten/${selectedActiviteit.activiteit_id}/submit/`, {
                 submission_text: submissionText
+            }, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
             });
             console.log(response.data);
             setModalVisible(false);
@@ -50,11 +61,14 @@ function ActiviteitenList({ route }) {
                         title={activiteit.taak}
                         onPress={() => {}}
                         niveau={activiteit.niveau}
-                        afgevinkt={activiteit.afgevinkt}
+                        status={activiteit.status}
                     />
-                    {index === activiteiten.length - 1 && <CoreAssignment cursusnaam={cursusnaam} activiteiten={activiteiten} />}
                 </View>
             ))}
+            {activiteiten.length === 0 && (
+                <Text>No activities found.</Text>
+            )}
+            <CoreAssignment cursusnaam={cursusnaam} />
         </View>
     );
 }

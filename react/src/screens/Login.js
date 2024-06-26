@@ -1,10 +1,9 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import Toast from "react-native-toast-message";
-import {Button, TextInput, View, StyleSheet, Text, TouchableOpacity, Linking, Alert} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
+import { TextInput, View, StyleSheet, Text, TouchableOpacity, Linking } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import * as Font from 'expo-font';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
 
 const Login = () => {
     const [email, setEmail] = useState('');
@@ -28,37 +27,38 @@ const Login = () => {
     }
 
     const handleLogin = async () => {
-    try {
-        const response = await fetch('http://localhost:8000/glitch/api/login/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                email: email + '@hr.nl',
-                password: password,
-            }),
-        });
-        const data = await response.json();
-        console.log('Login response data:', data);
-        if (response.status === 200 || response.status === 201) {
-            await AsyncStorage.setItem('access_token', data.access);
-            await AsyncStorage.setItem('refresh_token', data.refresh);
-            await AsyncStorage.setItem('user_type', data.user_type);
-            await AsyncStorage.setItem('user_id', String(data.user_id));
-
-            Toast.show({
-                type: 'success',
-                text1: 'Succes',
-                text2: 'Je bent succesvol aangemeld',
-            });
-
-            const userResponse = await fetch(`http://localhost:8000/glitch/gebruikers/${data.user_id}/`, {
-                method: 'GET',
+        try {
+            const response = await fetch('http://localhost:8000/glitch/api/login/', {
+                method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
+                body: JSON.stringify({
+                    email: email + '@hr.nl',
+                    password: password,
+                }),
             });
+            const data = await response.json();
+            console.log('Login response data:', data);
+            if (response.status === 200) {
+                await AsyncStorage.setItem('access_token', data.access);
+                await AsyncStorage.setItem('refresh_token', data.refresh);
+                await AsyncStorage.setItem('user_type', data.user_type);
+                await AsyncStorage.setItem('user_id', String(data.user_id));
+
+                Toast.show({
+                    type: 'success',
+                    text1: 'Succes',
+                    text2: 'Je bent succesvol aangemeld',
+                });
+
+                const userResponse = await fetch(`http://localhost:8000/glitch/gebruikers/${data.user_id}/`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${data.access}`
+                    },
+                });
 
             const userData = await userResponse.json();
             console.log('User data:', userData);
@@ -71,39 +71,38 @@ const Login = () => {
                 };
                 await AsyncStorage.setItem('user', JSON.stringify(user));
 
-                navigation.reset({
-                    index: 0,
-                    routes: [{name: data.user_type === 'DOCENT' ? 'DocentDashboard' : data.user_type === 'STUDENT' ? 'StudentDashboard' : 'AdminDashboard', params: { user: user } }],
-                });
+                    navigation.reset({
+                        index: 0,
+                        routes: [{ name: data.user_type === 'DOCENT' ? 'DocentDashboard' : data.user_type === 'STUDENT' ? 'StudentDashboard' : 'AdminDashboard', params: { user: user } }],
+                    });
+                } else {
+                    Toast.show({
+                        type: 'error',
+                        text1: 'Fout',
+                        text2: 'Er is een fout opgetreden bij het ophalen van gebruikersgegevens',
+                    });
+                }
             } else {
                 Toast.show({
                     type: 'error',
                     text1: 'Fout',
-                    text2: 'Er is een fout opgetreden bij het ophalen van gebruikersgegevens',
+                    text2: 'Onjuiste aanmeldgegevens',
                 });
             }
-        } else {
+        } catch (error) {
+            console.error('Error:', error);
             Toast.show({
                 type: 'error',
                 text1: 'Fout',
-                text2: 'Onjuiste aanmeldgegevens',
+                text2: 'Er is een fout opgetreden tijdens het aanmelden',
             });
         }
-    } catch (error) {
-        console.error('Error:', error);
-        Toast.show({
-            type: 'error',
-            text1: 'Fout',
-            text2: 'Er is een fout opgetreden tijdens het aanmelden',
-        });
-    }
-};
-
+    };
 
     return (
         <View style={styles.container}>
             <Text style={styles.loginText}>Inloggen</Text>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <TextInput
                     style={styles.emailinput}
                     placeholder="Email"

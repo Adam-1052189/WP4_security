@@ -96,12 +96,6 @@ class Activiteit(models.Model):
     cursus = models.ForeignKey('Cursus', on_delete=models.CASCADE, null=True)
     deadline = models.DateField(null=True)
 
-    def complete(self):
-        self.afgevinkt = True
-        self.save()
-        xp_to_add = self.niveau
-        self.gebruiker.update_xp(xp_to_add)
-
 
 class Cursus(models.Model):
     vak_cursus_id = models.AutoField(primary_key=True)
@@ -180,6 +174,8 @@ class GebruikerActiviteit(models.Model):
     activiteit = models.ForeignKey('Activiteit', on_delete=models.CASCADE)
     niveau = models.IntegerField(choices=NIVEAUS, default=0)
     status = models.CharField(max_length=11, choices=STATUS_CHOICES, default='OPEN')
+    submission_text = models.TextField(null=True, blank=True)
+
 
 class GebruikerCoreAssignment(models.Model):
     STATUS_CHOICES = [
@@ -192,3 +188,4 @@ class GebruikerCoreAssignment(models.Model):
     gebruiker = models.ForeignKey('Gebruiker', on_delete=models.CASCADE)
     core_assignment = models.ForeignKey('CoreAssignment', on_delete=models.CASCADE)
     status = models.CharField(max_length=11, choices=STATUS_CHOICES, default='OPEN')
+    submission_text = models.TextField(null=True, blank=True)
