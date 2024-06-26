@@ -67,14 +67,21 @@ class Notificatie(models.Model):
 
 
 class Voortgang(models.Model):
+    STATUS_CHOICES = [
+        ('OPEN', 'Open'),
+        ('AFWACHTING', 'Afwachting'),
+        ('GOEDGEKEURD', 'Goedgekeurd'),
+        ('AFGEKEURD', 'Afgekeurd'),
+    ]
+
     voortgang_id = models.AutoField(primary_key=True)
     cursus = models.ForeignKey('Cursus', on_delete=models.CASCADE, null=True)
     gebruiker = models.ForeignKey('Gebruiker', on_delete=models.CASCADE, related_name='voortgangen')
     core_assignment = models.ForeignKey('CoreAssignment', on_delete=models.CASCADE)
     score = models.IntegerField(null=True)
-    bijlage = models.FileField(upload_to='opdracht_bijlagen/', null=True)
-    afgevinkt = models.BooleanField(default=False)
     activiteiten = models.ManyToManyField('Activiteit')
+    submission_text = models.TextField(null=True)
+    status = models.CharField(max_length=11, choices=STATUS_CHOICES, default='OPEN')
 
 
 class Domein(models.Model):
@@ -90,16 +97,6 @@ class Activiteit(models.Model):
         (4, 'Niveau 4'),
     ]
 
-    STATUS_CHOICES = [
-        ('INGEDIEND', 'Ingediend'),
-        ('AFGEKEURD', 'Afgekeurd'),
-        ('GOEDGEKEURD', 'Goedgekeurd'),
-    ]
-    status = models.CharField(
-        max_length=12,
-        choices=STATUS_CHOICES,
-        default='INGEDIEND',
-    )
     activiteit_id = models.AutoField(primary_key=True)
     gebruiker = models.ForeignKey('Gebruiker', on_delete=models.CASCADE, null=True)
     taak = models.CharField(max_length=100, null=True)

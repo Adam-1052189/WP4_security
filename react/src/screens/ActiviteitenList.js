@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text} from 'react-native';
+import {View, Text, Modal, Button, TextInput} from 'react-native';
 import axios from 'axios';
 import Card from '../components/Card';
 import CoreAssignment from '../components/CoreAssignment';
@@ -8,6 +8,9 @@ function ActiviteitenList({ route }) {
     const { cursusnaam } = route.params;
     const [activiteiten, setActiviteiten] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [modalVisible, setModalVisible] = useState(false);
+    const [submissionText, setSubmissionText] = useState('');
+    const [selectedActiviteit, setSelectedActiviteit] = useState(null);
 
     useEffect(() => {
         const fetchActiviteiten = async () => {
@@ -26,6 +29,18 @@ function ActiviteitenList({ route }) {
 
         fetchActiviteiten();
     }, [cursusnaam]);
+
+    const handleSubmit = async () => {
+        try {
+            const response = await axios.post(`http://localhost:8000/glitch/activiteiten/${selectedActiviteit.pk}/submit/`, {
+                submission_text: submissionText
+            });
+            console.log(response.data);
+            setModalVisible(false);
+        } catch (error) {
+            console.error(error);
+        }
+    };
 
     return (
         <View>

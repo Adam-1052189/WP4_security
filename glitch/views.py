@@ -233,3 +233,16 @@ class GetAllActiviteiten(APIView):
         activiteiten = Activiteit.objects.all()
         serializer = ActiviteitSerializer(activiteiten, many=True)
         return Response(serializer.data)
+
+
+class SubmitActiviteitView(APIView):
+    def post(self, request, pk, format=None):
+        voortgang = Voortgang.objects.get(pk=pk)
+        submission_text = request.data.get('submission_text')
+        if submission_text:
+            voortgang.submission_text = submission_text
+            voortgang.status = 'AFWACHTING'
+            voortgang.save()
+            return Response({'status': 'Submission received'}, status=status.HTTP_200_OK)
+        else:
+            return Response({'status': 'Invalid submission'}, status=status.HTTP_400_BAD_REQUEST)
