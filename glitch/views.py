@@ -8,7 +8,7 @@ from rest_framework.views import APIView
 from rest_framework import status, generics, viewsets, permissions
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from .models import Domein, Cursus, Activiteit, CoreAssignment, Voortgang, Gebruiker, Cursusjaar
+from .models import Domein, Cursus, Activiteit, CoreAssignment, Voortgang, Gebruiker, Cursusjaar, GebruikerActiviteit, GebruikerCoreAssignment
 from .serializers import DomeinSerializer, GebruikerSerializer, CursusjaarSerializer, CursusSerializer, ActiviteitSerializer, CoreAssignmentSerializer, VoortgangSerializer
 from django.core import serializers
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -250,3 +250,18 @@ class SubmitActiviteitView(APIView):
 class ActiviteitUpdate(generics.UpdateAPIView):
     queryset = Activiteit.objects.all()
     serializer_class = ActiviteitSerializer
+
+class StudentActivities(APIView):
+    def get(self, request, gebruiker_id, format=None):
+        gebruiker_activiteiten = GebruikerActiviteit.objects.filter(gebruiker__id=gebruiker_id).select_related('activiteit')
+        activities = [ga.activiteit for ga in gebruiker_activiteiten]
+        activity_serializer = ActiviteitSerializer(activities, many=True)
+
+        gebruiker_core_assignments = GebruikerCoreAssignment.objects.filter(gebruiker__id=gebruiker_id).select_related('core_assignment')
+        core_assignments = [gca.core_assignment for gca in gebruiker_core_assignments]
+        core_assignment_serializer = CoreAssignmentSerializer(core_assignments, many=True)
+
+        return Response({
+            'activiteiten': activity_serializer.data,
+            'core_assignments': core_assignment_serializer.data
+        })
