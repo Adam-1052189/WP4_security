@@ -156,10 +156,10 @@ class ActiviteitViewSet(viewsets.ModelViewSet):
         activiteit.complete()
         return Response({'status': 'Taak voltooid'}, status=status.HTTP_200_OK)
 
-    def perform_update(self, serializer):
-        instance = serializer.save()
-        if instance.afgevinkt:
-            instance.complete()
+    # def perform_update(self, serializer):
+    #     instance = serializer.save()
+    #     if instance.afgevinkt:
+    #         instance.complete()
 
 
 class CoreAssignmentViewSet(viewsets.ModelViewSet):
@@ -246,3 +246,7 @@ class SubmitActiviteitView(APIView):
             return Response({'status': 'Submission received'}, status=status.HTTP_200_OK)
         else:
             return Response({'status': 'Invalid submission'}, status=status.HTTP_400_BAD_REQUEST)
+
+class ActiviteitUpdate(generics.UpdateAPIView):
+    queryset = Activiteit.objects.all()
+    serializer_class = ActiviteitSerializer

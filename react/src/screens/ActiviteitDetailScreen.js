@@ -1,14 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, FlatList, Modal } from 'react-native';
-import { useNavigation } from "@react-navigation/native";
 import Card from '../components/Card';
-import ActiviteitBewerkenScreen from './ActiviteitBewerkenScreen'; // Import the ActiviteitBewerkenScreen component
+import ActiviteitBewerkenScreen from './ActiviteitBewerkenScreen';
 
 const ActiviteitDetailScreen = ({ route }) => {
     const [activiteiten, setActiviteiten] = useState([]);
     const [modalVisible, setModalVisible] = useState(false);
     const [selectedActiviteit, setSelectedActiviteit] = useState(null);
-    const navigation = useNavigation();
 
     const fetchAllActiviteiten = async () => {
         try {
@@ -52,7 +50,7 @@ const ActiviteitDetailScreen = ({ route }) => {
                     setModalVisible(!modalVisible);
                 }}
             >
-                <ActiviteitBewerkenScreen activiteit={selectedActiviteit} onClose={() => setModalVisible(false)} />
+                <ActiviteitBewerkenScreen activiteit={selectedActiviteit} onClose={() => setModalVisible(false)} onUpdated={fetchAllActiviteiten} />
             </Modal>
         </View>
     );
