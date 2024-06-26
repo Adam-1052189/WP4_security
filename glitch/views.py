@@ -272,7 +272,8 @@ class GetCoreAssignment(APIView):
                     data = {
                         'id': gebruiker_core_assignment.core_assignment.id,
                         'opdrachtnaam': gebruiker_core_assignment.core_assignment.opdrachtnaam,
-                        'status': gebruiker_core_assignment.status
+                        'status': gebruiker_core_assignment.status,
+                        'submission_text': gebruiker_core_assignment.submission_text,
                     }
                     return Response(data)
                 else:
@@ -317,4 +318,20 @@ class SubmitActiviteitView(APIView):
             else:
                 return Response({'status': 'Invalid submission'}, status=status.HTTP_400_BAD_REQUEST)
         except GebruikerActiviteit.DoesNotExist:
+            return Response({'status': 'Not found'}, status=status.HTTP_404_NOT_FOUND)
+
+
+class SubmitCoreAssignmentView(APIView):
+    def post(self, request, pk, format=None):
+        try:
+            gebruiker_core_assignment = GebruikerCoreAssignment.objects.get(pk=pk)
+            submission_text = request.data.get('submission_text')
+            if submission_text:
+                gebruiker_core_assignment.submission_text = submission_text
+                gebruiker_core_assignment.status = 'AFWACHTING'
+                gebruiker_core_assignment.save()
+                return Response({'status': 'Submission received'}, status=status.HTTP_200_OK)
+            else:
+                return Response({'status': 'Invalid submission'}, status=status.HTTP_400_BAD_REQUEST)
+        except GebruikerCoreAssignment.DoesNotExist:
             return Response({'status': 'Not found'}, status=status.HTTP_404_NOT_FOUND)
