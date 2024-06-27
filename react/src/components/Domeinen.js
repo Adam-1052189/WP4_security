@@ -29,7 +29,7 @@ function Domeinen() {
                 <DomeinItem
                     key={item.domein_id}
                     domeinnaam={item.domeinnaam}
-                    domein_id={item.domein_id}
+                    domein_id={item.domein_id.toString()}
                 />
             ))}
         </View>

@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {Text, View, StyleSheet} from 'react-native'; // Voeg StyleSheet toe
+import {Text, View, StyleSheet} from 'react-native';
 import axios from 'axios';
 import PropTypes from 'prop-types';
 import CursusList from './CursusList';
@@ -59,7 +59,7 @@ DomeinItem.propTypes = {
     domein_id: PropTypes.string.isRequired,
 };
 
-const styles = StyleSheet.create({ // Voeg deze stijl toe
+const styles = StyleSheet.create({
     linkText: {
         textDecorationLine: 'underline',
     },
