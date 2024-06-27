@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, Modal } from 'react-native';
+import {View, Text, StyleSheet, FlatList, TouchableOpacity, TextInput} from 'react-native';
 
 const StudentCard = ({ studentId, closeModal }) => {
     const [activiteiten, setActiviteiten] = useState([]);
