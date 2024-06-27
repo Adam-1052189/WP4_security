@@ -21,6 +21,8 @@ import ActiviteitDetailScreen from "./src/screens/ActiviteitDetailScreen";
 import StudentList from "./src/components/StudentList";
 import StudentCard from "./src/screens/StudentCard";
 import BackButton from "./src/components/BackButton";
+import HeaderButton from './src/components/HeaderRightButton';
+import HeaderRightButton from "./src/components/HeaderRightButton";
 
 
 const Stack = createStackNavigator();
@@ -109,21 +111,6 @@ const App = () => {
         checkLoginStatus();
     }, []);
 
-    const handleLogout = async (navigation) => {
-        await AsyncStorage.removeItem('access_token');
-        await AsyncStorage.removeItem('refresh_token');
-        await AsyncStorage.removeItem('user_type');
-        await AsyncStorage.removeItem('user_id');
-        await AsyncStorage.removeItem('user');
-        setUser(null);
-        Toast.show({
-            type: 'success',
-            text1: 'Uitgelogd',
-            text2: 'Je bent succesvol uitgelogd',
-        });
-        navigation.navigate('Login');
-    };
-
     if (!fontLoaded) {
         return null;
     }
@@ -182,20 +169,7 @@ const App = () => {
                             fontWeight: 'bold',
                             fontFamily: 'Poppins-extra-bold',
                         },
-                        headerRight: () => (
-                            <View style={{ flexDirection: 'row' }}>
-                                <Button
-                                    onPress={() => navigation.navigate('Profiel')}
-                                    title="Profiel"
-                                    color="#1a69da"
-                                />
-                                <Button
-                                    onPress={() => handleLogout(navigation)}
-                                    title="Uitloggen"
-                                    color="#d30f4c"
-                                />
-                            </View>
-                        ),
+                        headerRight: () => <HeaderRightButton />,
                     })}
                 />
                 <Stack.Screen name="Registreren" component={RegisterScreen}/>
@@ -214,20 +188,7 @@ const App = () => {
                             fontWeight: 'bold',
                             fontFamily: 'Poppins-extra-bold',
                         },
-                        headerRight: () => (
-                            <View style={{flexDirection: 'row'}}>
-                                <Button
-                                    onPress={() => navigation.navigate('Profiel')}
-                                    title="Profiel"
-                                    color="#1a69da"
-                                />
-                                <Button
-                                    onPress={() => handleLogout(navigation)}
-                                    title="Uitloggen"
-                                    color="#d30f4c"
-                                />
-                            </View>
-                        ),
+                        headerRight: () => <HeaderRightButton />,
                     })}
                 />
                 <Stack.Screen
@@ -245,20 +206,7 @@ const App = () => {
                             fontWeight: 'bold',
                             fontFamily: 'Poppins-extra-bold',
                         },
-                        headerRight: () => (
-                            <View style={{flexDirection: 'row'}}>
-                                <Button
-                                    onPress={() => navigation.navigate('Profiel')}
-                                    title="Profiel"
-                                    color="#1a69da"
-                                />
-                                <Button
-                                    onPress={() => handleLogout(navigation)}
-                                    title="Uitloggen"
-                                    color="#d30f4c"
-                                />
-                            </View>
-                        ),
+                        headerRight: () => <HeaderRightButton />,
                     })}
                 />
                 <Stack.Screen
@@ -277,13 +225,7 @@ const App = () => {
                             fontWeight: 'bold',
                             fontFamily: 'Poppins-extra-bold',
                         },
-                        headerRight: () => (
-                            <Button
-                                onPress={() => handleLogout(navigation)}
-                                title="Uitloggen"
-                                color="#d30f4c"
-                            />
-                        ),
+                        headerRight: () => <HeaderRightButton />,
                     })}
                 />
                 <Stack.Screen
@@ -302,20 +244,7 @@ const App = () => {
                             fontWeight: 'bold',
                             fontFamily: 'Poppins-extra-bold',
                         },
-                        headerRight: () => (
-                            <View style={{flexDirection: 'row'}}>
-                                <Button
-                                    onPress={() => navigation.navigate('Profiel')}
-                                    title="Profiel"
-                                    color="#1a69da"
-                                />
-                                <Button
-                                    onPress={() => handleLogout(navigation)}
-                                    title="Uitloggen"
-                                    color="#d30f4c"
-                                />
-                            </View>
-                        ),
+                        headerRight: () => <HeaderRightButton />,
                     })}
                 />
                 <Stack.Screen
@@ -334,20 +263,7 @@ const App = () => {
                             fontWeight: 'bold',
                             fontFamily: 'Poppins-extra-bold',
                         },
-                        headerRight: () => (
-                            <View style={{flexDirection: 'row'}}>
-                                <Button
-                                    onPress={() => navigation.navigate('Profiel')}
-                                    title="Profiel"
-                                    color="#1a69da"
-                                />
-                                <Button
-                                    onPress={() => handleLogout(navigation)}
-                                    title="Uitloggen"
-                                    color="#d30f4c"
-                                />
-                            </View>
-                        ),
+                        headerRight: () => <HeaderRightButton />,
                     })}
                 />
                 <Stack.Screen
@@ -366,24 +282,7 @@ const App = () => {
                             fontWeight: 'bold',
                             fontFamily: 'Poppins-extra-bold',
                         },
-                        headerRight: () => (
-                            <View style={{flexDirection: 'row'}}>
-                                <Button
-                                    onPress={() => navigation.navigate('Profiel')}
-                                    title="Profiel"
-                                    color="#1a69da"
-                                />
-                                <Button
-                                    onPress={() => handleLogout(navigation)}
-                                    title="Uitloggen"
-                                    color="#d30f4c"
-                                />
-                                <Stack.Screen
-                                    name="ActiviteitBewerkenScreen"
-                                    component={ActiviteitBewerkenScreen}
-                                />
-                            </View>
-                        ),
+                        headerRight: () => <HeaderRightButton />,
                     })}
                 />
                 <Stack.Screen
@@ -407,20 +306,7 @@ const App = () => {
                             fontWeight: 'bold',
                             fontFamily: 'Poppins-extra-bold',
                         },
-                        headerRight: () => (
-                            <View style={{flexDirection: 'row'}}>
-                                <Button
-                                    onPress={() => navigation.navigate('Profiel')}
-                                    title="Profiel"
-                                    color="#1a69da"
-                                />
-                                <Button
-                                    onPress={() => handleLogout(navigation)}
-                                    title="Uitloggen"
-                                    color="#d30f4c"
-                                />
-                            </View>
-                        ),
+                        headerRight: () => <HeaderRightButton />,
                     })}
                 />
                 <Stack.Screen
@@ -439,20 +325,7 @@ const App = () => {
                             fontWeight: 'bold',
                             fontFamily: 'Poppins-extra-bold',
                         },
-                        headerRight: () => (
-                            <View style={{flexDirection: 'row'}}>
-                                <Button
-                                    onPress={() => navigation.navigate('Profiel')}
-                                    title="Profiel"
-                                    color="#1a69da"
-                                />
-                                <Button
-                                    onPress={() => handleLogout(navigation)}
-                                    title="Uitloggen"
-                                    color="#d30f4c"
-                                />
-                            </View>
-                        ),
+                        headerRight: () => <HeaderRightButton />,
                     })}
                 />
                 <Stack.Screen
