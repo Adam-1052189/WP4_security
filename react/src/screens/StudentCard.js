@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Button, Modal, FlatList, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Button, Modal, FlatList, TouchableOpacity, TextInput } from 'react-native';
 
 const StudentCard = ({ studentId, closeModal, modalVisible, setModalVisible }) => {
     const [activiteiten, setActiviteiten] = useState([]);
+    const [editedNiveau, setEditedNiveau] = useState({});
 
     const fetchActivitiesAndAssignments = async () => {
         try {
@@ -27,7 +28,7 @@ const StudentCard = ({ studentId, closeModal, modalVisible, setModalVisible }) =
 
     const updateStatus = async (id, newStatus) => {
         try {
-            const response = await fetch(`http://localhost:8000/glitch/activiteiten/${id}/update_status/`, {
+            const response = await fetch(`http://localhost:8000/glitch/update-activiteit-status/${id}/`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -45,12 +46,61 @@ const StudentCard = ({ studentId, closeModal, modalVisible, setModalVisible }) =
         }
     };
 
+    const updateNiveau = async (id) => {
+        const newNiveau = editedNiveau[id];
+        try {
+            const response = await fetch(`http://localhost:8000/glitch/update-activiteit-status/${id}/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ niveau: newNiveau }),
+            });
+
+            if (response.ok) {
+                fetchActivitiesAndAssignments();
+            } else {
+                console.error('Failed to update niveau');
+            }
+        } catch (error) {
+            console.error('Error updating niveau:', error);
+        }
+    };
+
+    const handleNiveauChange = (id, niveau) => {
+        setEditedNiveau({ ...editedNiveau, [id]: niveau });
+    };
+
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const year = date.getFullYear();
+        return `${day}/${month}/${year}`;
+    };
+
     const renderActivity = ({ item }) => (
         <View style={styles.activityCard}>
             <Text style={styles.activityText}>Taak: {item.taak}</Text>
-            <Text style={styles.activityText}>Niveau: {item.niveau}</Text>
-            <Text style={styles.activityText}>Deadline: {item.deadline}</Text>
+            <Text style={styles.activityText}>Deadline: {formatDate(item.deadline)}</Text>
             <Text style={styles.activityText}>Status: {item.status}</Text>
+            {item.status === 'AFWACHTING' ? (
+                <>
+                    <TextInput
+                        style={styles.input}
+                        value={editedNiveau[item.id] !== undefined ? editedNiveau[item.id] : item.niveau.toString()}
+                        onChangeText={(text) => handleNiveauChange(item.id, text)}
+                    />
+                    <TouchableOpacity
+                        style={styles.buttonSave}
+                        onPress={() => updateNiveau(item.id)}
+                    >
+                        <Text style={styles.buttonText}>Save Niveau</Text>
+                    </TouchableOpacity>
+                </>
+            ) : (
+                <Text style={styles.activityText}>Niveau: {item.niveau}</Text>
+            )}
             {item.status === 'AFWACHTING' && (
                 <View style={styles.buttonContainer}>
                     <TouchableOpacity
@@ -87,7 +137,7 @@ const StudentCard = ({ studentId, closeModal, modalVisible, setModalVisible }) =
                         keyExtractor={item => item.id.toString()}
                     />
                     <TouchableOpacity style={styles.closeButton} onPress={closeModal}>
-                        <Text style={styles.closeButtonText}>Close</Text>
+                        <Text style={styles.closeButtonText}>Sluiten</Text>
                     </TouchableOpacity>
                 </View>
             </View>
@@ -136,6 +186,7 @@ const styles = StyleSheet.create({
     buttonContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
+        marginTop: 10,
     },
     buttonApprove: {
         backgroundColor: '#4CAF50',
@@ -153,6 +204,7 @@ const styles = StyleSheet.create({
         padding: 10,
         borderRadius: 5,
         marginTop: 10,
+        marginBottom: 10,
     },
     buttonText: {
         color: 'white',

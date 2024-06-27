@@ -52,10 +52,10 @@ const ActiviteitBewerkenScreen = ({ activiteit, onClose, onUpdated }) => {
                 />
                 <View style={styles.buttonContainer}>
                     <TouchableOpacity style={styles.buttonSave} onPress={submitChanges}>
-                        <Text style={styles.buttonText}>Submit</Text>
+                        <Text style={styles.buttonText}>Opslaan</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.buttonClose} onPress={onClose}>
-                        <Text style={styles.buttonText}>Close</Text>
+                        <Text style={styles.buttonText}>Sluiten</Text>
                     </TouchableOpacity>
                 </View>
             </View>
