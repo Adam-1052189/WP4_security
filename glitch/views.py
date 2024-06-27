@@ -57,10 +57,12 @@ class LoginView(APIView):
         user = authenticate(request, email=email, password=password)
         if user is not None:
             refresh = RefreshToken.for_user(user)
+            profielfoto_url = request.build_absolute_uri(user.profielfoto.url) if user.profielfoto else None
             return Response({
                 'status': 'success',
                 'user_type': user.user_type,
                 'user_id': user.id,
+                'profielfoto': profielfoto_url,
                 'access': str(refresh.access_token),
                 'refresh': str(refresh),
             }, status=status.HTTP_200_OK)

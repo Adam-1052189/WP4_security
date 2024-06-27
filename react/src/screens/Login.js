@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import Toast from "react-native-toast-message";
-import { TextInput, View, StyleSheet, Text, TouchableOpacity, Linking } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import {TextInput, View, StyleSheet, Text, TouchableOpacity, Linking} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 import * as Font from 'expo-font';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -45,6 +45,7 @@ const Login = () => {
                 await AsyncStorage.setItem('refresh_token', data.refresh);
                 await AsyncStorage.setItem('user_type', data.user_type);
                 await AsyncStorage.setItem('user_id', String(data.user_id));
+                await AsyncStorage.setItem('profielfoto', data.profielfoto);
 
                 Toast.show({
                     type: 'success',
@@ -60,20 +61,23 @@ const Login = () => {
                     },
                 });
 
-            const userData = await userResponse.json();
-            console.log('User data:', userData);
+                const userData = await userResponse.json();
+                console.log('User data:', userData);
 
-
-            if (userResponse.status === 200) {
-                const user = {
-                    voornaam: userData.voornaam,
-                    achternaam: userData.achternaam,
-                };
-                await AsyncStorage.setItem('user', JSON.stringify(user));
+                if (userResponse.status === 200) {
+                    const user = {
+                        voornaam: userData.voornaam,
+                        achternaam: userData.achternaam,
+                        profielfoto: data.profielfoto,
+                    };
+                    await AsyncStorage.setItem('user', JSON.stringify(user));
 
                     navigation.reset({
                         index: 0,
-                        routes: [{ name: data.user_type === 'DOCENT' ? 'DocentDashboard' : data.user_type === 'STUDENT' ? 'StudentDashboard' : 'AdminDashboard', params: { user: user } }],
+                        routes: [{
+                            name: data.user_type === 'DOCENT' ? 'DocentDashboard' : data.user_type === 'STUDENT' ? 'StudentDashboard' : 'AdminDashboard',
+                            params: {user: user}
+                        }],
                     });
                 } else {
                     Toast.show({
@@ -102,7 +106,7 @@ const Login = () => {
     return (
         <View style={styles.container}>
             <Text style={styles.loginText}>Inloggen</Text>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
                 <TextInput
                     style={styles.emailinput}
                     placeholder="Email"

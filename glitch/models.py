@@ -43,7 +43,7 @@ class Gebruiker(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default=False)
     cursussen = models.ManyToManyField('Cursus', through='Deelname')
     xp = models.IntegerField(default=0)
-    profielfoto = models.ImageField(null=True, upload_to='static/glitch/img/')
+    profielfoto = models.ImageField(upload_to='profielfotos/', null=True, blank=True)
     bio = models.TextField(null=True)
 
     objects = CustomUserManager()

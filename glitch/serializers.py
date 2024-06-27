@@ -32,7 +32,7 @@ class GebruikerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Gebruiker
         fields = ['voornaam', 'achternaam', 'email', 'password', 'xp', 'bio', 'user_type', 'is_active', 'is_staff',
-                  'is_superuser',]
+                  'is_superuser', 'profielfoto']
 
 
 class CursusSerializer(serializers.ModelSerializer):
