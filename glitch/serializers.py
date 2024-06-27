@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from .models import Domein, Gebruiker, Cursusjaar, Cursus, Activiteit, CoreAssignment, Voortgang, GebruikerActiviteit, GebruikerCoreAssignment
+from .models import Domein, Gebruiker, Cursusjaar, Cursus, Activiteit, CoreAssignment, Voortgang, GebruikerActiviteit, \
+    GebruikerCoreAssignment
 
 
 class ActiviteitSerializer(serializers.ModelSerializer):
@@ -27,12 +28,12 @@ class DomeinSerializer(serializers.ModelSerializer):
 
 
 class GebruikerSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(write_only=True)
+    password = serializers.CharField(write_only=True, required=False)
+    profielfoto = serializers.ImageField(required=False)
 
     class Meta:
         model = Gebruiker
-        fields = ['voornaam', 'achternaam', 'email', 'password', 'xp', 'bio', 'user_type', 'is_active', 'is_staff',
-                  'is_superuser', 'profielfoto']
+        fields = '__all__'
 
 
 class CursusSerializer(serializers.ModelSerializer):
@@ -46,10 +47,12 @@ class VoortgangSerializer(serializers.ModelSerializer):
         model = Voortgang
         fields = '__all__'
 
+
 class GebruikerActiviteitSerializer(serializers.ModelSerializer):
     class Meta:
         model = GebruikerActiviteit
         fields = '__all__'
+
 
 class GebruikerCoreAssignmentSerializer(serializers.ModelSerializer):
     class Meta:

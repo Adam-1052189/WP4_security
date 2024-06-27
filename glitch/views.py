@@ -214,7 +214,7 @@ class GebruikerUpdate(generics.RetrieveUpdateAPIView):
 
     def update(self, request, *args, **kwargs):
         user = self.get_object()
-        serializer = self.get_serializer(user, data=request.data)
+        serializer = self.get_serializer(user, data=request.data, partial=True)
         if serializer.is_valid():
             if 'password' in serializer.validated_data:
                 serializer.validated_data['password'] = make_password(serializer.validated_data['password'])
