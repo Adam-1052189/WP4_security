@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, Modal, TextInput } from 'react-native';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, Modal } from 'react-native';
 
 const StudentCard = ({ studentId, closeModal }) => {
     const [activiteiten, setActiviteiten] = useState([]);
+    const [coreAssignments, setCoreAssignments] = useState([]);
     const [editingNiveau, setEditingNiveau] = useState({});
 
     const fetchActivitiesAndAssignments = async () => {
@@ -10,6 +11,7 @@ const StudentCard = ({ studentId, closeModal }) => {
             const response = await fetch(`http://localhost:8000/glitch/gebruikers/${studentId}/activities/`);
             const data = await response.json();
             setActiviteiten(data.activiteiten);
+            setCoreAssignments(data.core_assignments);
         } catch (error) {
             console.error('Error fetching activities and assignments:', error);
         }
@@ -39,7 +41,27 @@ const StudentCard = ({ studentId, closeModal }) => {
         }
     };
 
-    const renderItem = ({ item }) => (
+    const updateCoreAssignmentStatus = async (id, status) => {
+        try {
+            const response = await fetch(`http://localhost:8000/glitch/update-coreassignment-status/${id}/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ status }),
+            });
+
+            if (response.ok) {
+                fetchActivitiesAndAssignments();
+            } else {
+                console.error('Failed to update status');
+            }
+        } catch (error) {
+            console.error('Error updating status:', error);
+        }
+    };
+
+    const renderActiviteitItem = ({ item }) => (
         <View style={styles.activityCard}>
             <Text style={styles.activityText}>Taak: {item.taak}</Text>
             {item.status === 'AFWACHTING' ? (
@@ -80,13 +102,43 @@ const StudentCard = ({ studentId, closeModal }) => {
         </View>
     );
 
+    const renderCoreAssignmentItem = ({ item }) => (
+        <View style={styles.activityCard}>
+            <Text style={styles.activityText}>Opdracht: {item.opdrachtnaam}</Text>
+            <Text style={styles.activityText}>Submission: {item.submission_text}</Text>
+            <Text style={styles.activityText}>Status: {item.status}</Text>
+            {item.status === 'AFWACHTING' && (
+                <View style={styles.buttonContainer}>
+                    <TouchableOpacity
+                        style={styles.buttonApprove}
+                        onPress={() => updateCoreAssignmentStatus(item.id, 'GOEDGEKEURD')}
+                    >
+                        <Text style={styles.buttonText}>Goedkeuren</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        style={styles.buttonReject}
+                        onPress={() => updateCoreAssignmentStatus(item.id, 'AFGEKEURD')}
+                    >
+                        <Text style={styles.buttonText}>Afkeuren</Text>
+                    </TouchableOpacity>
+                </View>
+            )}
+        </View>
+    );
+
     return (
         <View style={styles.container}>
             <View style={styles.modalContent}>
                 <Text style={styles.title}>Activiteiten</Text>
                 <FlatList
                     data={activiteiten}
-                    renderItem={renderItem}
+                    renderItem={renderActiviteitItem}
+                    keyExtractor={item => item.id.toString()}
+                />
+                <Text style={styles.title}>Core Assignments</Text>
+                <FlatList
+                    data={coreAssignments}
+                    renderItem={renderCoreAssignmentItem}
                     keyExtractor={item => item.id.toString()}
                 />
                 <TouchableOpacity onPress={closeModal} style={styles.closeButton}>

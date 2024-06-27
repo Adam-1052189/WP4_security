@@ -36,6 +36,7 @@ urlpatterns = [
     path('activiteiten/<int:pk>/', views.ActiviteitUpdate.as_view(), name='activiteit-update'),
     path('gebruikers/<int:gebruiker_id>/activities/', views.StudentActivities.as_view(), name='get_student_activiteiten'),
     path('activiteiten/<int:pk>/update/', views.ActiviteitUpdate.as_view(), name='activiteit-update'),
+    path('update-coreassignment-status/<int:pk>/', views.update_coreassignment_status, name='update-coreassignment-status'),
 ]
 
 if settings.DEBUG:

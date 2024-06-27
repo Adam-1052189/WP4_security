@@ -298,6 +298,25 @@ def update_activiteit_status(request, pk):
         return Response({'status': 'Not found'}, status=status.HTTP_404_NOT_FOUND)
 
 
+@api_view(['POST'])
+def update_coreassignment_status(request, pk):
+    try:
+        gebruiker_core_assignment = GebruikerCoreAssignment.objects.get(pk=pk)
+        new_status = request.data.get('status')
+        new_submission_text = request.data.get('submission_text')
+
+        if new_status in ['GOEDGEKEURD', 'AFGEKEURD', 'AFWACHTING']:
+            gebruiker_core_assignment.status = new_status
+
+        if new_submission_text is not None:
+            gebruiker_core_assignment.submission_text = new_submission_text
+
+        gebruiker_core_assignment.save()
+        return Response({'status': 'Status updated'}, status=status.HTTP_200_OK)
+    except GebruikerCoreAssignment.DoesNotExist:
+        return Response({'status': 'Not found'}, status=status.HTTP_404_NOT_FOUND)
+
+
 
 class GetAllActiviteiten(APIView):
     def get(self, request, format=None):
@@ -345,21 +364,27 @@ class ActiviteitUpdate(generics.UpdateAPIView):
 
 class StudentActivities(APIView):
     def get(self, request, gebruiker_id, format=None):
-        gebruiker_activiteiten = GebruikerActiviteit.objects.filter(gebruiker__id=gebruiker_id).select_related(
-            'activiteit')
+        gebruiker_activiteiten = GebruikerActiviteit.objects.filter(gebruiker__id=gebruiker_id).select_related('activiteit')
         activities = [{
             'id': ga.activiteit.activiteit_id,
             'taak': ga.activiteit.taak,
             'niveau': ga.niveau,
-            'status': ga.status  # Add this line to include the status
+            'status': ga.status
         } for ga in gebruiker_activiteiten]
 
-        gebruiker_core_assignments = GebruikerCoreAssignment.objects.filter(gebruiker__id=gebruiker_id).select_related(
-            'core_assignment')
-        core_assignments = [gca.core_assignment for gca in gebruiker_core_assignments]
-        core_assignment_serializer = CoreAssignmentSerializer(core_assignments, many=True)
+        gebruiker_core_assignments = GebruikerCoreAssignment.objects.filter(gebruiker__id=gebruiker_id).select_related('core_assignment')
+        core_assignments = [{
+            'id': gca.core_assignment.id,
+            'opdrachtnaam': gca.core_assignment.opdrachtnaam,
+            'deadline': gca.core_assignment.deadline,
+            'point_challenge': gca.core_assignment.point_challenge,
+            'concept_challenge': gca.core_assignment.concept_challenge,
+            'status': gca.status,
+            'submission_text': gca.submission_text
+        } for gca in gebruiker_core_assignments]
 
         return Response({
             'activiteiten': activities,
-            'core_assignments': core_assignment_serializer.data
+            'core_assignments': core_assignments
         })
+
