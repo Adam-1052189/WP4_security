@@ -10,7 +10,6 @@ const DocentDashboard = () => {
             <Text style={styles.title}>Docenten Dashboard</Text>
             <CursusvoortgangCard />
             <ActiviteitenCard />
-            <Text>Welkom op het dashboard. Hier vind je alle relevante informatie.</Text>
             <Footer />
         </View>
     );
