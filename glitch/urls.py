@@ -26,7 +26,7 @@ urlpatterns = [
     path('check_completion/<int:gebruiker_id>/<int:core_assignment_id>/', check_completion, name='check_completion'),
     path('', include(router.urls)),
     path('gebruiker/<int:pk>/', views.GebruikerUpdate.as_view(), name='gebruiker-update'),
-    path('activiteiten/<int:pk>/status/', views.UpdateActiviteitStatusView.as_view()),
+    path('update-activiteit-status/<int:pk>/', views.update_activiteit_status, name='update-activiteit-status'),
     path('docent_voortgang/<int:docent_id>/',views.docent_voortgang, name='docent-voortgang'),
     path('cursussen/<str:cursusnaam>/activiteiten/', views.ActiviteitenView.as_view(), name='activiteiten'),
     path('cursussen/<str:cursusnaam>/coreassignment/', views.GetCoreAssignment.as_view(), name='core_assignment'),
@@ -35,6 +35,7 @@ urlpatterns = [
     path('coreassignments/<int:pk>/submit/', views.SubmitCoreAssignmentView.as_view(), name='submit-coreassignment'),
     path('activiteiten/<int:pk>/', views.ActiviteitUpdate.as_view(), name='activiteit-update'),
     path('gebruikers/<int:gebruiker_id>/activities/', views.StudentActivities.as_view(), name='get_student_activiteiten'),
+    path('activiteiten/<int:pk>/update/', views.ActiviteitUpdate.as_view(), name='activiteit-update'),
 ]
 
 if settings.DEBUG:
