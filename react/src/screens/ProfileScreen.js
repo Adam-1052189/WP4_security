@@ -13,35 +13,47 @@ const ProfileScreen = () => {
 
     const fetchUserData = async () => {
         const userId = await AsyncStorage.getItem('user_id');
-        const response = await fetch(`http://localhost:8000/glitch/gebruiker/${userId}/`);
+        const token = await AsyncStorage.getItem('access_token');
+        const response = await fetch(`http://localhost:8000/glitch/gebruiker/${userId}/`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
         const data = await response.json();
         setUser(data);
     };
 
     const handleUpdate = async () => {
         const userId = await AsyncStorage.getItem('user_id');
+        const token = await AsyncStorage.getItem('access_token');
+
+        // Create a new object with user data without the profielfoto field
+        const { profielfoto, ...userData } = user;
+
         const response = await fetch(`http://localhost:8000/glitch/gebruiker/${userId}/`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
             },
-            body: JSON.stringify({ ...user, password })
+            body: JSON.stringify({ ...userData, password: password || undefined })
         });
 
         if (response.ok) {
             Toast.show({
                 type: 'success',
-                text1: 'succes',
+                text1: 'Succes',
                 text2: 'Gebruikersgegevens succesvol bijgewerkt',
             });
             console.log('Gebruikersgegevens bijgewerkt');
         } else {
+            const errorData = await response.json();
             Toast.show({
                 type: 'error',
                 text1: 'Fout',
                 text2: 'Er is een fout opgetreden, vul alles in',
             });
-            console.log('Er is een fout opgetreden, vul alles in');
+            console.log('Er is een fout opgetreden', errorData);
         }
     };
 
