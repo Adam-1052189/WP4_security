@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react'
-import {NavigationContainer} from '@react-navigation/native'
+import {NavigationContainer, useNavigation} from '@react-navigation/native'
 import {createStackNavigator} from '@react-navigation/stack'
 import {useIsFocused} from "@react-navigation/native";
 import DocentDashboard from "./src/screens/DocentDashboard"
@@ -20,6 +20,7 @@ import ActiviteitBewerkenScreen from "./src/screens/ActiviteitBewerkenScreen";
 import ActiviteitDetailScreen from "./src/screens/ActiviteitDetailScreen";
 import StudentList from "./src/components/StudentList";
 import StudentCard from "./src/screens/StudentCard";
+import BackButton from "./src/components/BackButton";
 
 
 const Stack = createStackNavigator();
@@ -59,14 +60,20 @@ const renderHeaderTitle = (user) => (
     </View>
 );
 
-const renderHeaderPhoto = (user) => (
-    user && user.profielfoto && (
-        <Image
-            source={{ uri: user.profielfoto }}
-            style={{ width: 40, height: 40, borderRadius: 20, marginRight: 10, marginLeft: 10}}
-        />
-    )
-);
+const renderHeaderLeft = (user) => {
+    const navigation = useNavigation();
+    return (
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <BackButton onPress={() => navigation.goBack()} />
+            {user && user.profielfoto && (
+                <Image
+                    source={{ uri: user.profielfoto }}
+                    style={{ width: 40, height: 40, borderRadius: 20, marginLeft: 10 }}
+                />
+            )}
+        </View>
+    );
+};
 
 
 const App = () => {
@@ -259,7 +266,7 @@ const App = () => {
                     component={ProfileScreen}
                     options={({navigation}) => ({
                         title: 'Profiel',
-                        headerLeft: () => renderHeaderPhoto(user),
+                        headerLeft: () => renderHeaderLeft(user),
                         headerStyle: {
                             borderBottomColor: '#fff7ea',
                             backgroundColor: '#fff7ea',
@@ -284,7 +291,7 @@ const App = () => {
                     component={GebruikerList}
                     options={({navigation}) => ({
                         title: 'Gebruikerslijst',
-                        headerLeft: () => renderHeaderPhoto(user),
+                        headerLeft: () => renderHeaderLeft(user),
                         headerStyle: {
                             borderBottomColor: '#fff7ea',
                             backgroundColor: '#fff7ea',
@@ -316,7 +323,7 @@ const App = () => {
                     component={GebruikerEditScreen}
                     options={({navigation}) => ({
                         title: 'Gebruiker bewerken',
-                        headerLeft: () => renderHeaderPhoto(user),
+                        headerLeft: () => renderHeaderLeft(user),
                         headerStyle: {
                             borderBottomColor: '#fff7ea',
                             backgroundColor: '#fff7ea',
@@ -348,7 +355,7 @@ const App = () => {
                     component={ActiviteitenList}
                     options={({route, navigation}) => ({
                         title: route.params.cursusnaam,
-                        headerLeft: () => renderHeaderPhoto(user),
+                        headerLeft: () => renderHeaderLeft(user),
                         headerStyle: {
                             borderBottomColor: '#fff7ea',
                             backgroundColor: '#fff7ea',
