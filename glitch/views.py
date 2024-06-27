@@ -369,7 +369,8 @@ class StudentActivities(APIView):
             'id': ga.activiteit.activiteit_id,
             'taak': ga.activiteit.taak,
             'niveau': ga.niveau,
-            'status': ga.status
+            'status': ga.status,
+            'deadline': ga.activiteit.deadline
         } for ga in gebruiker_activiteiten]
 
         gebruiker_core_assignments = GebruikerCoreAssignment.objects.filter(gebruiker__id=gebruiker_id).select_related('core_assignment')
@@ -387,4 +388,3 @@ class StudentActivities(APIView):
             'activiteiten': activities,
             'core_assignments': core_assignments
         })
-
