@@ -6,9 +6,10 @@ const ActiviteitCard = ({ activiteit }) => {
     const navigation = useNavigation();
 
     return (
-        <TouchableOpacity onPress={() => navigation.navigate('ActiviteitDetailScreen', {activiteit: activiteit})}>
+        <TouchableOpacity onPress={() => navigation.navigate('ActiviteitDetailScreen', { activiteit: activiteit })}>
             <View style={styles.card}>
                 <Text style={styles.title}>Activiteiten</Text>
+                <Text style={styles.subtitle}>Beheer activiteiten</Text>
             </View>
         </TouchableOpacity>
     );
@@ -31,6 +32,11 @@ const styles = StyleSheet.create({
     },
     title: {
         fontSize: 18,
+        textAlign: 'center',
+    },
+    subtitle: {
+        fontSize: 14,
+        fontStyle: 'italic',
         textAlign: 'center',
     },
 });

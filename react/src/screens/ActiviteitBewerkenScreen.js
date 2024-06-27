@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, Alert } from 'react-native';
-import DatePicker from 'react-native-datepicker'; // Assuming you have installed a date picker library
+import moment from 'moment';
 
 const ActiviteitBewerkenScreen = ({ activiteit, onClose, onUpdated }) => {
     const [taak, setTaak] = useState(activiteit.taak);
-    const [deadline, setDeadline] = useState(activiteit.deadline);
+    const [deadline, setDeadline] = useState(moment(activiteit.deadline, 'YYYY-MM-DD').format('DD/MM/YYYY'));
 
     const submitChanges = async () => {
         try {
+            const formattedDeadline = moment(deadline, 'DD/MM/YYYY').format('YYYY-MM-DD');
             const response = await fetch(`http://localhost:8000/glitch/activiteiten/${activiteit.activiteit_id}/`, {
                 method: 'PUT',
                 headers: {
@@ -15,7 +16,7 @@ const ActiviteitBewerkenScreen = ({ activiteit, onClose, onUpdated }) => {
                 },
                 body: JSON.stringify({
                     taak: taak,
-                    deadline: deadline,
+                    deadline: formattedDeadline,
                 }),
             });
 
@@ -43,15 +44,11 @@ const ActiviteitBewerkenScreen = ({ activiteit, onClose, onUpdated }) => {
                     onChangeText={setTaak}
                 />
                 <Text style={styles.label}>Deadline:</Text>
-                <DatePicker
-                    style={styles.datePicker}
-                    date={deadline}
-                    mode="date"
-                    placeholder="Select deadline"
-                    format="YYYY-MM-DD"
-                    confirmBtnText="Confirm"
-                    cancelBtnText="Cancel"
-                    onDateChange={(date) => { setDeadline(date); }}
+                <TextInput
+                    style={styles.input}
+                    value={deadline}
+                    onChangeText={setDeadline}
+                    placeholder="DD/MM/YYYY"
                 />
                 <View style={styles.buttonContainer}>
                     <TouchableOpacity style={styles.buttonSave} onPress={submitChanges}>
@@ -102,10 +99,7 @@ const styles = StyleSheet.create({
         marginTop: 10,
         paddingHorizontal: 10,
         borderRadius: 5,
-    },
-    datePicker: {
-        width: '100%',
-        marginTop: 10,
+        justifyContent: 'center',
     },
     buttonContainer: {
         flexDirection: 'row',

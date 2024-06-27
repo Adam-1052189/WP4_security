@@ -9,7 +9,7 @@ const VoortgangCard = () => {
         <TouchableOpacity onPress={() => navigation.navigate('StudentList')} style={styles.card}>
             <View style={styles.cardContent}>
                 <Text style={styles.cardText}>Voortgang</Text>
-                <Text style={styles.cardText}>Beheer activiteiten van studenten</Text>
+                <Text style={styles.subtitleText}>Beheer activiteiten en kernopdrachten van studenten</Text>
             </View>
         </TouchableOpacity>
     );
@@ -37,6 +37,11 @@ const styles = StyleSheet.create({
     },
     cardText: {
         fontSize: 18,
+        textAlign: 'center',
+    },
+    subtitleText: {
+        fontSize: 14,
+        fontStyle: 'italic',
         textAlign: 'center',
     },
 });
