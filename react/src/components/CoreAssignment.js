@@ -22,7 +22,6 @@ function CoreAssignment({ cursusnaam, activiteiten }) {
                     });
                     setCoreAssignment(response.data);
                     setSubmissionText(response.data.submission_text || '');
-
                 }
             } catch (error) {
                 console.error('Error fetching core assignment:', error);
@@ -32,9 +31,11 @@ function CoreAssignment({ cursusnaam, activiteiten }) {
         fetchCoreAssignment();
     }, [cursusnaam]);
 
-     const openModal = () => {
-        setSelectedCoreAssignment(coreAssignment);
-        setModalVisible(true);
+    const openModal = () => {
+        if (allActivitiesApproved) {
+            setSelectedCoreAssignment(coreAssignment);
+            setModalVisible(true);
+        }
     };
 
     const handleSubmit = async () => {

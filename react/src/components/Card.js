@@ -1,9 +1,9 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, } from 'react-native';
+import {View, Text, TouchableOpacity, StyleSheet,} from 'react-native';
 import * as Progress from 'react-native-progress';
 
-function Card({ title, onPress, niveau, status, isLocked }) {
-     let backgroundColor;
+function Card({title, onPress, niveau, status, isLocked}) {
+    let backgroundColor;
 
     switch (status) {
         case 'GOEDGEKEURD':
@@ -22,12 +22,13 @@ function Card({ title, onPress, niveau, status, isLocked }) {
     }
 
     return (
-        <TouchableOpacity onPress={onPress} style={[styles.card, {backgroundColor}]}>
+        <TouchableOpacity onPress={!isLocked ? onPress : null} style={[styles.card, {backgroundColor}]}>
             <View style={[styles.cardContent, {opacity: isLocked ? 0.2 : 1}]}>
                 <Text style={[styles.cardText, {marginBottom: 10}]}>{title}</Text>
-                {niveau !== undefined && <Progress.Bar progress={niveau / 4} width={200} />}
+                {niveau !== undefined && <Progress.Bar progress={niveau / 4} width={200}/>}
             </View>
-            {isLocked && <Text style={styles.lockedText}>Voltooi eerst alle activiteiten om de kernopdracht te ontgrendelen.</Text>}
+            {isLocked && <Text style={styles.lockedText}>Voltooi eerst alle activiteiten om de kernopdracht te
+                ontgrendelen.</Text>}
         </TouchableOpacity>
     );
 }
@@ -38,7 +39,7 @@ const styles = StyleSheet.create({
         height: 100,
         borderRadius: 10,
         shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
+        shadowOffset: {width: 0, height: 2},
         shadowOpacity: 0.8,
         shadowRadius: 2,
         backgroundColor: '#fff',
