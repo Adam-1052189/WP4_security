@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react'
-import {NavigationContainer} from '@react-navigation/native'
+import {NavigationContainer, useNavigation} from '@react-navigation/native'
 import {createStackNavigator} from '@react-navigation/stack'
 import {useIsFocused} from "@react-navigation/native";
 import DocentDashboard from "./src/screens/DocentDashboard"
@@ -12,7 +12,7 @@ import * as Font from 'expo-font';
 import AdminDashboard from "./src/screens/AdminDashboard";
 import ProfileScreen from "./src/screens/ProfileScreen";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {Button, View} from 'react-native';
+import {Button, View, Text, Image, Platform} from 'react-native';
 import GebruikerList from "./src/screens/GebruikerList";
 import GebruikerEditScreen from "./src/screens/GebruikerEditScreen";
 import ActiviteitenList from "./src/screens/ActiviteitenList";
@@ -20,6 +20,7 @@ import ActiviteitBewerkenScreen from "./src/screens/ActiviteitBewerkenScreen";
 import ActiviteitDetailScreen from "./src/screens/ActiviteitDetailScreen";
 import StudentList from "./src/components/StudentList";
 import StudentCard from "./src/screens/StudentCard";
+import BackButton from "./src/components/BackButton";
 
 
 const Stack = createStackNavigator();
@@ -42,6 +43,38 @@ const FetchUserComponent = ({ setUser }) => {
 
     return null;
 };
+
+const renderHeaderTitle = (user) => (
+    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+        {user && user.profielfoto && (
+            <Image
+                source={{ uri: user.profielfoto }}
+                style={{ width: 40, height: 40, borderRadius: 20, marginRight: 10 }}
+            />
+        )}
+        <Text style={{
+            fontSize: 24,
+            fontWeight: 'bold',
+            fontFamily: 'Poppins-extra-bold',
+        }}>{user ? `${user.achternaam}, ${user.voornaam}` : 'Dashboard'}</Text>
+    </View>
+);
+
+const renderHeaderLeft = (user) => {
+    const navigation = useNavigation();
+    return (
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <BackButton onPress={() => navigation.goBack()} />
+            {user && user.profielfoto && (
+                <Image
+                    source={{ uri: user.profielfoto }}
+                    style={{ width: 40, height: 40, borderRadius: 20, marginLeft: 10 }}
+                />
+            )}
+        </View>
+    );
+};
+
 
 const App = () => {
     const [fontLoaded, setFontLoaded] = useState(false);
@@ -137,8 +170,8 @@ const App = () => {
                 <Stack.Screen
                     name="DocentDashboard"
                     component={DocentDashboard}
-                    options={({navigation}) => ({
-                        title: user ? `${user.achternaam}, ${user.voornaam}` : 'Docenten Dashboard',
+                    options={({ navigation }) => ({
+                        headerTitle: () => renderHeaderTitle(user),
                         headerStyle: {
                             borderBottomColor: '#fff7ea',
                             backgroundColor: '#fff7ea',
@@ -150,7 +183,7 @@ const App = () => {
                             fontFamily: 'Poppins-extra-bold',
                         },
                         headerRight: () => (
-                            <View style={{flexDirection: 'row'}}>
+                            <View style={{ flexDirection: 'row' }}>
                                 <Button
                                     onPress={() => navigation.navigate('Profiel')}
                                     title="Profiel"
@@ -170,7 +203,7 @@ const App = () => {
                     name="StudentDashboard"
                     component={StudentDashboard}
                     options={({navigation}) => ({
-                        title: user ? `${user.achternaam}, ${user.voornaam}` : 'Student Dashboard',
+                        headerTitle: () => renderHeaderTitle(user),
                         headerStyle: {
                             borderBottomColor: '#fff7ea',
                             backgroundColor: '#fff7ea',
@@ -201,7 +234,7 @@ const App = () => {
                     name="AdminDashboard"
                     component={AdminDashboard}
                     options={({navigation}) => ({
-                        title: user ? `${user.achternaam}, ${user.voornaam}` : 'Admin Dashboard',
+                        headerTitle: () => renderHeaderTitle(user),
                         headerStyle: {
                             borderBottomColor: '#fff7ea',
                             backgroundColor: '#fff7ea',
@@ -233,6 +266,7 @@ const App = () => {
                     component={ProfileScreen}
                     options={({navigation}) => ({
                         title: 'Profiel',
+                        headerLeft: () => renderHeaderLeft(user),
                         headerStyle: {
                             borderBottomColor: '#fff7ea',
                             backgroundColor: '#fff7ea',
@@ -257,6 +291,7 @@ const App = () => {
                     component={GebruikerList}
                     options={({navigation}) => ({
                         title: 'Gebruikerslijst',
+                        headerLeft: () => renderHeaderLeft(user),
                         headerStyle: {
                             borderBottomColor: '#fff7ea',
                             backgroundColor: '#fff7ea',
@@ -288,6 +323,7 @@ const App = () => {
                     component={GebruikerEditScreen}
                     options={({navigation}) => ({
                         title: 'Gebruiker bewerken',
+                        headerLeft: () => renderHeaderLeft(user),
                         headerStyle: {
                             borderBottomColor: '#fff7ea',
                             backgroundColor: '#fff7ea',
@@ -319,6 +355,7 @@ const App = () => {
                     component={ActiviteitenList}
                     options={({route, navigation}) => ({
                         title: route.params.cursusnaam,
+                        headerLeft: () => renderHeaderLeft(user),
                         headerStyle: {
                             borderBottomColor: '#fff7ea',
                             backgroundColor: '#fff7ea',
