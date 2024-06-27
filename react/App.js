@@ -394,12 +394,66 @@ const App = () => {
                 <Stack.Screen
                     name="ActiviteitDetailScreen"
                     component={ActiviteitDetailScreen}
-                    options={{title: 'Activiteit Details'}}
+                    options={({navigation}) => ({
+                        title: 'Activiteit Details',
+                        headerLeft: () => renderHeaderLeft(user),
+                        headerStyle: {
+                            borderBottomColor: '#fff7ea',
+                            backgroundColor: '#fff7ea',
+                        },
+                        headerTintColor: '#001e48',
+                        headerTitleStyle: {
+                            fontSize: 24,
+                            fontWeight: 'bold',
+                            fontFamily: 'Poppins-extra-bold',
+                        },
+                        headerRight: () => (
+                            <View style={{flexDirection: 'row'}}>
+                                <Button
+                                    onPress={() => navigation.navigate('Profiel')}
+                                    title="Profiel"
+                                    color="#1a69da"
+                                />
+                                <Button
+                                    onPress={() => handleLogout(navigation)}
+                                    title="Uitloggen"
+                                    color="#d30f4c"
+                                />
+                            </View>
+                        ),
+                    })}
                 />
                 <Stack.Screen
                     name="StudentList"
                     component={StudentList}
-                    options={{title: 'Voortgang'}}
+                    options={({navigation}) => ({
+                        title: 'Voortgang',
+                        headerLeft: () => renderHeaderLeft(user),
+                        headerStyle: {
+                            borderBottomColor: '#fff7ea',
+                            backgroundColor: '#fff7ea',
+                        },
+                        headerTintColor: '#001e48',
+                        headerTitleStyle: {
+                            fontSize: 24,
+                            fontWeight: 'bold',
+                            fontFamily: 'Poppins-extra-bold',
+                        },
+                        headerRight: () => (
+                            <View style={{flexDirection: 'row'}}>
+                                <Button
+                                    onPress={() => navigation.navigate('Profiel')}
+                                    title="Profiel"
+                                    color="#1a69da"
+                                />
+                                <Button
+                                    onPress={() => handleLogout(navigation)}
+                                    title="Uitloggen"
+                                    color="#d30f4c"
+                                />
+                            </View>
+                        ),
+                    })}
                 />
                 <Stack.Screen
                     name="StudentCard"
