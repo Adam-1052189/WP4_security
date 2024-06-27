@@ -1,22 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Button, Modal, FlatList, TouchableOpacity, TextInput } from 'react-native';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, Modal, TextInput } from 'react-native';
 
-const StudentCard = ({ studentId, closeModal, modalVisible, setModalVisible }) => {
+const StudentCard = ({ studentId, closeModal }) => {
     const [activiteiten, setActiviteiten] = useState([]);
-    const [editedNiveau, setEditedNiveau] = useState({});
+    const [coreAssignments, setCoreAssignments] = useState([]);
+    const [editingNiveau, setEditingNiveau] = useState({});
 
     const fetchActivitiesAndAssignments = async () => {
         try {
             const response = await fetch(`http://localhost:8000/glitch/gebruikers/${studentId}/activities/`);
-            let data = await response.json();
-            const activities = data.activiteiten.map(item => ({
-                id: item.id,
-                taak: item.taak,
-                niveau: item.niveau,
-                deadline: item.deadline,
-                status: item.status,
-            }));
-            setActiviteiten(activities);
+            const data = await response.json();
+            setActiviteiten(data.activiteiten);
+            setCoreAssignments(data.core_assignments);
         } catch (error) {
             console.error('Error fetching activities and assignments:', error);
         }
@@ -24,16 +19,16 @@ const StudentCard = ({ studentId, closeModal, modalVisible, setModalVisible }) =
 
     useEffect(() => {
         fetchActivitiesAndAssignments();
-    }, []);
+    }, [studentId]);
 
-    const updateStatus = async (id, newStatus) => {
+    const updateActiviteitStatus = async (id, status, niveau = null) => {
         try {
             const response = await fetch(`http://localhost:8000/glitch/update-activiteit-status/${id}/`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ status: newStatus }),
+                body: JSON.stringify({ status, niveau }),
             });
 
             if (response.ok) {
@@ -46,40 +41,35 @@ const StudentCard = ({ studentId, closeModal, modalVisible, setModalVisible }) =
         }
     };
 
-    const updateNiveau = async (id) => {
-        const newNiveau = editedNiveau[id];
+    const updateCoreAssignmentStatus = async (id, status) => {
         try {
-            const response = await fetch(`http://localhost:8000/glitch/update-activiteit-status/${id}/`, {
+            const response = await fetch(`http://localhost:8000/glitch/update-coreassignment-status/${id}/`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ niveau: newNiveau }),
+                body: JSON.stringify({ status }),
             });
 
             if (response.ok) {
                 fetchActivitiesAndAssignments();
             } else {
-                console.error('Failed to update niveau');
+                console.error('Failed to update status');
             }
         } catch (error) {
-            console.error('Error updating niveau:', error);
+            console.error('Error updating status:', error);
         }
-    };
-
-    const handleNiveauChange = (id, niveau) => {
-        setEditedNiveau({ ...editedNiveau, [id]: niveau });
     };
 
     const formatDate = (dateString) => {
         const date = new Date(dateString);
         const day = String(date.getDate()).padStart(2, '0');
-        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
         const year = date.getFullYear();
         return `${day}/${month}/${year}`;
     };
 
-    const renderActivity = ({ item }) => (
+    const renderActiviteitItem = ({ item }) => (
         <View style={styles.activityCard}>
             <Text style={styles.activityText}>Taak: {item.taak}</Text>
             <Text style={styles.activityText}>Deadline: {formatDate(item.deadline)}</Text>
@@ -88,12 +78,13 @@ const StudentCard = ({ studentId, closeModal, modalVisible, setModalVisible }) =
                 <>
                     <TextInput
                         style={styles.input}
-                        value={editedNiveau[item.id] !== undefined ? editedNiveau[item.id] : item.niveau.toString()}
-                        onChangeText={(text) => handleNiveauChange(item.id, text)}
+                        value={editingNiveau[item.id] !== undefined ? editingNiveau[item.id] : item.niveau.toString()}
+                        onChangeText={text => setEditingNiveau({ ...editingNiveau, [item.id]: text })}
+                        keyboardType="numeric"
                     />
                     <TouchableOpacity
                         style={styles.buttonSave}
-                        onPress={() => updateNiveau(item.id)}
+                        onPress={() => updateActiviteitStatus(item.id, item.status, editingNiveau[item.id])}
                     >
                         <Text style={styles.buttonText}>Save Niveau</Text>
                     </TouchableOpacity>
@@ -105,13 +96,37 @@ const StudentCard = ({ studentId, closeModal, modalVisible, setModalVisible }) =
                 <View style={styles.buttonContainer}>
                     <TouchableOpacity
                         style={styles.buttonApprove}
-                        onPress={() => updateStatus(item.id, 'GOEDGEKEURD')}
+                        onPress={() => updateActiviteitStatus(item.id, 'GOEDGEKEURD')}
                     >
                         <Text style={styles.buttonText}>Goedkeuren</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
                         style={styles.buttonReject}
-                        onPress={() => updateStatus(item.id, 'AFGEKEURD')}
+                        onPress={() => updateActiviteitStatus(item.id, 'AFGEKEURD')}
+                    >
+                        <Text style={styles.buttonText}>Afkeuren</Text>
+                    </TouchableOpacity>
+                </View>
+            )}
+        </View>
+    );
+
+    const renderCoreAssignmentItem = ({ item }) => (
+        <View style={styles.activityCard}>
+            <Text style={styles.activityText}>Opdracht: {item.opdrachtnaam}</Text>
+            <Text style={styles.activityText}>Submission: {item.submission_text}</Text>
+            <Text style={styles.activityText}>Status: {item.status}</Text>
+            {item.status === 'AFWACHTING' && (
+                <View style={styles.buttonContainer}>
+                    <TouchableOpacity
+                        style={styles.buttonApprove}
+                        onPress={() => updateCoreAssignmentStatus(item.id, 'GOEDGEKEURD')}
+                    >
+                        <Text style={styles.buttonText}>Goedkeuren</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        style={styles.buttonReject}
+                        onPress={() => updateCoreAssignmentStatus(item.id, 'AFGEKEURD')}
                     >
                         <Text style={styles.buttonText}>Afkeuren</Text>
                     </TouchableOpacity>
@@ -124,19 +139,24 @@ const StudentCard = ({ studentId, closeModal, modalVisible, setModalVisible }) =
         <Modal
             animationType="slide"
             transparent={true}
-            visible={modalVisible}
-            onRequestClose={() => {
-                setModalVisible(!modalVisible);
-            }}
+            visible={true}
+            onRequestClose={closeModal}
         >
             <View style={styles.container}>
                 <View style={styles.modalContent}>
+                    <Text style={styles.title}>Activiteiten</Text>
                     <FlatList
                         data={activiteiten}
-                        renderItem={renderActivity}
+                        renderItem={renderActiviteitItem}
                         keyExtractor={item => item.id.toString()}
                     />
-                    <TouchableOpacity style={styles.closeButton} onPress={closeModal}>
+                    <Text style={styles.title}>Core Assignments</Text>
+                    <FlatList
+                        data={coreAssignments}
+                        renderItem={renderCoreAssignmentItem}
+                        keyExtractor={item => item.id.toString()}
+                    />
+                    <TouchableOpacity onPress={closeModal} style={styles.closeButton}>
                         <Text style={styles.closeButtonText}>Sluiten</Text>
                     </TouchableOpacity>
                 </View>
