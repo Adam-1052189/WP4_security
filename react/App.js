@@ -59,6 +59,16 @@ const renderHeaderTitle = (user) => (
     </View>
 );
 
+const renderHeaderPhoto = (user) => (
+    user && user.profielfoto && (
+        <Image
+            source={{ uri: user.profielfoto }}
+            style={{ width: 40, height: 40, borderRadius: 20, marginRight: 10, marginLeft: 10}}
+        />
+    )
+);
+
+
 const App = () => {
     const [fontLoaded, setFontLoaded] = useState(false);
     const [initialRoute, setInitialRoute] = useState('Welkom');
@@ -160,6 +170,11 @@ const App = () => {
                             backgroundColor: '#fff7ea',
                         },
                         headerTintColor: '#001e48',
+                        headerTitleStyle: {
+                            fontSize: 24,
+                            fontWeight: 'bold',
+                            fontFamily: 'Poppins-extra-bold',
+                        },
                         headerRight: () => (
                             <View style={{ flexDirection: 'row' }}>
                                 <Button
@@ -181,7 +196,7 @@ const App = () => {
                     name="StudentDashboard"
                     component={StudentDashboard}
                     options={({navigation}) => ({
-                        title: user ? `${user.achternaam}, ${user.voornaam}` : 'Student Dashboard',
+                        headerTitle: () => renderHeaderTitle(user),
                         headerStyle: {
                             borderBottomColor: '#fff7ea',
                             backgroundColor: '#fff7ea',
@@ -212,7 +227,7 @@ const App = () => {
                     name="AdminDashboard"
                     component={AdminDashboard}
                     options={({navigation}) => ({
-                        title: user ? `${user.achternaam}, ${user.voornaam}` : 'Admin Dashboard',
+                        headerTitle: () => renderHeaderTitle(user),
                         headerStyle: {
                             borderBottomColor: '#fff7ea',
                             backgroundColor: '#fff7ea',
@@ -244,6 +259,7 @@ const App = () => {
                     component={ProfileScreen}
                     options={({navigation}) => ({
                         title: 'Profiel',
+                        headerLeft: () => renderHeaderPhoto(user),
                         headerStyle: {
                             borderBottomColor: '#fff7ea',
                             backgroundColor: '#fff7ea',
@@ -268,6 +284,7 @@ const App = () => {
                     component={GebruikerList}
                     options={({navigation}) => ({
                         title: 'Gebruikerslijst',
+                        headerLeft: () => renderHeaderPhoto(user),
                         headerStyle: {
                             borderBottomColor: '#fff7ea',
                             backgroundColor: '#fff7ea',
@@ -299,6 +316,7 @@ const App = () => {
                     component={GebruikerEditScreen}
                     options={({navigation}) => ({
                         title: 'Gebruiker bewerken',
+                        headerLeft: () => renderHeaderPhoto(user),
                         headerStyle: {
                             borderBottomColor: '#fff7ea',
                             backgroundColor: '#fff7ea',
@@ -330,6 +348,7 @@ const App = () => {
                     component={ActiviteitenList}
                     options={({route, navigation}) => ({
                         title: route.params.cursusnaam,
+                        headerLeft: () => renderHeaderPhoto(user),
                         headerStyle: {
                             borderBottomColor: '#fff7ea',
                             backgroundColor: '#fff7ea',
