@@ -21,6 +21,9 @@ from django.conf import settings
 import os
 from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth.mixins import LoginRequiredMixin
+from rest_framework.parsers import MultiPartParser, FormParser
+import base64
+from django.core.files.base import ContentFile
 
 
 User = get_user_model()
@@ -390,3 +393,26 @@ class StudentActivities(APIView):
             'activiteiten': activities,
             'core_assignments': core_assignments
         })
+
+
+class ProfielfotoUploadView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def put(self, request, pk, format=None):
+        try:
+            gebruiker = Gebruiker.objects.get(pk=pk)
+            profielfoto_data = request.data.get('profielfoto')
+
+            if profielfoto_data:
+                format, imgstr = profielfoto_data.split(';base64,')
+                ext = format.split('/')[-1]
+                gebruiker.profielfoto = ContentFile(base64.b64decode(imgstr), name=f'profielfoto.{ext}')
+
+            gebruiker.save()
+            serializer = GebruikerSerializer(gebruiker)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Gebruiker.DoesNotExist:
+            return Response({"error": "Gebruiker niet gevonden"}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
