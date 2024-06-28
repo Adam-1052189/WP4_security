@@ -324,8 +324,10 @@ def update_activiteit_status(request, pk):
         new_status = request.data.get('status')
         new_niveau = request.data.get('niveau')
 
-        if new_status in ['GOEDGEKEURD', 'AFGEKEURD', 'AFWACHTING']:
-            gebruiker_activiteit.status = new_status
+        if new_status not in ['GOEDGEKEURD', 'AFGEKEURD', 'AFWACHTING']:
+            return Response({'status': 'Invalid status'}, status=status.HTTP_400_BAD_REQUEST)
+
+        gebruiker_activiteit.status = new_status
 
         if new_niveau is not None:
             gebruiker_activiteit.niveau = new_niveau
@@ -341,6 +343,8 @@ def update_activiteit_status(request, pk):
         return Response({'status': 'Status updated'}, status=status.HTTP_200_OK)
     except GebruikerActiviteit.DoesNotExist:
         return Response({'status': 'Not found'}, status=status.HTTP_404_NOT_FOUND)
+    except Exception as e:
+        return Response({'status': 'Internal Server Error', 'message': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 @api_view(['POST'])
 def update_coreassignment_status(request, pk):

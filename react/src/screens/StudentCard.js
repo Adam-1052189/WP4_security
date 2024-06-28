@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, Modal, TextInput } from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {View, Text, StyleSheet, FlatList, TouchableOpacity, Modal, TextInput} from 'react-native';
 
-const StudentCard = ({ studentId, closeModal }) => {
+const StudentCard = ({studentId, closeModal}) => {
     const [activiteiten, setActiviteiten] = useState([]);
     const [coreAssignments, setCoreAssignments] = useState([]);
     const [editingNiveau, setEditingNiveau] = useState({});
@@ -23,23 +23,27 @@ const StudentCard = ({ studentId, closeModal }) => {
 
     const updateActiviteitStatus = async (id, status, niveau = null) => {
         try {
+            const body = JSON.stringify({status, niveau});
+            console.log('Updating activiteit status:', body);
             const response = await fetch(`http://localhost:8000/glitch/update-activiteit-status/${id}/`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ status, niveau }),
+                body: body,
             });
 
             if (response.ok) {
                 fetchActivitiesAndAssignments();
             } else {
-                console.error('Failed to update status');
+                const errorData = await response.json();
+                console.error('Failed to update status', errorData);
             }
         } catch (error) {
             console.error('Error updating status:', error);
         }
     };
+
 
     const updateCoreAssignmentStatus = async (id, status) => {
         try {
@@ -48,7 +52,7 @@ const StudentCard = ({ studentId, closeModal }) => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ status }),
+                body: JSON.stringify({status}),
             });
 
             if (response.ok) {
@@ -69,7 +73,7 @@ const StudentCard = ({ studentId, closeModal }) => {
         return `${day}/${month}/${year}`;
     };
 
-    const renderActiviteitItem = ({ item }) => (
+    const renderActiviteitItem = ({item}) => (
         <View style={styles.activityCard}>
             <Text style={styles.activityText}>Taak: {item.taak}</Text>
             <Text style={styles.activityText}>Deadline: {formatDate(item.deadline)}</Text>
@@ -79,7 +83,7 @@ const StudentCard = ({ studentId, closeModal }) => {
                     <TextInput
                         style={styles.input}
                         value={editingNiveau[item.id] !== undefined ? editingNiveau[item.id] : item.niveau.toString()}
-                        onChangeText={text => setEditingNiveau({ ...editingNiveau, [item.id]: text })}
+                        onChangeText={text => setEditingNiveau({...editingNiveau, [item.id]: text})}
                         keyboardType="numeric"
                     />
                     <TouchableOpacity
@@ -111,7 +115,7 @@ const StudentCard = ({ studentId, closeModal }) => {
         </View>
     );
 
-    const renderCoreAssignmentItem = ({ item }) => (
+    const renderCoreAssignmentItem = ({item}) => (
         <View style={styles.activityCard}>
             <Text style={styles.activityText}>Opdracht: {item.opdrachtnaam}</Text>
             <Text style={styles.activityText}>Submission: {item.submission_text}</Text>
@@ -178,7 +182,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         padding: 20,
         shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
+        shadowOffset: {width: 0, height: 2},
         shadowOpacity: 0.8,
         shadowRadius: 2,
         elevation: 5,
@@ -195,7 +199,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#f9f9f9',
         borderRadius: 10,
         shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
+        shadowOffset: {width: 0, height: 2},
         shadowOpacity: 0.1,
         shadowRadius: 5,
     },
