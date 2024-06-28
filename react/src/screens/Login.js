@@ -1,11 +1,11 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import Toast from "react-native-toast-message";
-import {TextInput, View, StyleSheet, Text, TouchableOpacity, Linking} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
+import { TextInput, View, StyleSheet, Text, TouchableOpacity, Linking, Platform } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import * as Font from 'expo-font';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const Login = () => {
+const Login = ({ setUser }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [fontLoaded, setFontLoaded] = useState(false);
@@ -72,13 +72,19 @@ const Login = () => {
                     };
                     await AsyncStorage.setItem('user', JSON.stringify(user));
 
+                    setUser(user);
+
                     navigation.reset({
                         index: 0,
                         routes: [{
                             name: data.user_type === 'DOCENT' ? 'DocentDashboard' : data.user_type === 'STUDENT' ? 'StudentDashboard' : 'AdminDashboard',
-                            params: {user: user}
+                            params: { user: user }
                         }],
                     });
+
+                    if (Platform.OS === 'web') {
+                        window.location.reload();
+                    }
                 } else {
                     Toast.show({
                         type: 'error',
@@ -106,7 +112,7 @@ const Login = () => {
     return (
         <View style={styles.container}>
             <Text style={styles.loginText}>Inloggen</Text>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <TextInput
                     style={styles.emailinput}
                     placeholder="Email"

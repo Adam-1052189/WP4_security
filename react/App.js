@@ -12,7 +12,7 @@ import * as Font from 'expo-font';
 import AdminDashboard from "./src/screens/AdminDashboard";
 import ProfileScreen from "./src/screens/ProfileScreen";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Button, View, Text, Image, Platform } from 'react-native';
+import {Button, View, Text, Image, Platform} from 'react-native';
 import GebruikerList from "./src/screens/GebruikerList";
 import GebruikerEditScreen from "./src/screens/GebruikerEditScreen";
 import ActiviteitenList from "./src/screens/ActiviteitenList";
@@ -136,7 +136,6 @@ const App = () => {
                 />
                 <Stack.Screen
                     name="Login"
-                    component={Login}
                     options={{
                         title: 'Login',
                         headerStyle: {
@@ -150,7 +149,9 @@ const App = () => {
                             fontFamily: 'Poppins-extra-bold',
                         },
                     }}
-                />
+                >
+                    {props => <Login {...props} setUser={setUser} />}
+                </Stack.Screen>
                 <Stack.Screen
                     name="DocentDashboard"
                     component={DocentDashboard}
@@ -334,6 +335,7 @@ const App = () => {
                     component={Notifications}
                     options={{
                         title: 'Notifications',
+                        headerLeft: () => renderHeaderLeft(user),
                         headerStyle: {
                             borderBottomColor: '#fff7ea',
                             backgroundColor: '#fff7ea',
@@ -344,6 +346,7 @@ const App = () => {
                             fontWeight: 'bold',
                             fontFamily: 'Poppins-extra-bold',
                         },
+                        headerRight: () => <HeaderRightButton />,
                     }}
                 />
             </Stack.Navigator>
