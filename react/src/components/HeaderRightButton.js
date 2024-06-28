@@ -1,10 +1,10 @@
 import React from 'react';
-import { View, Button, TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { View, Button, TouchableOpacity, Text, StyleSheet, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Toast from 'react-native-toast-message';
 
-const HeaderRightButton = ({ handleLogout }) => {
+const HeaderRightButton = () => {
     const navigation = useNavigation();
 
     const logout = async () => {
@@ -13,7 +13,6 @@ const HeaderRightButton = ({ handleLogout }) => {
         await AsyncStorage.removeItem('user_type');
         await AsyncStorage.removeItem('user_id');
         await AsyncStorage.removeItem('user');
-        await AsyncStorage.removeItem('profielfoto');
         Toast.show({
             type: 'success',
             text1: 'Uitgelogd',
@@ -30,14 +29,21 @@ const HeaderRightButton = ({ handleLogout }) => {
             >
                 <Text style={styles.buttonText}>Profiel</Text>
             </TouchableOpacity>
-            <View style={{ width: 10 }} />
+            <TouchableOpacity
+                style={styles.notificationButton}
+                onPress={() => navigation.navigate('Notifications')}
+            >
+                <Image
+                    source={require('../components/Images/notification-icon.png')}
+                    style={styles.notificationIcon}
+                />
+            </TouchableOpacity>
             <TouchableOpacity
                 style={styles.logoutButton}
                 onPress={logout}
             >
                 <Text style={styles.buttonText}>Uitloggen</Text>
             </TouchableOpacity>
-            <View style={{ width: 10 }} />
         </View>
     );
 };
@@ -52,6 +58,13 @@ const styles = StyleSheet.create({
     buttonText: {
         color: '#fff',
         fontSize: 16,
+    },
+    notificationButton: {
+        marginHorizontal: 10,
+    },
+    notificationIcon: {
+        width: 24,
+        height: 24,
     },
     logoutButton: {
         backgroundColor: '#d30f4c',

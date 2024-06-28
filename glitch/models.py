@@ -64,6 +64,8 @@ class Notificatie(models.Model):
     gebruiker = models.ForeignKey('Gebruiker', on_delete=models.CASCADE, null=True)
     score = models.IntegerField(null=True)
     beschrijving = models.TextField(null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
 
 
 class Voortgang(models.Model):

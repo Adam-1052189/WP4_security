@@ -9,10 +9,10 @@ from rest_framework import status, generics, viewsets, permissions
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from .models import (Domein, Cursus, Activiteit, CoreAssignment, Voortgang, Gebruiker, Cursusjaar,
-                     GebruikerCoreAssignment, GebruikerActiviteit)
+                     GebruikerCoreAssignment, GebruikerActiviteit, Notificatie)
 from .serializers import (DomeinSerializer, GebruikerSerializer, CursusjaarSerializer, CursusSerializer,
                           ActiviteitSerializer, CoreAssignmentSerializer, VoortgangSerializer,
-                          GebruikerActiviteitSerializer)
+                          GebruikerActiviteitSerializer, NotificatieSerializer)
 from django.core import serializers
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.http import FileResponse, JsonResponse
@@ -24,6 +24,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from rest_framework.parsers import MultiPartParser, FormParser
 import base64
 from django.core.files.base import ContentFile
+from django.utils import timezone
 
 
 User = get_user_model()
@@ -284,6 +285,14 @@ class GetCoreAssignment(APIView):
             return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
+class NotificationView(APIView):
+    def get(self, request, gebruiker_id, format=None):
+        print(f"Fetching notifications for user: {gebruiker_id}")
+        notificaties = Notificatie.objects.filter(gebruiker_id=gebruiker_id).order_by('-created_at')
+        print(f"Notifications found: {notificaties}")
+        serializer = NotificatieSerializer(notificaties, many=True)
+        return Response(serializer.data)
+
 @api_view(['POST'])
 def update_activiteit_status(request, pk):
     try:
@@ -298,10 +307,16 @@ def update_activiteit_status(request, pk):
             gebruiker_activiteit.niveau = new_niveau
 
         gebruiker_activiteit.save()
+
+        # Create a notification
+        Notificatie.objects.create(
+            gebruiker=gebruiker_activiteit.gebruiker,
+            beschrijving=f'De status van je activiteit "{gebruiker_activiteit.activiteit.taak}" is veranderd naar {new_status}.'
+        )
+
         return Response({'status': 'Status updated'}, status=status.HTTP_200_OK)
     except GebruikerActiviteit.DoesNotExist:
         return Response({'status': 'Not found'}, status=status.HTTP_404_NOT_FOUND)
-
 
 @api_view(['POST'])
 def update_coreassignment_status(request, pk):
@@ -317,6 +332,13 @@ def update_coreassignment_status(request, pk):
             gebruiker_core_assignment.submission_text = new_submission_text
 
         gebruiker_core_assignment.save()
+
+        # Create a notification
+        Notificatie.objects.create(
+            gebruiker=gebruiker_core_assignment.gebruiker,
+            beschrijving=f'De status van je kernopdracht "{gebruiker_core_assignment.core_assignment.opdrachtnaam}" is veranderd naar {new_status}.'
+        )
+
         return Response({'status': 'Status updated'}, status=status.HTTP_200_OK)
     except GebruikerCoreAssignment.DoesNotExist:
         return Response({'status': 'Not found'}, status=status.HTTP_404_NOT_FOUND)
