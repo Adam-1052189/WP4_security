@@ -75,6 +75,7 @@ function ActiviteitenList({route}) {
                         onPress={() => openModal(activiteit)}
                         niveau={activiteit.niveau}
                         status={activiteit.status}
+                        deadline={activiteit.deadline}
                     />
                 </View>
             ))}
@@ -96,6 +97,7 @@ function ActiviteitenList({route}) {
                 }}>
                     <View style={{width: 300, padding: 20, backgroundColor: 'white', borderRadius: 10}}>
                         <Text style={{marginBottom: 10}}>Inleveren voor: {selectedActiviteit?.taak}</Text>
+                        <Text style={{marginBottom: 10}}>Deadline: {selectedActiviteit?.deadline}</Text>
                         <TextInput
                             placeholder="Voer je tekst in"
                             value={submissionText}

@@ -244,14 +244,14 @@ class ActiviteitenView(APIView):
                 'taak': ga.activiteit.taak,
                 'status': ga.status,
                 'niveau': ga.niveau,
-                'submission_text': ga.submission_text
+                'submission_text': ga.submission_text,
+                'deadline': ga.activiteit.deadline.strftime('%d-%m-%Y') if ga.activiteit.deadline else None
             } for ga in gebruiker_activiteiten]
 
             data = {"activiteiten": activiteiten_data}
             print(f"Data: {data}")
             return JsonResponse(data)
         except Exception as e:
-            # Log de fout
             print(f"Error: {str(e)}")
             return JsonResponse({'error': str(e)}, status=500)
 
@@ -275,6 +275,7 @@ class GetCoreAssignment(APIView):
                         'opdrachtnaam': gebruiker_core_assignment.core_assignment.opdrachtnaam,
                         'status': gebruiker_core_assignment.status,
                         'submission_text': gebruiker_core_assignment.submission_text,
+                        'deadline': gebruiker_core_assignment.core_assignment.deadline.strftime('%d-%m-%Y') if gebruiker_core_assignment.core_assignment.deadline else None
                     }
                     return Response(data)
                 else:

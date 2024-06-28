@@ -2,7 +2,7 @@ import React from 'react';
 import {View, Text, TouchableOpacity, StyleSheet,} from 'react-native';
 import * as Progress from 'react-native-progress';
 
-function Card({title, onPress, niveau, status, isLocked}) {
+function Card({title, onPress, niveau, status, isLocked, deadline}) {
     let backgroundColor;
 
     switch (status) {
@@ -26,6 +26,7 @@ function Card({title, onPress, niveau, status, isLocked}) {
             <View style={[styles.cardContent, {opacity: isLocked ? 0.2 : 1}]}>
                 <Text style={[styles.cardText, {marginBottom: 10}]}>{title}</Text>
                 {niveau !== undefined && <Progress.Bar progress={niveau / 4} width={200}/>}
+                {deadline && <Text style={styles.deadlineText}>Deadline: {deadline}</Text>}
             </View>
             {isLocked && <Text style={styles.lockedText}>Voltooi eerst alle activiteiten om de kernopdracht te
                 ontgrendelen.</Text>}
@@ -56,6 +57,11 @@ const styles = StyleSheet.create({
     cardText: {
         fontSize: 18,
         textAlign: 'center',
+    },
+    deadlineText: {
+        fontSize: 14,
+        color: '#555',
+        marginTop: 5,
     },
     lockedText: {
         fontSize: 16,

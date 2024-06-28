@@ -83,6 +83,7 @@ function CoreAssignment({ cursusnaam, activiteiten }) {
                 onPress={openModal}
                 isLocked={coreAssignment ? !allActivitiesApproved : true}
                 status={coreAssignment ? coreAssignment.status : 'OPEN'}
+                deadline={coreAssignment?.deadline}
             />
             <Modal
                 visible={modalVisible}
@@ -93,6 +94,7 @@ function CoreAssignment({ cursusnaam, activiteiten }) {
                 <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0,0,0,0.5)' }}>
                     <View style={{ width: 300, padding: 20, backgroundColor: 'white', borderRadius: 10 }}>
                         <Text style={{ marginBottom: 10 }}>Inleveren voor: {selectedCoreAssignment?.opdrachtnaam}</Text>
+                        <Text style={{marginBottom: 10}}>Deadline: {selectedCoreAssignment?.deadline}</Text>
                         <TextInput
                             placeholder="Voer je tekst in"
                             value={submissionText}
