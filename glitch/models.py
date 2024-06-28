@@ -65,7 +65,7 @@ class Notificatie(models.Model):
     score = models.IntegerField(null=True)
     beschrijving = models.TextField(null=True)
     created_at = models.DateTimeField(auto_now_add=True)
-
+    read = models.BooleanField(default=False)
 
 
 class Voortgang(models.Model):

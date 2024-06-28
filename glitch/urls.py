@@ -39,6 +39,8 @@ urlpatterns = [
     path('update-coreassignment-status/<int:pk>/', views.update_coreassignment_status, name='update-coreassignment-status'),
     path('gebruiker/<int:pk>/upload_profielfoto/', views.ProfielfotoUploadView.as_view(), name='upload_profielfoto'),
     path('notifications/<int:gebruiker_id>/', views.NotificationView.as_view(), name='get-notifications'),
+    path('notifications/mark-as-read/<int:gebruiker_id>/', views.mark_notifications_as_read, name='mark-notifications-as-read'),
+    path('notifications/delete/<int:notificatie_id>/', views.delete_notification, name='delete-notification'),
 ]
 
 if settings.DEBUG:
