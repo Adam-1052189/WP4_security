@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import Domein, Gebruiker, Cursusjaar, Cursus, Activiteit, CoreAssignment, Voortgang, GebruikerActiviteit, \
-    GebruikerCoreAssignment
+    GebruikerCoreAssignment, Notificatie
 
 
 class ActiviteitSerializer(serializers.ModelSerializer):
@@ -58,3 +58,8 @@ class GebruikerCoreAssignmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = GebruikerCoreAssignment
         fields = '__all__'
+
+class NotificatieSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Notificatie
+        fields = ['notificatie_id', 'gebruiker', 'score', 'beschrijving', 'created_at']

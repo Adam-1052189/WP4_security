@@ -38,6 +38,7 @@ urlpatterns = [
     path('activiteiten/<int:pk>/update/', views.ActiviteitUpdate.as_view(), name='activiteit-update'),
     path('update-coreassignment-status/<int:pk>/', views.update_coreassignment_status, name='update-coreassignment-status'),
     path('gebruiker/<int:pk>/upload_profielfoto/', views.ProfielfotoUploadView.as_view(), name='upload_profielfoto'),
+    path('notifications/<int:gebruiker_id>/', views.NotificationView.as_view(), name='get-notifications'),
 ]
 
 if settings.DEBUG:
