@@ -74,8 +74,8 @@ Dit zorgt ervoor dat alle verzoeken die naar localhost:8000 op je telefoon gaan,
 
 ## Accounts
 - Admin: admin@hr.nl:admin
-- Docent: docent@hr.nl:docent
-- Student: student@hr.nl:student
+- Docent: sbergh@hr.nl:sietze
+- Student: omer@hr.nl:omer
 
 ## Bronvermelding
 - https://scrimba.com/playlist/p7P5Hd
