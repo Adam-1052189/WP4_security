@@ -22,7 +22,7 @@ import StudentList from "./src/components/StudentList";
 import StudentCard from "./src/screens/StudentCard";
 import BackButton from "./src/components/BackButton";
 import HeaderRightButton from './src/components/HeaderRightButton';
-import Notifications from './src/components/Notifications';
+import Notifications from "./src/components/Notifications";
 
 const Stack = createStackNavigator();
 
@@ -138,7 +138,6 @@ const App = () => {
                 />
                 <Stack.Screen
                     name="Login"
-                    component={Login}
                     options={{
                         title: 'Login',
                         headerStyle: {
