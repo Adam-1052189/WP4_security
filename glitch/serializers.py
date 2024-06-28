@@ -62,4 +62,4 @@ class GebruikerCoreAssignmentSerializer(serializers.ModelSerializer):
 class NotificatieSerializer(serializers.ModelSerializer):
     class Meta:
         model = Notificatie
-        fields = ['notificatie_id', 'gebruiker', 'score', 'beschrijving', 'created_at']
+        fields = '__all__'

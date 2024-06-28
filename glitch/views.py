@@ -295,6 +295,29 @@ class NotificationView(APIView):
         return Response(serializer.data)
 
 @api_view(['POST'])
+def mark_notifications_as_read(request, gebruiker_id):
+    try:
+        notifications = Notificatie.objects.filter(gebruiker__id=gebruiker_id, read=False)
+        notifications.update(read=True)
+        notifications.delete()
+        return Response({'status': 'Notifications marked as read and cleared'}, status=status.HTTP_200_OK)
+    except Exception as e:
+        return Response({'status': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+@api_view(['DELETE'])
+def delete_notification(request, notificatie_id):
+    try:
+        notification = Notificatie.objects.get(pk=notificatie_id)
+        notification.delete()
+        return Response({'status': 'Notification deleted'}, status=status.HTTP_200_OK)
+    except Notificatie.DoesNotExist:
+        return Response({'status': 'Not found'}, status=status.HTTP_404_NOT_FOUND)
+    except Exception as e:
+        return Response({'status': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+
+@api_view(['POST'])
 def update_activiteit_status(request, pk):
     try:
         gebruiker_activiteit = GebruikerActiviteit.objects.get(pk=pk)

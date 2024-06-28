@@ -1,12 +1,12 @@
-import React, {useEffect, useState} from 'react'
-import {NavigationContainer, useNavigation} from '@react-navigation/native'
-import {createStackNavigator} from '@react-navigation/stack'
-import {useIsFocused} from "@react-navigation/native";
-import DocentDashboard from "./src/screens/DocentDashboard"
-import WelcomeScreen from './src/screens/WelcomeScreen'
-import Login from "./src/screens/Login"
-import RegisterScreen from "./src/screens/RegisterScreen"
-import StudentDashboard from "./src/screens/StudentDashboard"
+import React, { useEffect, useState } from 'react';
+import { NavigationContainer, useNavigation } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import { useIsFocused } from "@react-navigation/native";
+import DocentDashboard from "./src/screens/DocentDashboard";
+import WelcomeScreen from './src/screens/WelcomeScreen';
+import Login from "./src/screens/Login";
+import RegisterScreen from "./src/screens/RegisterScreen";
+import StudentDashboard from "./src/screens/StudentDashboard";
 import Toast from 'react-native-toast-message';
 import * as Font from 'expo-font';
 import AdminDashboard from "./src/screens/AdminDashboard";
@@ -22,7 +22,7 @@ import StudentList from "./src/components/StudentList";
 import StudentCard from "./src/screens/StudentCard";
 import BackButton from "./src/components/BackButton";
 import HeaderRightButton from './src/components/HeaderRightButton';
-import Notifications from "./src/components/Notifications";
+import Notifications from './src/components/Notifications';
 
 const Stack = createStackNavigator();
 
@@ -76,7 +76,6 @@ const renderHeaderLeft = (user) => {
     );
 };
 
-
 const App = () => {
     const [fontLoaded, setFontLoaded] = useState(false);
     const [initialRoute, setInitialRoute] = useState('Welkom');
@@ -113,7 +112,6 @@ const App = () => {
     if (!fontLoaded) {
         return null;
     }
-
 
     return (
         <NavigationContainer>
@@ -172,11 +170,11 @@ const App = () => {
                         headerRight: () => <HeaderRightButton />,
                     })}
                 />
-                <Stack.Screen name="Registreren" component={RegisterScreen}/>
+                <Stack.Screen name="Registreren" component={RegisterScreen} />
                 <Stack.Screen
                     name="StudentDashboard"
                     component={StudentDashboard}
-                    options={({navigation}) => ({
+                    options={({ navigation }) => ({
                         headerTitle: () => renderHeaderTitle(user),
                         headerStyle: {
                             borderBottomColor: '#fff7ea',
@@ -194,7 +192,7 @@ const App = () => {
                 <Stack.Screen
                     name="AdminDashboard"
                     component={AdminDashboard}
-                    options={({navigation}) => ({
+                    options={({ navigation }) => ({
                         headerTitle: () => renderHeaderTitle(user),
                         headerStyle: {
                             borderBottomColor: '#fff7ea',
@@ -212,7 +210,7 @@ const App = () => {
                 <Stack.Screen
                     name="Profiel"
                     component={ProfileScreen}
-                    options={({navigation}) => ({
+                    options={({ navigation }) => ({
                         title: 'Profiel',
                         headerLeft: () => renderHeaderLeft(user),
                         headerStyle: {
@@ -231,7 +229,7 @@ const App = () => {
                 <Stack.Screen
                     name="GebruikerList"
                     component={GebruikerList}
-                    options={({navigation}) => ({
+                    options={({ navigation }) => ({
                         title: 'Gebruikerslijst',
                         headerLeft: () => renderHeaderLeft(user),
                         headerStyle: {
@@ -250,7 +248,7 @@ const App = () => {
                 <Stack.Screen
                     name="GebruikerEditScreen"
                     component={GebruikerEditScreen}
-                    options={({navigation}) => ({
+                    options={({ navigation }) => ({
                         title: 'Gebruiker bewerken',
                         headerLeft: () => renderHeaderLeft(user),
                         headerStyle: {
@@ -269,7 +267,7 @@ const App = () => {
                 <Stack.Screen
                     name="ActiviteitenList"
                     component={ActiviteitenList}
-                    options={({route, navigation}) => ({
+                    options={({ route, navigation }) => ({
                         title: route.params.cursusnaam,
                         headerLeft: () => renderHeaderLeft(user),
                         headerStyle: {
@@ -288,12 +286,12 @@ const App = () => {
                 <Stack.Screen
                     name="ActiviteitBewerkenScreen"
                     component={ActiviteitBewerkenScreen}
-                    options={{title: 'Activiteiten Bewerken'}}
+                    options={{ title: 'Activiteiten Bewerken' }}
                 />
                 <Stack.Screen
                     name="ActiviteitDetailScreen"
                     component={ActiviteitDetailScreen}
-                    options={({navigation}) => ({
+                    options={({ navigation }) => ({
                         title: 'Activiteit Details',
                         headerLeft: () => renderHeaderLeft(user),
                         headerStyle: {
@@ -312,7 +310,7 @@ const App = () => {
                 <Stack.Screen
                     name="StudentList"
                     component={StudentList}
-                    options={({navigation}) => ({
+                    options={({ navigation }) => ({
                         title: 'Voortgang',
                         headerLeft: () => renderHeaderLeft(user),
                         headerStyle: {
@@ -352,7 +350,7 @@ const App = () => {
                     }}
                 />
             </Stack.Navigator>
-            <Toast/>
+            <Toast />
         </NavigationContainer>
     );
 };
