@@ -31,3 +31,5 @@ instance/
 
 # Scrapy files
 .scrapy!/db.sqlite3
+
+WP4S
